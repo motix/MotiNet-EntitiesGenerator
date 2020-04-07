@@ -1,0 +1,8 @@
+﻿<partial name="Layouts/_MetaPartial" model="@("MotiWiki")" />
+
+<environment include="Development">
+    <link rel="stylesheet" href="~/assets/site/site.css" />
+</environment>
+<environment exclude="Development">
+    <link rel="stylesheet" href="~/assets/site/site.min.css" asp-append-version="true" />
+</environment>

@@ -1,0 +1,14 @@
+﻿@import "./lib.scss";
+
+
+/*#region fix theme bugs */
+
+.custom-select {
+    -moz-appearance: none;
+}
+
+/*#endregion */
+
+.w-tight {
+    width: 1px;
+}

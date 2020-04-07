@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>EntitiesGenerator</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="3.1.1" />
+    <PackageReference Include="MotiNet.Extensions.Entities.Core" Version="1.1.0-beta-0016" />
+  </ItemGroup>
+
+</Project>

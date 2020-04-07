@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>EntitiesGenerator.EntityFrameworkCore</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MotiNet.Extensions.Entities.EntityFrameworkCore" Version="1.1.0-beta-0016" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EntitiesGenerator.EntityFrameworkCore\EntitiesGenerator.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\EntitiesGenerator.SealedModels\EntitiesGenerator.SealedModels.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "name": "asp.net",
+  "private": true,
+  "dependencies": {
+    "@fortawesome/fontawesome-pro": "5.12.0"
+  },
+  "overrides": {
+    "@fortawesome/fontawesome-pro": {
+      "main": [
+        "js/all.js",
+        "js/all.min.js"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@babel/compat-data": "7.8.0",
+    "@babel/core": "7.8.0",
+    "@babel/polyfill": "7.8.0",
+    "@babel/preset-env": "7.8.2",
+    "@babel/register": "7.8.0",
+    "@fortawesome/fontawesome-svg-core": "1.2.26",
+    "@fortawesome/vue-fontawesome": "0.1.9",
+    "apexcharts": "3.12.0",
+    "axios": "0.19.1",
+    "babel-loader": "8.0.6",
+    "bootstrap-vue": "2.3.0",
+    "copy-webpack-plugin": "5.1.1",
+    "css-loader": "3.4.2",
+    "enumify": "1.0.4",
+    "file-loader": "5.0.2",
+    "htmlparser2": "4.0.0",
+    "lodash": "4.17.15",
+    "mini-css-extract-plugin": "0.9.0",
+    "mn-anytext-vue": "0.0.6",
+    "mn-npm-main": "1.0.0",
+    "moment": "2.24.0",
+    "node-sass": "4.13.0",
+    "optimize-css-assets-webpack-plugin": "5.0.3",
+    "resolve-url-loader": "3.1.1",
+    "sass-loader": "8.0.2",
+    "sweetalert2": "9.5.4",
+    "uglifyjs-webpack-plugin": "2.2.0",
+    "url-loader": "3.0.0",
+    "vue": "2.6.11",
+    "vue-apexcharts": "1.5.2",
+    "vue-bootstrap-typeahead": "0.2.6",
+    "vue-ctk-date-time-picker": "2.4.0",
+    "vue-inheritance-loader": "0.1.9",
+    "vue-loader": "15.8.3",
+    "vue-template-compiler": "2.6.11",
+    "webpack": "4.41.5",
+    "webpack-cli": "3.3.10"
+  }
+}

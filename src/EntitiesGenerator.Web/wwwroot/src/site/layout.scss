@@ -1,0 +1,33 @@
+﻿@import "./lib.scss";
+
+.welcome-wrapper {
+    height: ($spacer * 9) - 58px;
+
+    .welcome {
+        background-image: url('./images/member-home-background.png');
+        background-size: auto 180px;
+        background-color: #106ebe;
+        background-attachment: fixed;
+        font-size: 32px;
+        color: #fff;
+        height: $spacer * 9;
+        padding-top: $spacer * 3;
+
+        @include media-breakpoint-up(sm) {
+            font-size: 40px;
+        }
+    }
+}
+
+.navbar {
+    &.fixed-top {
+        background-color: #106ebe;
+    }
+
+    &.navbar-main {
+        background-image: url('./images/member-home-background.png');
+        background-size: auto 180px;
+        background-color: #106ebe;
+        background-attachment: fixed;
+    }
+}

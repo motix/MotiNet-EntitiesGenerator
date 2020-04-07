@@ -1,0 +1,21 @@
+﻿@import "./lib.scss";
+
+@import "../../lib_licensed/theme-application/v4/scss/components.scss";
+
+body {
+    font-weight: lighter;
+    padding-bottom: 20px;
+}
+
+small, .small {
+    font-weight: lighter;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-weight: lighter;
+}
+
+th {
+    font-weight: normal;
+}

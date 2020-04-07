@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="MotiNet.AspNetCore.Mvc.Localization" Version="1.1.0-beta-0002" />
+    <PackageReference Include="MotiNet.AspNetCore.Mvc.RazorPagesUI" Version="1.1.0-beta-0002" />
+    <PackageReference Include="MotiNet.Extensions.Entities.Mvc" Version="1.1.0-beta-0016" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EntitiesGenerator.AspNetCore.Mvc.DefaultViewModels\EntitiesGenerator.AspNetCore.Mvc.DefaultViewModels.csproj" />
+    <ProjectReference Include="..\EntitiesGenerator.AspNetCore\EntitiesGenerator.AspNetCore.csproj" />
+    <ProjectReference Include="..\EntitiesGenerator.EntityFrameworkCore.SealedModels\EntitiesGenerator.EntityFrameworkCore.SealedModels.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,16 @@
+﻿@import "./lib.scss";
+@import "./theme.scss";
+@import "./theme-extensions.scss";
+@import "./layout.scss";
+
+[v-cloak] {
+    display: none !important;
+}
+
+[contenteditable] {
+    border-bottom: 1px dashed $border-color;
+
+    &:hover {
+        background: darken($light, 10);
+    }
+}

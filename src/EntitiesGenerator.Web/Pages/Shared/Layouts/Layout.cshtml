@@ -1,0 +1,62 @@
+﻿@inject MvcHelper MvcHelper
+@{
+    Layout = "Layouts/Empty";
+
+    var fullWidthLayout = ViewData["FullWidthLayout"] as bool? ?? false;
+}
+
+@section Head {
+    @RenderSection("Head", required: false)
+}
+
+<header>
+    <div class="welcome-wrapper">
+        <div class="welcome text-center">
+            MotiNet-EntitiesGenerator
+        </div>
+    </div>
+    <div class="navbar fixed-top navbar-expand navbar-dark">
+        <a class="navbar-brand" asp-area="" asp-page="/Index">Home</a>
+        <div class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item @MvcHelper.ActiveMenuItem(ViewData, "Refactoring")">
+                    <a class="nav-link" asp-area="" asp-page="/Refactoring/Index">Refactoring</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-main">
+        <h2 class="sr-only">Main navigation</h2>
+        <div class="container">
+            <div class="mr-auto"></div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbarContent" aria-controls="mainNavbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div id="mainNavbarContent" class="navbar-collapse collapse">
+                <ul class="navbar-nav mr-auto">
+                    @if (MvcHelper.IsMenuItemActive(ViewData, "Refactoring"))
+                    {
+                        <li class="nav-item @MvcHelper.ActiveSubMenuItem(ViewData, "Rename")"><a class="nav-link" asp-area="" asp-page="/Refactoring/Rename">Rename</a></li>
+                    }
+                    <li class="nav-item"><a class="nav-link" asp-area="" asp-page="/Index">&nbsp;</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="@(fullWidthLayout ? "container-fluid" : "container")">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2020 - MotiWiki - <a asp-area="" asp-page="/Privacy">Privacy</a>
+    </div>
+</footer>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}
