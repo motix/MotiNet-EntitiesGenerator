@@ -30,9 +30,6 @@ namespace EntitiesGenerator.Mvc
 
         [Display(Name = nameof(FeatureSettings), ResourceType = typeof(DisplayNames))]
         public ICollection<ItemFeatureSettingViewModel> FeatureSettings { get; set; }
-
-        [Display(Name = nameof(Relationships), ResourceType = typeof(DisplayNames))]
-        public ICollection<ItemsRelationshipViewModel> Relationships { get; set; }
     }
 
     // Lite

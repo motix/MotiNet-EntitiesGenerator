@@ -36,8 +36,8 @@ namespace EntitiesGenerator.EntityFrameworkCore
         protected override void ConfigureModule(EntityTypeBuilder<Module> builder)
         {
             // Unique
-            builder.HasIndex(nameof(Module.ProjectId), nameof(Module.Name));
-            builder.HasIndex(nameof(Module.ProjectId), nameof(Module.NormalizedName));
+            builder.HasIndex(nameof(Module.ProjectId), nameof(Module.Name)).IsUnique();
+            builder.HasIndex(nameof(Module.ProjectId), nameof(Module.NormalizedName)).IsUnique();
 
             // Restrict delete
             builder.HasOne(x => x.Project)
@@ -51,8 +51,8 @@ namespace EntitiesGenerator.EntityFrameworkCore
         protected override void ConfigureItem(EntityTypeBuilder<Item> builder)
         {
             // Unique
-            builder.HasIndex(nameof(Item.ModuleId), nameof(Item.Name));
-            builder.HasIndex(nameof(Item.ModuleId), nameof(Item.NormalizedName));
+            builder.HasIndex(nameof(Item.ModuleId), nameof(Item.Name)).IsUnique();
+            builder.HasIndex(nameof(Item.ModuleId), nameof(Item.NormalizedName)).IsUnique();
 
             // Restrict delete
             builder.HasOne(x => x.Module)
@@ -66,7 +66,15 @@ namespace EntitiesGenerator.EntityFrameworkCore
         protected override void ConfigureItemsRelationship(EntityTypeBuilder<ItemsRelationship> builder)
         {
             // Unique
-            builder.HasIndex(nameof(ItemsRelationship.Item1Id), nameof(ItemsRelationship.Item2Id));
+            builder.HasIndex(nameof(ItemsRelationship.Item1Id), nameof(ItemsRelationship.Item2Id)).IsUnique();
+
+            // Multiple cascade paths
+            builder.HasOne(x => x.Item1)
+                   .WithMany()
+                   .OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Item2)
+                   .WithMany()
+                   .OnDelete(DeleteBehavior.Restrict);
         }
 
         protected override void ConfigureItemFeatureSetting(EntityTypeBuilder<ItemFeatureSetting> builder)

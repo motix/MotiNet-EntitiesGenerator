@@ -36,8 +36,6 @@ namespace EntitiesGenerator
         public Module Module { get; set; }
 
         public ICollection<ItemFeatureSetting> FeatureSettings { get; set; }
-
-        public ICollection<ItemsRelationship> Relationships { get; set; }
     }
 
     // Customization
