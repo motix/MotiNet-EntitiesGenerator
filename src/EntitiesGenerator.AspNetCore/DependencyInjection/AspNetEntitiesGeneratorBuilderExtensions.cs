@@ -14,7 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddScoped(typeof(IFeatureManager<>).MakeGenericType(builder.FeatureType), typeof(AspNetFeatureManager<>).MakeGenericType(builder.FeatureType));
 
             builder.Services.AddScoped(typeof(IProjectManager<>).MakeGenericType(builder.ProjectType), typeof(AspNetProjectManager<>).MakeGenericType(builder.ProjectType));
-            builder.Services.AddScoped(typeof(IModuleManager<,>).MakeGenericType(builder.ModuleType), typeof(AspNetModuleManager<,>).MakeGenericType(builder.ModuleType, builder.ProjectType));
+            builder.Services.AddScoped(typeof(IModuleManager<,>).MakeGenericType(builder.ModuleType, builder.ProjectType), typeof(AspNetModuleManager<,>).MakeGenericType(builder.ModuleType, builder.ProjectType));
             builder.Services.AddScoped(typeof(IItemManager<,>).MakeGenericType(builder.ItemType, builder.ModuleType), typeof(AspNetItemManager<,>).MakeGenericType(builder.ItemType, builder.ModuleType));
 
             builder.Services.AddScoped(typeof(IItemsRelationshipManager<>).MakeGenericType(builder.ItemsRelationshipType), typeof(AspNetItemsRelationshipManager<>).MakeGenericType(builder.ItemsRelationshipType));
