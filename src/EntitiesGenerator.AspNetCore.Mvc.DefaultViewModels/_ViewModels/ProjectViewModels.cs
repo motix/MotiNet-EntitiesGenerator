@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace EntitiesGenerator.Mvc
@@ -6,6 +7,8 @@ namespace EntitiesGenerator.Mvc
     // Base
     public abstract class ProjectViewModelBase
     {
+        protected ProjectViewModelBase() => Id = Guid.NewGuid().ToString();
+
         public string Id { get; set; }
 
         [LocalizedRequired]

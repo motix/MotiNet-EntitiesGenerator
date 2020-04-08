@@ -8,6 +8,8 @@ namespace EntitiesGenerator.Mvc
     // Base
     public abstract class ItemViewModelBase
     {
+        protected ItemViewModelBase() => Id = Guid.NewGuid().ToString();
+
         public string Id { get; set; }
 
         [LocalizedRequired]

@@ -10,8 +10,6 @@ namespace EntitiesGenerator
         : INameWiseEntity,
           IIsActiveWiseEntity
     {
-        public Feature() => Id = Guid.NewGuid().ToString();
-
         [StringLength(StringLengths.Guid)]
         public string Id { get; set; }
 

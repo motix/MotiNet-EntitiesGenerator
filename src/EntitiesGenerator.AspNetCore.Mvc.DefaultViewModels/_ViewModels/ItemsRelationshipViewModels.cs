@@ -1,10 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace EntitiesGenerator.Mvc
 {
     // Full
     public class ItemsRelationshipViewModel
     {
+        public ItemsRelationshipViewModel() => Id = Guid.NewGuid().ToString();
+
         public string Id { get; set; }
 
         [LocalizedRequired]
