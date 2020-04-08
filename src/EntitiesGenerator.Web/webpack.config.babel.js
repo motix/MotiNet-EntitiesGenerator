@@ -80,8 +80,19 @@ module.exports = (env, args) => {
         context: path.resolve(__dirname, './wwwroot/src'),
         entry: function () {
             const entries = {
-                //// Include polyfill before any other application scripts. Only once.
-                //'site/site': ['@babel/polyfill', './site/site.js'],
+                // Include polyfill before any other application scripts. Only once.
+                'site/site': ['@babel/polyfill', './site/site.js'],
+                // Building
+                'building/features/index/app': './building/features/index/app.js',
+                'building/features/new/app': './building/features/new/app.js',
+                'building/features/view/app': './building/features/view/app.js',
+                'building/projects/index/app': './building/projects/index/app.js',
+                'building/projects/new/app': './building/projects/new/app.js',
+                'building/projects/view/app': './building/projects/view/app.js',
+                'building/modules/new/app': './building/modules/new/app.js',
+                'building/modules/view/app': './building/modules/view/app.js',
+                'building/items/new/app': './building/items/new/app.js',
+                'building/items/view/app': './building/items/view/app.js'
                 // Refactoring
                 'refactoring/rename/app': './refactoring/rename/app.js',
             };

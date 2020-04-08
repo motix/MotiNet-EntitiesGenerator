@@ -1,0 +1,30 @@
+﻿@page
+@inject MvcHelper MvcHelper
+@inject IDisplayNameCollector<Code.EmptyPageModel> displayNameCollector;
+@model Code.EmptyPageModel
+@{
+    ViewData["Title"] = "Projects";
+    MvcHelper.SetActiveSubMenuItem(ViewData, "Projects");
+
+    var projects = new ProjectViewModel();
+
+    displayNameCollector.Collect(x => projects.Name, Html);
+}
+
+<section id="app" v-cloak>
+    <index-page api-url="@Url.Action("Get", "Projects")"
+                :display-names='@displayNameCollector.ToJson()'
+                title="Projects"
+                new-entity-title="New Project"
+                new-entity-url="@Url.Page("NewProject")"
+                view-entity-url="@Url.Page("ViewProject", new { id = "_id_" }).Replace("/_id_", string.Empty)"></index-page>
+</section>
+
+@section Scripts {
+    <environment include="Development">
+        <script src="~/assets/building/projects/index/app.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/assets/building/projects/index/app.min.js" asp-append-version="true"></script>
+    </environment>
+}

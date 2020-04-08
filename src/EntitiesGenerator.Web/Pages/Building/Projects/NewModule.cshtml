@@ -1,0 +1,42 @@
+﻿@page "{id}"
+@inject MvcHelper MvcHelper
+@inject IDisplayNameCollector<ViewEntityByIdPageModel<string, Project, ProjectViewModel, IProjectManager<Project>>> displayNameCollector;
+@model ViewEntityByIdPageModel<string, Project, ProjectViewModel, IProjectManager<Project>>
+@{
+    ViewData["Title"] = "New Module";
+    MvcHelper.SetActiveSubMenuItem(ViewData, "Projects");
+
+    var emptyModule = new ModuleViewModel();
+
+    displayNameCollector.Collect(x => emptyModule.Position, Html)
+                        .Collect(x => emptyModule.Name, Html)
+                        .Collect(x => emptyModule.Project, Html);
+}
+
+@section Head {
+    <environment include="Development">
+        <link href="~/assets/building/modules/new/app.css" rel="stylesheet" />
+    </environment>
+    <environment exclude="Development">
+        <link href="~/assets/building/modules/new/app.min.css" rel="stylesheet" asp-append-version="true" />
+    </environment>
+}
+
+<section id="app" v-cloak>
+    <edit-page new-mode
+               project-id="@Model.Entity.Id"
+               project-name="@Model.Entity.Name"
+               api-url="@Url.Action("Get", "Modules")"
+               :display-names='@displayNameCollector.ToJson()'
+               view-url="@Url.Page("ViewModule", new { id = "_id_" }).Replace("/_id_", string.Empty)"
+               return-url="@Url.Page("ViewProject", new { id = Model.Entity.Id })"></edit-page>
+</section>
+
+@section Scripts {
+    <environment include="Development">
+        <script src="~/assets/building/modules/new/app.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/assets/building/modules/new/app.min.js" asp-append-version="true"></script>
+    </environment>
+}

@@ -1,0 +1,15 @@
+﻿@page
+@inject MvcHelper MvcHelper
+@model EntitiesGenerator.Web.Pages.SeedDataModel
+@{
+    ViewData["Title"] = "Seed Data";
+}
+
+<div class="my-4">
+    <h2>Seed Data</h2>
+</div>
+
+<form method="post">
+    <button type="submit" class="btn btn-danger" asp-page-handler="Clear">Clear</button>
+    <button type="submit" class="btn btn-primary" asp-page-handler="Initialize">Initialize</button>
+</form>
