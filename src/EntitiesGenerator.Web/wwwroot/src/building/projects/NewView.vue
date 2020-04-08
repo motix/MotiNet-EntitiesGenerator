@@ -18,6 +18,16 @@
         <extension point="titleValidationErrors">
             <div v-for="error in entity.errors.name">{{error}}</div>
         </extension>
+        <extension point="toolbarExtra">
+            <div class="btn-group mr-2">
+                <a class="btn btn-sm btn-outline-primary"
+                   :href="generateUrl"
+                   title="Generate"
+                   v-bind:disabled="freezed">
+                    <font-awesome-icon :icon="['fal', 'cauldron']" fixed-width></font-awesome-icon>
+                </a>
+            </div>
+        </extension>
         <extension>
             <section class="mt-4" v-if="!newMode">
                 <div class="row">
@@ -94,6 +104,10 @@
                 viewModuleUrl: {
                     type: String
                     // required: !newMode
+                },
+                generateUrl: {
+                    type: String,
+                    // required: !newMode
                 }
             };
         }
@@ -108,6 +122,7 @@
             const newMode = vm.$options.propsData.newMode === '' || vm.$options.propsData.newMode === true;
             vm.$options.props.newModuleUrl.required = !newMode;
             vm.$options.props.viewModuleUrl.required = !newMode;
+            vm.$options.props.generateUrl.required = !newMode;
         }
 
         // Constructor

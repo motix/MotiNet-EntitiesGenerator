@@ -21,6 +21,8 @@ namespace EntitiesGenerator.Mvc
     {
         [Display(Name = nameof(Modules), ResourceType = typeof(DisplayNames))]
         public ICollection<ModuleLiteViewModel> Modules { get; set; }
+
+        public ICollection<ModuleViewModel> FullModules { get; set; }
     }
 
     // Lite

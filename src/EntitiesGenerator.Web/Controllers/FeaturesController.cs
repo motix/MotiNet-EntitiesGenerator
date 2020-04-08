@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace EntitiesGenerator.Web.Controllers
 {
-    [Route("api/[controller]")]
     public class FeaturesController
         : EntityApiControllerBase<string, Feature, FeatureViewModel, IFeatureManager<Feature>>
     {

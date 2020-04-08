@@ -16,28 +16,26 @@
 
 @section Head {
     <environment include="Development">
-        <link href="~/assets/building/projects/view/app.css" rel="stylesheet" />
+        <link href="~/assets/building/projects/generate/app.css" rel="stylesheet" />
     </environment>
     <environment exclude="Development">
-        <link href="~/assets/building/projects/view/app.min.css" rel="stylesheet" asp-append-version="true" />
+        <link href="~/assets/building/projects/generate/app.min.css" rel="stylesheet" asp-append-version="true" />
     </environment>
 }
 
 <section id="app" v-cloak>
-    <edit-page api-url="@Url.Action("Get", "Projects")"
-               id="@Model.Entity.Id"
-               :display-names='@displayNameCollector.ToJson()'
-               new-module-url="@Url.Page("NewModule", new { id = Model.Entity.Id })"
-               view-module-url="@Url.Page("ViewModule", new { id = "_id_" }).Replace("/_id_", string.Empty)"
-               generate-url="@Url.Page("Generate", new { id = Model.Entity.Id })"
-               return-url="@Url.Page("Index")"></edit-page>
+    <generate-page read-only
+                   api-url="@Url.Action("Get", "FullProjects")"
+                   id="@Model.Entity.Id"
+                   :display-names='@displayNameCollector.ToJson()'
+                   return-url="@Url.Page("ViewProject", new { id = Model.Entity.Id })"></generate-page>
 </section>
 
 @section Scripts {
     <environment include="Development">
-        <script src="~/assets/building/projects/view/app.js"></script>
+        <script src="~/assets/building/projects/generate/app.js"></script>
     </environment>
     <environment exclude="Development">
-        <script src="~/assets/building/projects/view/app.min.js" asp-append-version="true"></script>
+        <script src="~/assets/building/projects/generate/app.min.js" asp-append-version="true"></script>
     </environment>
 }

@@ -34,6 +34,8 @@ namespace EntitiesGenerator.Mvc
 
         [Display(Name = nameof(Items), ResourceType = typeof(DisplayNames))]
         public ICollection<ItemLiteViewModel> Items { get; set; }
+
+        public ICollection<ItemViewModel> FullItems { get; set; }
     }
 
     // Lite
