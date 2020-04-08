@@ -13,7 +13,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
     <PackageReference Include="MotiNet.AspNetCore.Mvc.Localization" Version="1.1.0-beta-0002" />
     <PackageReference Include="MotiNet.AspNetCore.Mvc.RazorPagesUI" Version="1.1.0-beta-0002" />
-    <PackageReference Include="MotiNet.Extensions.Entities.Mvc" Version="1.1.0-beta-0016" />
+    <PackageReference Include="MotiNet.Extensions.Entities.Mvc" Version="1.1.0-beta-0018" />
   </ItemGroup>
 
   <ItemGroup>

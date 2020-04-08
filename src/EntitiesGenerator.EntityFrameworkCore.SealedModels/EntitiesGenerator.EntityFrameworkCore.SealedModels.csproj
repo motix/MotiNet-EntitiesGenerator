@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MotiNet.Extensions.Entities.EntityFrameworkCore" Version="1.1.0-beta-0016" />
+    <PackageReference Include="MotiNet.Extensions.Entities.EntityFrameworkCore" Version="1.1.0-beta-0018" />
   </ItemGroup>
 
   <ItemGroup>
