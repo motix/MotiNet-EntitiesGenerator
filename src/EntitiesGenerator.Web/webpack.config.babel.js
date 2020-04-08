@@ -92,9 +92,9 @@ module.exports = (env, args) => {
                 'building/modules/new/app': './building/modules/new/app.js',
                 'building/modules/view/app': './building/modules/view/app.js',
                 'building/items/new/app': './building/items/new/app.js',
-                'building/items/view/app': './building/items/view/app.js'
+                'building/items/view/app': './building/items/view/app.js',
                 // Refactoring
-                'refactoring/rename/app': './refactoring/rename/app.js',
+                'refactoring/rename/app': './refactoring/rename/app.js'
             };
 
             if (prod) {
