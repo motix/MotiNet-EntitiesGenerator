@@ -88,6 +88,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Has Own Namespace.
+        /// </summary>
+        public static string HasOwnNamespace {
+            get {
+                return ResourceManager.GetString("HasOwnNamespace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Item.
         /// </summary>
         public static string Item {

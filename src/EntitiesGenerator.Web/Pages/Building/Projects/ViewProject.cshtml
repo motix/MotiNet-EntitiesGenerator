@@ -6,11 +6,12 @@
     ViewData["Title"] = Model.Entity.Name;
     MvcHelper.SetActiveSubMenuItem(ViewData, "Projects");
 
-    var emptyModule = new Module();
+    var emptyModule = new ModuleViewModel();
 
     displayNameCollector.Collect(x => Model.Entity.Name, Html)
                         .Collect(x => Model.Entity.Modules, Html)
-                        .Collect(x => emptyModule.Position, Html);
+                        .Collect(x => emptyModule.Position, Html)
+                        .Collect(x => emptyModule.HasOwnNamespace, Html);
 }
 
 @section Head {

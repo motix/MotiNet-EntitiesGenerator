@@ -19,7 +19,7 @@
             <div v-for="error in entity.errors.name">{{error}}</div>
         </extension>
         <extension>
-            <section v-if="!newMode">
+            <section class="mt-4" v-if="!newMode">
                 <div class="row">
                     <div class="col-lg-8 col-xl-9">
                         <h3>{{displayNames['Modules']}}</h3>
@@ -53,6 +53,7 @@
                             <tr>
                                 <th scope="col" class="text-right w-tight">{{displayNames['Position']}}</th>
                                 <th scope="col">{{displayNames['Name']}}</th>
+                                <th scope="col" class="text-center">{{displayNames['HasOwnNamespace']}}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,6 +61,10 @@
                                 <td class="text-right">{{module.position}}</td>
                                 <td>
                                     <a :href="viewModuleUrl + '/' + module.id">{{module.name}}</a>
+                                </td>
+                                <td class="text-center">
+                                    <font-awesome-icon :icon="['fal', 'check-square']" fixed-width v-if="module.hasOwnNamespace"></font-awesome-icon>
+                                    <font-awesome-icon :icon="['fal', 'square']" fixed-width v-if="!module.hasOwnNamespace"></font-awesome-icon>
                                 </td>
                             </tr>
                         </tbody>

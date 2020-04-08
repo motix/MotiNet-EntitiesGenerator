@@ -44,7 +44,18 @@
                     {{entity.position}}
                 </template>
             </div>
-            <section v-if="!newMode">
+            <div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox"
+                           class="custom-control-input"
+                           id="hasOwnNamespaceSwitch"
+                           v-bind:disabled="!newMode && !editMode"
+                           v-model="entity.hasOwnNamespace"
+                           @change="dirty()">
+                    <label class="custom-control-label" for="hasOwnNamespaceSwitch">{{displayNames['HasOwnNamespace']}}</label>
+                </div>
+            </div>
+            <section class="mt-4" v-if="!newMode">
                 <div class="row">
                     <div class="col-lg-8 col-xl-9">
                         <h3>{{displayNames['Items']}}</h3>

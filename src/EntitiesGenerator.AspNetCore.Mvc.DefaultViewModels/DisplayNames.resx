@@ -126,6 +126,9 @@
   <data name="FeatureSettings" xml:space="preserve">
     <value>Feature Settings</value>
   </data>
+  <data name="HasOwnNamespace" xml:space="preserve">
+    <value>Has Own Namespace</value>
+  </data>
   <data name="Item" xml:space="preserve">
     <value>Item</value>
   </data>

@@ -30,6 +30,8 @@ namespace EntitiesGenerator
         [Required]
         [StringLength(StringLengths.TitleContent)]
         public string NormalizedName { get; set; }
+
+        public bool HasOwnNamespace { get; set; }
     }
 
     // Relationships

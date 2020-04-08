@@ -44,7 +44,7 @@
                     {{entity.position}}
                 </template>
             </div>
-            <section v-if="!newMode">
+            <section class="mt-4" v-if="!newMode">
                 <h3>{{displayNames['FeatureSettings']}}</h3>
                 <div>
                     Features
