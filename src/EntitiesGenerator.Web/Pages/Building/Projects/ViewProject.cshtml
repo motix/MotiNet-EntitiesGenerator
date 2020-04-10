@@ -10,6 +10,8 @@
 
     displayNameCollector.Collect(x => Model.Entity.Name, Html)
                         .Collect(x => Model.Entity.Namespace, Html)
+                        .Collect(x => Model.Entity.GenerateLocation, Html)
+                        .Collect(x => Model.Entity.WorkingLocation, Html)
                         .Collect(x => Model.Entity.Modules, Html)
                         .Collect(x => emptyModule.Position, Html)
                         .Collect(x => emptyModule.HasOwnNamespace, Html);

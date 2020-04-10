@@ -6,6 +6,19 @@
         <extension point="title">
             {{entity.name}}
         </extension>
+        <extension point="toolbar">
+            <div class="btn-toolbar justify-content-md-end mb-3 mb-md-0">
+                <div class="btn-group">
+                    <a class="btn btn-sm btn-outline-primary"
+                       href="javascript:void(0)"
+                       title="Save to Disk"
+                       v-bind:disabled="freezed"
+                       @click="saveToDisk">
+                        <font-awesome-icon :icon="['fal', 'download']" fixed-width></font-awesome-icon>
+                    </a>
+                </div>
+            </div>
+        </extension>
         <extension>
             <div>
                 <div class="custom-control custom-switch">
@@ -31,7 +44,7 @@
                         <div>
                             <small class="text-muted"><i v-html="selectedNodePath"></i></small>
                         </div>
-                        <prism :language="selectedNode.generator.language" v-if="selectedNodeContentAvailable && selectedNode.generator">
+                        <prism :language="selectedNode.generator.language" v-if="selectedNodeContentAvailable">
                             {{selectedNode.generator.generate()}}
                         </prism>
                         <div class="text-muted" v-else>
@@ -48,6 +61,8 @@
 </template>
 
 <script>
+    import axios from 'axios';
+    import Swal from 'sweetalert2';
     import 'prismjs';
     import 'prismjs/themes/prism.css';
     import Prism from 'vue-prism-component';
@@ -66,6 +81,16 @@
                 ...super.components,
                 Prism: Prism,
                 SolutionNode: SolutionNode
+            };
+        }
+
+        static get props() {
+            return {
+                ...super.props,
+                saveGeneratedProjectUrl: {
+                    type: String,
+                    required: true
+                }
             };
         }
 
@@ -149,7 +174,7 @@
 
         get $selectedNodeContentAvailable() {
             const node = this.vm.selectedNode;
-            return node.type !== 'folder' && node.type !== 'solutionFolder';
+            return node.type !== 'folder' && node.type !== 'solutionFolder' && node.generator;
         }
 
         get $selectedNodePath() {
@@ -174,6 +199,57 @@
 
             this.vm.selectedNode = node;
             this.vm.selectedNode.selected = true;
+        }
+
+        $saveToDisk() {
+            const structure = getNode(this.vm.solutionStructure);
+            const data = {
+                projectId: this.vm.entity.id,
+                solutionStructure: structure
+            }
+
+            axios
+                .post(this.vm.saveGeneratedProjectUrl, data)
+                .then(response => {
+                    if (response.data === true) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Project saved to Generate Location.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    } else {
+                        this.showError('There is error saving Project.');
+                    }
+                })
+                .catch(error => {
+                    this.showError('There is error saving Project.', error);
+                });
+
+            function getNode(node) {
+                const result = {
+                    name: node.name
+                };
+
+                if (node.children) {
+                    result.children = [];
+                    for (const childNode of node.children) {
+                        if (childNode.type === 'solutionFolder') {
+                            for (const grandChildNode of childNode.children) {
+                                result.children.push(getNode(grandChildNode));
+                            }
+                        } else {
+                            result.children.push(getNode(childNode));
+                        }
+                    }
+                }
+
+                if (node.generator) {
+                    result.content = node.generator.generate();
+                }
+
+                return result;
+            }
         }
 
         // Internal

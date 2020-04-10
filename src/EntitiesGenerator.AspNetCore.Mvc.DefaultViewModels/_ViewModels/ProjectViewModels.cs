@@ -17,6 +17,12 @@ namespace EntitiesGenerator.Mvc
 
         [Display(Name = nameof(Namespace), ResourceType = typeof(DisplayNames))]
         public string Namespace { get; set; }
+
+        [Display(Name = nameof(GenerateLocation), ResourceType = typeof(DisplayNames))]
+        public string GenerateLocation { get; set; }
+
+        [Display(Name = nameof(WorkingLocation), ResourceType = typeof(DisplayNames))]
+        public string WorkingLocation { get; set; }
     }
 
     // Full

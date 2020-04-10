@@ -142,9 +142,9 @@
 <script>
     import axios from 'axios';
     import Swal from 'sweetalert2';
-    import PageController from '../../shared/components/pages/PageController';
     import VueConfigHelper from '../../shared/utilities/VueConfigHelper';
 
+    import PageController from '../../shared/components/pages/PageController';
 
     export class RenamePageController extends PageController {
 

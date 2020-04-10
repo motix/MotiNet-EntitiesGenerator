@@ -24,8 +24,14 @@ namespace EntitiesGenerator
         [StringLength(StringLengths.TitleContent)]
         public string NormalizedName { get; set; }
 
-        [StringLength(StringLengths.TitleContent)]
+        [StringLength(StringLengths.TinyContent)]
         public string Namespace { get; set; }
+
+        [StringLength(StringLengths.Website)]
+        public string GenerateLocation { get; set; }
+
+        [StringLength(StringLengths.Website)]
+        public string WorkingLocation { get; set; }
     }
 
     // Relationships

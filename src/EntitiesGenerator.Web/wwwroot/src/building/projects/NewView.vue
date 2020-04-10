@@ -47,6 +47,42 @@
                     </template>
                 </template>
             </div>
+            <div>
+                <strong>{{displayNames['GenerateLocation']}}:</strong>
+                <template v-if="editMode || newMode">
+                    <single-line-input :placeholder="displayNames['GenerateLocation']"
+                                       placeholder-css-class="text-muted"
+                                       v-model="entity.generateLocation"
+                                       @input="dirty()"
+                                       class="d-inline-block"></single-line-input>
+                </template>
+                <template v-else>
+                    <template v-if="entity.generateLocation">
+                        {{entity.generateLocation}}
+                    </template>
+                    <template v-else>
+                        <i class="text-muted">None</i>
+                    </template>
+                </template>
+            </div>
+            <div>
+                <strong>{{displayNames['WorkingLocation']}}:</strong>
+                <template v-if="editMode || newMode">
+                    <single-line-input :placeholder="displayNames['WorkingLocation']"
+                                       placeholder-css-class="text-muted"
+                                       v-model="entity.workingLocation"
+                                       @input="dirty()"
+                                       class="d-inline-block"></single-line-input>
+                </template>
+                <template v-else>
+                    <template v-if="entity.workingLocation">
+                        {{entity.workingLocation}}
+                    </template>
+                    <template v-else>
+                        <i class="text-muted">None</i>
+                    </template>
+                </template>
+            </div>
             <section class="mt-4" v-if="!newMode">
                 <div class="row">
                     <div class="col-lg-8 col-xl-9">
@@ -171,7 +207,9 @@
 
             // Nullable strings
             this.normalizeNullableStrings(serializableProject, [
-                'namespace'
+                'namespace',
+                'generateLocation',
+                'workingLocation'
             ]);
 
             delete serializableProject.modules;

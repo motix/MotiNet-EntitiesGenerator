@@ -126,6 +126,9 @@
   <data name="FeatureSettings" xml:space="preserve">
     <value>Feature Settings</value>
   </data>
+  <data name="GenerateLocation" xml:space="preserve">
+    <value>Generate Location</value>
+  </data>
   <data name="HasOwnNamespace" xml:space="preserve">
     <value>Has Own Namespace</value>
   </data>
@@ -161,5 +164,8 @@
   </data>
   <data name="Relationships" xml:space="preserve">
     <value>Relationships</value>
+  </data>
+  <data name="WorkingLocation" xml:space="preserve">
+    <value>Working Location</value>
   </data>
 </root>

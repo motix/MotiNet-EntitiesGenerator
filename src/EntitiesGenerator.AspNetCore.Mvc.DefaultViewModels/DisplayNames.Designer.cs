@@ -88,6 +88,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generate Location.
+        /// </summary>
+        public static string GenerateLocation {
+            get {
+                return ResourceManager.GetString("GenerateLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Has Own Namespace.
         /// </summary>
         public static string HasOwnNamespace {
@@ -192,6 +201,15 @@ namespace EntitiesGenerator.Mvc {
         public static string Relationships {
             get {
                 return ResourceManager.GetString("Relationships", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Working Location.
+        /// </summary>
+        public static string WorkingLocation {
+            get {
+                return ResourceManager.GetString("WorkingLocation", resourceCulture);
             }
         }
     }
