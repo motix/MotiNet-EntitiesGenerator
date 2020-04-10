@@ -8,13 +8,10 @@ namespace EntitiesGenerator.EntityFrameworkCore
     public class ItemStore<TDbContext>
         : EntityStore<Item, TDbContext>,
           IItemStore<Item, Module>,
-          IScopedNameBasedEntityStoreMarker<Item, Module, TDbContext>,
-          IItemAccessor<Item, Module>
+          IScopedNameBasedEntityStoreMarker<Item, Module, TDbContext>
         where TDbContext : DbContext
     {
         public ItemStore(TDbContext dbContext) : base(dbContext) { }
-
-        #region Store
 
         public Item FindByName(string normalizedName, Module module)
             => ScopedNameBasedEntityStoreHelper.FindEntityByName(this, normalizedName, module, x => x.ModuleId);
@@ -27,25 +24,5 @@ namespace EntitiesGenerator.EntityFrameworkCore
 
         public Task<Module> FindScopeByIdAsync(object id, CancellationToken cancellationToken)
             => ScopedNameBasedEntityStoreHelper.FindScopeByIdAsync(this, id, cancellationToken);
-
-        #endregion
-
-        #region Accessor
-
-        public object GetId(Item item) => item.Id;
-
-        public string GetName(Item item) => item.Name;
-
-        public void SetNormalizedName(Item item, string normalizedName) => item.NormalizedName = normalizedName;
-
-        public object GetScopeId(Item item) => item.ModuleId;
-
-        public void SetScopeId(Item item, object moduleId) => item.ModuleId = (string)moduleId;
-
-        public Module GetScope(Item item) => item.Module;
-
-        public void SetScope(Item item, Module module) => item.Module = module;
-
-        #endregion
     }
 }

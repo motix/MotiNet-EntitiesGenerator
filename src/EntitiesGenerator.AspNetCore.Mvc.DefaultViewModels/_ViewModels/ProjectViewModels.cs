@@ -14,6 +14,9 @@ namespace EntitiesGenerator.Mvc
         [LocalizedRequired]
         [Display(Name = nameof(Name), ResourceType = typeof(DisplayNames))]
         public string Name { get; set; }
+
+        [Display(Name = nameof(Namespace), ResourceType = typeof(DisplayNames))]
+        public string Namespace { get; set; }
     }
 
     // Full

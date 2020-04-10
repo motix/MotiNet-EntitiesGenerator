@@ -150,6 +150,9 @@
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="Namespace" xml:space="preserve">
+    <value>Namespace</value>
+  </data>
   <data name="Position" xml:space="preserve">
     <value>Position</value>
   </data>

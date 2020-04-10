@@ -23,6 +23,9 @@ namespace EntitiesGenerator
         [Required]
         [StringLength(StringLengths.TitleContent)]
         public string NormalizedName { get; set; }
+
+        [StringLength(StringLengths.TitleContent)]
+        public string Namespace { get; set; }
     }
 
     // Relationships

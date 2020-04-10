@@ -6,18 +6,208 @@
         <extension point="title">
             {{entity.name}}
         </extension>
+        <extension>
+            <div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox"
+                           class="custom-control-input"
+                           id="solutionViewSwitch"
+                           v-model="solutionView">
+                    <label class="custom-control-label" for="solutionViewSwitch">Solution View</label>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4 col-xl-3">
+                    <h3>Solution Explorer</h3>
+                    <div class="table-responsive">
+                        <solution-node :solution-view="solutionView"
+                                       :model="solutionStructure"
+                                       @select="select"></solution-node>
+                    </div>
+                </div>
+                <div class="col-md-8 col-xl-9">
+                    <template v-if="selectedNode">
+                        <h3>{{selectedNode.name}}</h3>
+                        <div>
+                            <small class="text-muted"><i v-html="selectedNodePath"></i></small>
+                        </div>
+                        <prism :language="selectedNode.generator.language" v-if="selectedNodeContentAvailable && selectedNode.generator">
+                            {{selectedNode.generator.generate()}}
+                        </prism>
+                        <div class="text-muted" v-else>
+                            <i>Content not available for this item.</i>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <span class="text-muted"><i>No node selected.</i></span>
+                    </template>
+                </div>
+            </div>
+        </extension>
     </extensions>
 </template>
 
 <script>
+    import 'prismjs';
+    import 'prismjs/themes/prism.css';
+    import Prism from 'vue-prism-component';
+    import VueConfigHelper from '../../../shared/utilities/VueConfigHelper';
+
     import EditPageController from '../../../shared/components/pages/EditPageController';
+    import SolutionStructureGenerator from './SolutionStructureGenerator';
+    import SolutionNode from './SolutionNode.vue';
 
     export class GeneratePageController extends EditPageController {
 
         // Static
 
+        static get components() {
+            return {
+                ...super.components,
+                Prism: Prism,
+                SolutionNode: SolutionNode
+            };
+        }
+
+        static get data() {
+            return {
+                ...super.data,
+                solutionView: true,
+                selectedNode: null,
+                solutionStructure: {
+                    type: 'solution',
+                    name: 'MotiNet-EntitiesGenerator.sln',
+                    children: [
+                        {
+                            type: 'folder',
+                            name: 'Solution Items',
+                            children: [
+                                {
+                                    type: 'file',
+                                    name: 'NuGet.config'
+                                },
+                                {
+                                    type: 'file',
+                                    name: 'README.md'
+                                }
+                            ]
+                        },
+                        {
+                            type: 'folder',
+                            name: 'src',
+                            children: [
+                                {
+                                    type: 'project',
+                                    name: 'EntitiesGenerator.Core'
+                                },
+                                {
+                                    type: 'project',
+                                    name: 'EntitiesGenerator.SealedModels'
+                                },
+                                {
+                                    type: 'project',
+                                    name: 'EntitiesGenerator.AspNetCore'
+                                },
+                                {
+                                    type: 'project',
+                                    name: 'EntitiesGenerator.AspNetCore.Mvc.DefaultViewModels'
+                                },
+                                {
+                                    type: 'project',
+                                    name: 'EntitiesGenerator.EntityFrameworkCore'
+                                },
+                                {
+                                    type: 'project',
+                                    name: 'EntitiesGenerator.EntityFrameworkCore.SealedModels'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            };
+        }
+
+        static get computed() {
+            return {
+                ...super.computed,
+                ...VueConfigHelper.getComputed(GeneratePageController)
+            };
+        }
+
+        static get methods() {
+            return {
+                ...super.methods,
+                ...VueConfigHelper.getMethods(GeneratePageController)
+            };
+        }
+
         static getConfig(controllerClass = GeneratePageController) {
             return super.getConfig(controllerClass);
+        }
+
+        // Computed
+
+        get $selectedNodeContentAvailable() {
+            const node = this.vm.selectedNode;
+            return node.type !== 'folder' && node.type !== 'solutionFolder';
+        }
+
+        get $selectedNodePath() {
+            const node = this.vm.selectedNode;
+            var path;
+
+            if (node.path === null) {
+                path = 'Path not available for this item.';
+            } else {
+                path = node.path;
+            }
+
+            return path;
+        }
+
+        // Methods
+
+        $select(node) {
+            if (this.vm.selectedNode !== null) {
+                this.vm.selectedNode.selected = false;
+            }
+
+            this.vm.selectedNode = node;
+            this.vm.selectedNode.selected = true;
+        }
+
+        // Internal
+
+        doneInitialDataLoading(responses) {
+            super.doneInitialDataLoading(responses);
+
+            const solutionStructure = SolutionStructureGenerator.generateSolutionStructure(this.vm.entity);
+
+            setSelected(solutionStructure);
+
+            var id = 0;
+            setId(solutionStructure);
+
+            this.vm.solutionStructure = solutionStructure;
+
+            function setId(node) {
+                node.id = id;
+                id++;
+                if (node.children) {
+                    for (const child of node.children) {
+                        setId(child);
+                    }
+                }
+            }
+
+            function setSelected(node) {
+                node.selected = false;
+                if (node.children) {
+                    for (const child of node.children) {
+                        setSelected(child);
+                    }
+                }
+            }
         }
 
         convertToWorkEntity(loadedProject) {

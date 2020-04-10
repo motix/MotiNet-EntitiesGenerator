@@ -10,7 +10,7 @@ import VueLoaderPlugin from 'vue-loader/lib/plugin';
 // Development: map files
 // Production: vendors, min files
 
-const vendors = false;
+const vendors = true;
 
 module.exports = (env, args) => {
     const prod = args.mode === 'production' || process.env.NODE_ENV === 'production';
@@ -89,6 +89,7 @@ module.exports = (env, args) => {
                 'building/projects/index/app': './building/projects/index/app.js',
                 'building/projects/new/app': './building/projects/new/app.js',
                 'building/projects/view/app': './building/projects/view/app.js',
+                'building/projects/generate/app': './building/projects/generate/app.js',
                 'building/modules/new/app': './building/modules/new/app.js',
                 'building/modules/view/app': './building/modules/view/app.js',
                 'building/items/new/app': './building/items/new/app.js',

@@ -29,6 +29,24 @@
             </div>
         </extension>
         <extension>
+            <div>
+                <strong>{{displayNames['Namespace']}}:</strong>
+                <template v-if="editMode || newMode">
+                    <single-line-input :placeholder="displayNames['Namespace']"
+                                       placeholder-css-class="text-muted"
+                                       v-model="entity.namespace"
+                                       @input="dirty()"
+                                       class="d-inline-block"></single-line-input>
+                </template>
+                <template v-else>
+                    <template v-if="entity.namespace">
+                        {{entity.namespace}}
+                    </template>
+                    <template v-else>
+                        <i class="text-muted">None</i>
+                    </template>
+                </template>
+            </div>
             <section class="mt-4" v-if="!newMode">
                 <div class="row">
                     <div class="col-lg-8 col-xl-9">
@@ -150,6 +168,11 @@
 
         convertToSerializableEntity(editableProject) {
             const serializableProject = super.convertToSerializableEntity(editableProject);
+
+            // Nullable strings
+            this.normalizeNullableStrings(serializableProject, [
+                'namespace'
+            ]);
 
             delete serializableProject.modules;
 

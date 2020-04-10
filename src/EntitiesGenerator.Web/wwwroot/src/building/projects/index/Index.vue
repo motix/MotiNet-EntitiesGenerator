@@ -2,12 +2,14 @@
     <extensions>
         <extension point="entityTableHeaders">
             <th scope="col">{{displayNames['Name']}}</th>
+            <th scope="col">{{displayNames['Namespace']}}</th>
         </extension>
 
         <extension point="entityTableCells">
             <td>
                 <a :href="viewEntityUrl + '/' + entity.id">{{entity.name}}</a>
             </td>
+            <td>{{entity.namespace}}</td>
         </extension>
     </extensions>
 </template>

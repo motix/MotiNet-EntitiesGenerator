@@ -27,12 +27,12 @@ namespace EntitiesGenerator.Web.Controllers
         protected override void ProcessViewModelForGet(ProjectViewModel viewModel, Project model)
         {
             viewModel.Modules = null;
-            viewModel.FullModules = Mapper.Map<List<ModuleViewModel>>(model.Modules);
+            viewModel.FullModules = Mapper.Map<List<ModuleViewModel>>(model.OrderedModules);
             foreach(var moduleViewModel in viewModel.FullModules)
             {
                 moduleViewModel.Project = null;
                 moduleViewModel.Items = null;
-                moduleViewModel.FullItems = Mapper.Map<List<ItemViewModel>>(model.Modules.Single(x => x.Id == moduleViewModel.Id).Items);
+                moduleViewModel.FullItems = Mapper.Map<List<ItemViewModel>>(model.Modules.Single(x => x.Id == moduleViewModel.Id).OrderedItems);
                 foreach(var itemViewModel in moduleViewModel.FullItems)
                 {
                     itemViewModel.Module = null;

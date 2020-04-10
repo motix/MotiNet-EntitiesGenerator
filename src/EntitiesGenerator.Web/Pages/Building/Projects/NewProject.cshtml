@@ -8,7 +8,8 @@
 
     var emptyProject = new ProjectViewModel();
 
-    displayNameCollector.Collect(x => emptyProject.Name, Html);
+    displayNameCollector.Collect(x => emptyProject.Name, Html)
+                        .Collect(x => emptyProject.Namespace, Html);
 }
 
 @section Head {
