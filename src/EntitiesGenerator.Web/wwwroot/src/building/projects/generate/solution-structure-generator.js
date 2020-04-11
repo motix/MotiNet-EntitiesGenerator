@@ -4,16 +4,9 @@
 //    fileType:     solutionFile | projectFile
 //}
 
-import ContentHelper from './contentHelper';
-import {
-    SolutionFileGenerator,
-    CoreProject_ProjectFileGenerator,
-    SealedModelsProject_ProjectFileGenerator,
-    EntityFrameworkCoreProject_ProjectFileGenerator,
-    EntityFrameworkCoreSealedModelsProject_ProjectFileGenerator,
-    AspNetCoreProject_ProjectFileGenerator,
-    AspNetCoreMvcDefaultViewModelsProject_ProjectFileGenerator
-} from './contentGenerator';
+import ContentHelper from './content-helper';
+import * as ContentGenerators from './content-generator/content-generators';
+import { ContentGenerator } from './content-generator/content-generator';
 
 export default class SolutionStructureGenerator {
     static generateSolutionStructure(project) {
@@ -28,7 +21,7 @@ export default class SolutionStructureGenerator {
                     type: 'file',
                     fileType: 'solutionFile',
                     name: project.name + '.sln',
-                    generator: new SolutionFileGenerator(project)
+                    generator: new ContentGenerators.SolutionFileGenerator(project)
                 },
                 srcFolder,
                 {
@@ -37,25 +30,25 @@ export default class SolutionStructureGenerator {
                     children: [
                         {
                             type: 'file',
-                            name: 'NuGet.config'
+                            name: 'README.md',
+                            generator: new ContentGenerators.SolutionReadmeGenerator(project)
                         },
                         {
                             type: 'file',
-                            name: 'README.md'
+                            name: 'NuGet.config',
+                            generator: new ContentGenerators.SolutionNuGetGenerator()
                         }
                     ]
                 },
                 {
                     type: 'excludedFile',
                     name: '.gitattributes',
+                    generator: new ContentGenerators.SolutionGitattributesGenerator()
                 },
                 {
                     type: 'excludedFile',
                     name: '.gitignore',
-                },
-                {
-                    type: 'excludedFile',
-                    name: 'LICENSE',
+                    generator: new ContentGenerators.SolutionGitignoreGenerator()
                 }
             ]
         };
@@ -165,12 +158,13 @@ export default class SolutionStructureGenerator {
                     type: 'file',
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
-                    generator: new CoreProject_ProjectFileGenerator(module)
+                    generator: new ContentGenerators.CoreProject_ProjectFileGenerator(module)
                 },
                 entitiesFolder,
                 {
                     type: 'file',
-                    name: moduleName + 'ErrorDescriber.cs'
+                    name: moduleName + 'ErrorDescriber.cs',
+                    generator: new ContentGenerators.CoreProject_ErrorDescriberClassGenerator(module)
                 },
                 {
                     type: 'folder',
@@ -178,17 +172,20 @@ export default class SolutionStructureGenerator {
                     children: [
                         {
                             type: 'file',
-                            name: moduleName + 'ErrorDescriberResources.cs'
+                            name: moduleName + 'ErrorDescriberResources.cs',
+                            generator: new ContentGenerators.CoreProject_ErrorDescriberResourcesClassGenerator(module)
                         },
                         {
                             type: 'file',
-                            name: moduleName + 'ErrorDescriberResources.resx'
+                            name: moduleName + 'ErrorDescriberResources.resx',
+                            generator: new ContentGenerators.CoreProject_ErrorDescriberResourcesResxGenerator(module)
                         }
                     ]
                 },
                 {
                     type: 'file',
-                    name: moduleName + 'Builder.cs'
+                    name: moduleName + 'Builder.cs',
+                    generator: new ContentGenerators.CoreProject_BuilderClassGenerator(module)
                 },
                 {
                     type: 'folder',
@@ -196,7 +193,8 @@ export default class SolutionStructureGenerator {
                     children: [
                         {
                             type: 'file',
-                            name: moduleName + 'ServiceCollectionExtensions.cs'
+                            name: moduleName + 'ServiceCollectionExtensions.cs',
+                            generator: new ContentGenerators.CoreProject_DependencyInjectionClassGenerator(module)
                         }
                     ]
                 }
@@ -220,23 +218,28 @@ export default class SolutionStructureGenerator {
                 children: [
                     {
                         type: 'file',
-                        name: 'I' + item.name + 'Manager.cs'
+                        name: 'I' + item.name + 'Manager.cs',
+                        generator: new ContentGenerators.CoreProject_EntityManagerInterfaceGenerator(item)
                     },
                     {
                         type: 'file',
-                        name: 'I' + item.name + 'Store.cs'
+                        name: 'I' + item.name + 'Store.cs',
+                        generator: new ContentGenerators.CoreProject_EntityStoreInterfaceGenerator(item)
                     },
                     {
                         type: 'file',
-                        name: 'I' + item.name + 'Accessor.cs'
+                        name: 'I' + item.name + 'Accessor.cs',
+                        generator: new ContentGenerators.CoreProject_EntityAccessorInterfaceGenerator(item)
                     },
                     {
                         type: 'file',
-                        name: item.name + 'Manager.cs'
+                        name: item.name + 'Manager.cs',
+                        generator: new ContentGenerators.CoreProject_EntityManagerClassGenerator(item)
                     },
                     {
                         type: 'file',
-                        name: item.name + 'Validator.cs'
+                        name: item.name + 'Validator.cs',
+                        generator: new ContentGenerators.CoreProject_EntityValidatorClassGenerator(item)
                     }
                 ]
             };
@@ -264,7 +267,7 @@ export default class SolutionStructureGenerator {
                     type: 'file',
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
-                    generator: new SealedModelsProject_ProjectFileGenerator(module)
+                    generator: new ContentGenerators.SealedModelsProject_ProjectFileGenerator(module)
                 },
                 entitiesFolder,
                 accessorsFolder,
@@ -274,7 +277,8 @@ export default class SolutionStructureGenerator {
                     children: [
                         {
                             type: 'file',
-                            name: 'SealedModels' + moduleName + 'BuilderExtensions.cs'
+                            name: 'SealedModels' + moduleName + 'BuilderExtensions.cs',
+                            generator: new ContentGenerators.SealedModelsProject_DependencyInjectionClassGenerator(module)
                         }
                     ]
                 }
@@ -294,7 +298,8 @@ export default class SolutionStructureGenerator {
         for (const item of module.items) {
             const itemFolder = {
                 type: 'file',
-                name: item.name + '.cs'
+                name: item.name + '.cs',
+                generator: new ContentGenerators.SealedModelsProject_EntityClassGenerator(item)
             };
 
             folder.children.push(itemFolder);
@@ -313,7 +318,8 @@ export default class SolutionStructureGenerator {
         for (const item of module.items) {
             const itemFolder = {
                 type: 'file',
-                name: item.name + 'Accessor.cs'
+                name: item.name + 'Accessor.cs',
+                generator: new ContentGenerators.SealedModelsProject_EntityAccessorClassGenerator(item)
             };
 
             folder.children.push(itemFolder);
@@ -337,11 +343,12 @@ export default class SolutionStructureGenerator {
                     type: 'file',
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
-                    generator: new EntityFrameworkCoreProject_ProjectFileGenerator(module)
+                    generator: new ContentGenerators.EntityFrameworkCoreProject_ProjectFileGenerator(module)
                 },
                 {
                     type: 'file',
-                    name: moduleName + 'DbContextBase.cs'
+                    name: moduleName + 'DbContextBase.cs',
+                    generator: new ContentGenerators.EntityFrameworkCoreProject_DbContextClassGenerator(module)
                 }
             ]
         }
@@ -365,11 +372,12 @@ export default class SolutionStructureGenerator {
                     type: 'file',
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
-                    generator: new EntityFrameworkCoreSealedModelsProject_ProjectFileGenerator(module)
+                    generator: new ContentGenerators.EntityFrameworkCoreSealedModelsProject_ProjectFileGenerator(module)
                 },
                 {
                     type: 'file',
-                    name: moduleName + 'DbContextBase.cs'
+                    name: moduleName + 'DbContextBase.cs',
+                    generator: new ContentGenerators.EntityFrameworkCoreSealedModelsProject_DbContextClassGenerator(module)
                 },
                 storesFolder,
                 {
@@ -378,7 +386,8 @@ export default class SolutionStructureGenerator {
                     children: [
                         {
                             type: 'file',
-                            name: 'EntityFrameworkCore' + moduleName + 'BuilderExtensions.cs'
+                            name: 'EntityFrameworkCore' + moduleName + 'BuilderExtensions.cs',
+                            generator: new ContentGenerators.EntityFrameworkCoreSealedModelsProject_DependencyInjectionClassGenerator(module)
                         }
                     ]
                 }
@@ -398,7 +407,8 @@ export default class SolutionStructureGenerator {
         for (const item of module.items) {
             const itemFolder = {
                 type: 'file',
-                name: item.name + 'Store.cs'
+                name: item.name + 'Store.cs',
+                generator: new ContentGenerators.EntityFrameworkCoreSealedModelsProject_EntityStoreClassGenerator(item)
             };
 
             folder.children.push(itemFolder);
@@ -423,7 +433,7 @@ export default class SolutionStructureGenerator {
                     type: 'file',
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
-                    generator: new AspNetCoreProject_ProjectFileGenerator(module)
+                    generator: new ContentGenerators.AspNetCoreProject_ProjectFileGenerator(module)
                 },
                 managersFolder,
                 {
@@ -432,7 +442,8 @@ export default class SolutionStructureGenerator {
                     children: [
                         {
                             type: 'file',
-                            name: 'AspNet' + moduleName + 'BuilderExtensions.cs'
+                            name: 'AspNet' + moduleName + 'BuilderExtensions.cs',
+                            generator: new ContentGenerators.AspNetCoreProject_DependencyInjectionClassGenerator(module)
                         }
                     ]
                 }
@@ -452,7 +463,8 @@ export default class SolutionStructureGenerator {
         for (const item of module.items) {
             const itemFolder = {
                 type: 'file',
-                name: 'AspNet' + item.name + 'Manager.cs'
+                name: 'AspNet' + item.name + 'Manager.cs',
+                generator: new ContentGenerators.AspNetCoreProject_EntityManagerClassGenerator(item)
             };
 
             folder.children.push(itemFolder);
@@ -477,16 +489,18 @@ export default class SolutionStructureGenerator {
                     type: 'file',
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
-                    generator: new AspNetCoreMvcDefaultViewModelsProject_ProjectFileGenerator(module)
+                    generator: new ContentGenerators.AspNetCoreMvcDefaultViewModelsProject_ProjectFileGenerator(module)
                 },
                 viewModelsFolder,
                 {
                     type: 'file',
-                    name: 'DisplayNames.resx'
+                    name: 'DisplayNames.resx',
+                    generator: new ContentGenerators.AspNetCoreMvcDefaultViewModelsProject_DisplayNamesResxGenerator(module)
                 },
                 {
                     type: 'file',
-                    name: moduleName + 'Profile.cs'
+                    name: moduleName + 'Profile.cs',
+                    generator: new ContentGenerators.AspNetCoreMvcDefaultViewModelsProject_ProfileClassGenerator(module)
                 },
                 {
                     type: 'folder',
@@ -494,7 +508,8 @@ export default class SolutionStructureGenerator {
                     children: [
                         {
                             type: 'file',
-                            name: 'DefaultViewModels' + moduleName + 'BuilderExtensions.cs'
+                            name: 'DefaultViewModels' + moduleName + 'BuilderExtensions.cs',
+                            generator: new ContentGenerators.AspNetCoreMvcDefaultViewModelsProject_DependencyInjectionClassGenerator(module)
                         }
                     ]
                 }
@@ -514,7 +529,8 @@ export default class SolutionStructureGenerator {
         for (const item of module.items) {
             const itemFolder = {
                 type: 'file',
-                name: item.name + 'ViewModels.cs'
+                name: item.name + 'ViewModels.cs',
+                generator: new ContentGenerators.AspNetCoreMvcDefaultViewModelsProject_EntityViewModelsClassGenerator(item)
             };
 
             folder.children.push(itemFolder);

@@ -31,7 +31,17 @@ namespace EntitiesGenerator.Web.Controllers
 
             if (Directory.Exists(project.GenerateLocation))
             {
-                Directory.Delete(project.GenerateLocation, true);
+                var folders = Directory.GetDirectories(project.GenerateLocation);
+                foreach(var folder in folders)
+                {
+                    Directory.Delete(folder, true);
+                }
+
+                var files = Directory.GetFiles(project.GenerateLocation);
+                foreach(var file in files)
+                {
+                    System.IO.File.Delete(file);
+                }
             }
 
             var path = Path.GetDirectoryName(project.GenerateLocation);
@@ -53,7 +63,11 @@ namespace EntitiesGenerator.Web.Controllers
             }
             else
             {
-                Directory.CreateDirectory(path);
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
                 foreach (var child in node.Children)
                 {
                     SaveNode(child, path);

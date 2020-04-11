@@ -44,9 +44,8 @@
                         <div>
                             <small class="text-muted"><i v-html="selectedNodePath"></i></small>
                         </div>
-                        <prism :language="selectedNode.generator.language" v-if="selectedNodeContentAvailable">
-                            {{selectedNode.generator.generate()}}
-                        </prism>
+                        <prism :language="selectedNode.generator.language"
+                               v-if="selectedNodeContentAvailable">{{selectedNode.generator.generate()}}</prism>
                         <div class="text-muted" v-else>
                             <i>Content not available for this item.</i>
                         </div>
@@ -69,7 +68,7 @@
     import VueConfigHelper from '../../../shared/utilities/VueConfigHelper';
 
     import EditPageController from '../../../shared/components/pages/EditPageController';
-    import SolutionStructureGenerator from './SolutionStructureGenerator';
+    import SolutionStructureGenerator from './solution-structure-generator';
     import SolutionNode from './SolutionNode.vue';
 
     export class GeneratePageController extends EditPageController {
