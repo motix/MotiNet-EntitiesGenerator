@@ -7,10 +7,6 @@ namespace EntitiesGenerator.Mvc
     {
         public EntitiesGeneratorProfile(EntitiesGeneratorBuilder builder)
         {
-            CreateMap(builder.FeatureType, typeof(FeatureViewModel))
-                .ReverseMap();
-            CreateMap(builder.FeatureType, typeof(FeatureLiteViewModel));
-
             CreateMap(builder.ProjectType, typeof(ProjectViewModel))
                 .SwapMemberWithOrderedMember(nameof(ProjectViewModel.Modules))
                 .ReverseMap();
@@ -26,11 +22,17 @@ namespace EntitiesGenerator.Mvc
                 .ReverseMap();
             CreateMap(builder.ItemType, typeof(ItemLiteViewModel));
 
-            CreateMap(builder.ItemsRelationshipType, typeof(ItemsRelationshipViewModel))
+            CreateMap(builder.FeatureSettingType, typeof(FeatureSettingBaseViewModel))
+                .IncludeAllDerived()
+                .ReverseMap();
+            CreateMap(builder.DomainSpecificTypes[nameof(EntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
+                      typeof(EntityFeatureSettingViewModel))
+                .ReverseMap();
+            CreateMap(builder.DomainSpecificTypes[nameof(TimeTrackedEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
+                      typeof(TimeTrackedEntityFeatureSettingViewModel))
                 .ReverseMap();
 
-            CreateMap(builder.DomainSpecificTypes[nameof(ItemFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
-                      typeof(ItemFeatureSettingViewModel))
+            CreateMap(builder.ItemsRelationshipType, typeof(ItemsRelationshipViewModel))
                 .ReverseMap();
         }
     }

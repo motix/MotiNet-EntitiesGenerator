@@ -35,12 +35,12 @@ namespace EntitiesGenerator
     {
         public Module Module { get; set; }
 
-        public ICollection<ItemFeatureSetting> FeatureSettings { get; set; }
+        public ICollection<FeatureSettingBase> FeatureSettings { get; set; }
     }
 
     // Customization
     partial class Item
     {
-        public IEnumerable<ItemFeatureSetting> OrderedFeatureSettings => FeatureSettings?.OrderBy(x => x.Feature?.Position);
+        public IEnumerable<FeatureSettingBase> OrderedFeatureSettings => FeatureSettings?.OrderBy(x => x.Position);
     }
 }

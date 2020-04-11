@@ -31,7 +31,7 @@ namespace EntitiesGenerator.Mvc
         public ModuleLiteViewModel Module { get; set; }
 
         [Display(Name = nameof(FeatureSettings), ResourceType = typeof(DisplayNames))]
-        public ICollection<ItemFeatureSettingViewModel> FeatureSettings { get; set; }
+        public ICollection<FeatureSettingBaseViewModel> FeatureSettings { get; set; }
     }
 
     // Lite

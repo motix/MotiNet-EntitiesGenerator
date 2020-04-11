@@ -6,19 +6,16 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class EntitiesGeneratorServiceCollectionExtensions
     {
-        public static EntitiesGeneratorBuilder AddEntitiesGenerator<TFeature,
-                                                                    TProject, TModule, TItem,
+        public static EntitiesGeneratorBuilder AddEntitiesGenerator<TProject, TModule, TItem,
+                                                                    TFeatureSetting,
                                                                     TItemsRelationship>(
             this IServiceCollection services)
-            where TFeature : class
             where TProject : class
             where TModule : class
             where TItem : class
+            where TFeatureSetting : class
             where TItemsRelationship : class
         {
-            services.TryAddScoped<IFeatureManager<TFeature>, FeatureManager<TFeature>>();
-            services.TryAddScoped<IValidator<TFeature>, FeatureValidator<TFeature>>();
-
             services.TryAddScoped<IProjectManager<TProject>, ProjectManager<TProject>>();
             services.TryAddScoped<IValidator<TProject>, ProjectValidator<TProject>>();
 
@@ -27,6 +24,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<IItemManager<TItem, TModule>, ItemManager<TItem, TModule>>();
             services.TryAddScoped<IValidator<TItem, TModule>, ItemValidator<TItem, TModule>>();
+
+            services.TryAddScoped<IFeatureSettingManager<TFeatureSetting>, FeatureSettingManager<TFeatureSetting>>();
 
             services.TryAddScoped<IItemsRelationshipManager<TItemsRelationship>, ItemsRelationshipManager<TItemsRelationship>>();
             services.TryAddScoped<IValidator<TItemsRelationship>, DefaultValidator<TItemsRelationship, ItemsRelationshipManager<TItemsRelationship>>>();
@@ -38,8 +37,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return new EntitiesGeneratorBuilder(
                 services,
-                typeof(TFeature),
                 typeof(TProject), typeof(TModule), typeof(TItem),
+                typeof(TFeatureSetting),
                 typeof(TItemsRelationship));
         }
     }

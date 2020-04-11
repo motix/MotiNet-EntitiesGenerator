@@ -6,8 +6,7 @@ using System.Threading;
 
 namespace EntitiesGenerator
 {
-    public class AspNetModuleManager<TModule, TProject>
-        : ModuleManager<TModule, TProject>
+    public class AspNetModuleManager<TModule, TProject> : ModuleManager<TModule, TProject>
         where TModule : class
         where TProject : class
     {

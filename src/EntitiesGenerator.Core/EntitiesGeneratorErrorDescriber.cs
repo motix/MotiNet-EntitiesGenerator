@@ -20,24 +20,6 @@ namespace EntitiesGenerator
 
         #endregion
 
-        #region Feature
-
-        public virtual GenericError InvalidFeatureName(string featureName)
-            => new GenericError
-            {
-                Code = nameof(InvalidFeatureName),
-                Description = _localizer[nameof(InvalidFeatureName), featureName]
-            };
-
-        public virtual GenericError DuplicateFeatureName(string featureName)
-            => new GenericError
-            {
-                Code = nameof(DuplicateFeatureName),
-                Description = _localizer[nameof(DuplicateFeatureName), featureName]
-            };
-
-        #endregion
-
         #region Project
 
         public virtual GenericError InvalidProjectName(string projectName)

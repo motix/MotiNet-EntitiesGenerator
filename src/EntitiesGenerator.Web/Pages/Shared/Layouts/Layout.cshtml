@@ -40,7 +40,6 @@
                     @if (MvcHelper.IsMenuItemActive(ViewData, "Building"))
                     {
                         <li class="nav-item @MvcHelper.ActiveSubMenuItem(ViewData, "Projects")"><a class="nav-link" asp-area="" asp-page="/Building/Projects/Index">Projects</a></li>
-                        <li class="nav-item @MvcHelper.ActiveSubMenuItem(ViewData, "Features")"><a class="nav-link" asp-area="" asp-page="/Building/Features/Index">Features</a></li>
                     }
                     @if (MvcHelper.IsMenuItemActive(ViewData, "Refactoring"))
                     {

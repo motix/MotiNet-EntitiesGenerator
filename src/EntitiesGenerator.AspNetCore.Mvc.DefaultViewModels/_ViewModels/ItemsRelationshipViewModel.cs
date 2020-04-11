@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntitiesGenerator.Mvc
 {
-    // Full
     public class ItemsRelationshipViewModel
     {
         public ItemsRelationshipViewModel() => Id = Guid.NewGuid().ToString();

@@ -6,8 +6,8 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class SealedModelsEntitiesGeneratorBuilderExtensions
     {
         public static EntitiesGeneratorBuilder AddEntitiesGeneratorWithSealedModels(this IServiceCollection services)
-            => services.AddEntitiesGenerator<Feature,
-                                             Project, Module, Item,
+            => services.AddEntitiesGenerator<Project, Module, Item,
+                                             FeatureSettingBase,
                                              ItemsRelationship>()
                        .AddSealedModels();
 
@@ -15,15 +15,10 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             // DomainSpecificTypes
 
-            builder.DomainSpecificTypes.Add(nameof(ItemFeatureSetting), typeof(ItemFeatureSetting));
+            builder.DomainSpecificTypes.Add(nameof(EntityFeatureSetting), typeof(EntityFeatureSetting));
+            builder.DomainSpecificTypes.Add(nameof(TimeTrackedEntityFeatureSetting), typeof(TimeTrackedEntityFeatureSetting));
 
             var services = builder.Services;
-
-            // Accessors
-
-            services.TryAddScoped(
-                typeof(IFeatureAccessor<>).MakeGenericType(builder.FeatureType),
-                typeof(FeatureAccessor));
 
             services.TryAddScoped(
                 typeof(IProjectAccessor<>).MakeGenericType(builder.ProjectType),
@@ -36,6 +31,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped(
                 typeof(IItemAccessor<,>).MakeGenericType(builder.ItemType, builder.ModuleType),
                 typeof(ItemAccessor));
+
+            services.TryAddScoped(
+                typeof(IFeatureSettingAccessor<>).MakeGenericType(builder.FeatureSettingType),
+                typeof(FeatureSettingAccessor));
 
             services.TryAddScoped(
                 typeof(IItemsRelationshipAccessor<>).MakeGenericType(builder.ItemsRelationshipType),

@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5AF9D36A-D67
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E73332CE-4CEB-4011-AD9E-2E9FDBA184F9}"
 	ProjectSection(SolutionItems) = preProject
+		doc\Features.txt = doc\Features.txt
 		NuGet.config = NuGet.config
 		README.md = README.md
 	EndProjectSection

@@ -6,9 +6,7 @@ using System.Threading;
 
 namespace EntitiesGenerator
 {
-    public class AspNetItemsRelationshipManager<TItemsRelationship>
-        : ItemsRelationshipManager<TItemsRelationship>
-        where TItemsRelationship : class
+    public class AspNetItemsRelationshipManager<TItemsRelationship> : ItemsRelationshipManager<TItemsRelationship> where TItemsRelationship : class
     {
         private readonly CancellationToken _cancel;
 

@@ -1,0 +1,12 @@
+TimeTrackedEntity
+CodeBasedEntity
+NameBasedEntity
+GroupedEntity
+ScopedNameBasedEntity
+ReadableIdEntity
+OnOffEntity
+DeleteMarkEntity
+TaggedEntity
+ChildEntity
+MasterDetailsEntity
+PreprocessedEntity

@@ -8,26 +8,26 @@ namespace EntitiesGenerator
     {
         public EntitiesGeneratorBuilder(
             IServiceCollection services,
-            Type featureType,
             Type projectType, Type moduleType, Type itemType,
+            Type featureSettingType,
             Type itemsRelationshipType)
             : base(services)
             => BuilderHelper.ConstructBuilder(
                 this, typeof(EntitiesGeneratorBuilder).GetConstructors()[0],
                 services,
-                featureType,
                 projectType, moduleType, itemType,
+                featureSettingType,
                 itemsRelationshipType);
 
         #region Properties
-
-        public Type FeatureType { get; private set; }
 
         public Type ProjectType { get; private set; }
 
         public Type ModuleType { get; private set; }
 
         public Type ItemType { get; private set; }
+
+        public Type FeatureSettingType { get; private set; }
 
         public Type ItemsRelationshipType { get; private set; }
 

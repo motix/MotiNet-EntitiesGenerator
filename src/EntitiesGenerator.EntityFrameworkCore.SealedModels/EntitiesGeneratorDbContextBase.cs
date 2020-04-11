@@ -5,23 +5,18 @@ namespace EntitiesGenerator.EntityFrameworkCore
 {
     public abstract class EntitiesGeneratorDbContextBase
         : EntitiesGeneratorDbContextBase<
-            Feature,
             Project, Module, Item,
+            FeatureSettingBase,
             ItemsRelationship,
-            ItemFeatureSetting,
             // Key
             string>
     {
+        public DbSet<EntityFeatureSetting> EntityFeatureSettings { get; set; }
+        public DbSet<TimeTrackedEntityFeatureSetting> TimeTrackedEntityFeatureSettings { get; set; }
+
         protected EntitiesGeneratorDbContextBase(DbContextOptions options) : base(options) { }
 
         protected EntitiesGeneratorDbContextBase() { }
-
-        protected override void ConfigureFeature(EntityTypeBuilder<Feature> builder)
-        {
-            // Unique
-            builder.HasIndex(x => x.Name).IsUnique();
-            builder.HasIndex(x => x.NormalizedName).IsUnique();
-        }
 
         protected override void ConfigureProject(EntityTypeBuilder<Project> builder)
         {
@@ -63,6 +58,11 @@ namespace EntitiesGenerator.EntityFrameworkCore
             builder.Ignore(x => x.OrderedFeatureSettings);
         }
 
+        protected override void ConfigureFeatureSetting(EntityTypeBuilder<FeatureSettingBase> builder)
+        {
+            builder.HasIndex(nameof(FeatureSettingBase.ItemId), "Discriminator").IsUnique();
+        }
+
         protected override void ConfigureItemsRelationship(EntityTypeBuilder<ItemsRelationship> builder)
         {
             // Unique
@@ -74,17 +74,6 @@ namespace EntitiesGenerator.EntityFrameworkCore
                    .OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.Item2)
                    .WithMany()
-                   .OnDelete(DeleteBehavior.Restrict);
-        }
-
-        protected override void ConfigureItemFeatureSetting(EntityTypeBuilder<ItemFeatureSetting> builder)
-        {
-            // Key
-            builder.HasKey(x => new { x.ItemId, x.FeatureId });
-
-            // Restrict delete
-            builder.HasOne(x => x.Feature)
-                   .WithMany(x => x.FeatureSettings)
                    .OnDelete(DeleteBehavior.Restrict);
         }
     }

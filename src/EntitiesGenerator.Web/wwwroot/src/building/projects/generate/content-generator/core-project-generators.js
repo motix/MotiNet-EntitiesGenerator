@@ -97,7 +97,6 @@ export class CoreProject_EntityManagerClassGenerator extends CSharpContentGenera
 
         var content = `using Microsoft.Extensions.Logging;
 using MotiNet.Entities;
-using System;
 using System.Collections.Generic;
 
 namespace ${namespace}
