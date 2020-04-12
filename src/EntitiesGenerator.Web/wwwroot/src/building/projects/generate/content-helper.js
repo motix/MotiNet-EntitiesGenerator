@@ -174,12 +174,28 @@
                 item.scopedNameBasedEntityFeatureSetting);
     }
 
+    static getEmptyEntityGenericParameters(item) {
+        if (item.scopedNameBasedEntityFeatureSetting !== null) {
+            return '<,>';
+        }
+
+        return '<>';
+    }
+
     static getEntityGenericParameters(item) {
         if (item.scopedNameBasedEntityFeatureSetting !== null) {
             return `<T${item.name}, T${item.scopedNameBasedEntityFeatureSetting.scopeName}>`;
         }
 
         return `<T${item.name}>`;
+    }
+
+    static getMakeGenericTypeParameterList(item) {
+        if (item.scopedNameBasedEntityFeatureSetting !== null) {
+            return `builder.${item.name}Type, builder.${item.scopedNameBasedEntityFeatureSetting.scopeName}Type`;
+        }
+
+        return `builder.${item.name}Type`;
     }
 
     static subEntityManaged(item, subEntityName) {
