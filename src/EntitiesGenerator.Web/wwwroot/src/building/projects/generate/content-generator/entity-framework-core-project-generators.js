@@ -2,7 +2,26 @@
 import 'prismjs/components/prism-csharp';
 import ContentHelper from '../content-helper';
 
-import { CSharpContentGenerator } from './content-generator';
+import { CSharpContentGenerator, ProjectFileGenerator} from './content-generator';
+
+export class EntityFrameworkCoreProject_ProjectFileGenerator extends ProjectFileGenerator {
+    generate() {
+        var content = `<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
+  </ItemGroup>
+
+</Project>
+`;
+
+        return content;
+    }
+}
 
 export class EntityFrameworkCoreProject_DbContextClassGenerator extends CSharpContentGenerator {
     constructor(module) {

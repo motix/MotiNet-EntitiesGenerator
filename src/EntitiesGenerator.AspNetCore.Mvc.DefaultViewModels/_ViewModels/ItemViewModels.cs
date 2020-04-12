@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace EntitiesGenerator.Mvc
 {
@@ -25,13 +24,55 @@ namespace EntitiesGenerator.Mvc
     }
 
     // Full
-    public class ItemViewModel : ItemViewModelBase
+    public partial class ItemViewModel : ItemViewModelBase
     {
         [Display(Name = nameof(Module), ResourceType = typeof(DisplayNames))]
         public ModuleLiteViewModel Module { get; set; }
 
         [Display(Name = nameof(FeatureSettings), ResourceType = typeof(DisplayNames))]
         public ICollection<FeatureSettingBaseViewModel> FeatureSettings { get; set; }
+    }
+
+    // Customization
+    partial class ItemViewModel
+    {
+        public EntityFeatureSettingViewModel EntityFeatureSetting { get; set; }
+    
+        public TimeTrackedEntityFeatureSettingViewModel TimeTrackedEntityFeatureSetting { get; set; }
+
+        public void CollectFeatureSettings()
+        {
+            FeatureSettings = new List<FeatureSettingBaseViewModel>();
+
+            if (EntityFeatureSetting != null)
+            {
+                FeatureSettings.Add(EntityFeatureSetting);
+            }
+
+            if (TimeTrackedEntityFeatureSetting != null)
+            {
+                FeatureSettings.Add(TimeTrackedEntityFeatureSetting);
+            }
+        }
+
+        public void DistributeFeatureSettings()
+        {
+            foreach (var setting in FeatureSettings)
+            {
+                if (setting is EntityFeatureSettingViewModel)
+                {
+                    EntityFeatureSetting = (EntityFeatureSettingViewModel)setting;
+                }
+                else if (setting is TimeTrackedEntityFeatureSettingViewModel)
+                {
+                    TimeTrackedEntityFeatureSetting = (TimeTrackedEntityFeatureSettingViewModel)setting;
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+            }
+        }
     }
 
     // Lite

@@ -9,13 +9,13 @@
         <extension point="toolbar">
             <div class="btn-toolbar justify-content-md-end mb-3 mb-md-0">
                 <div class="btn-group">
-                    <a class="btn btn-sm btn-outline-primary"
-                       href="javascript:void(0)"
-                       title="Save to Disk"
-                       v-bind:disabled="freezed"
-                       @click="saveToDisk">
+                    <button class="btn btn-sm btn-outline-primary"
+                            href="javascript:void(0)"
+                            title="Save to Disk"
+                            v-bind:disabled="freezed"
+                            @click="saveToDisk">
                         <font-awesome-icon :icon="['fal', 'download']" fixed-width></font-awesome-icon>
-                    </a>
+                    </button>
                 </div>
             </div>
         </extension>
@@ -207,6 +207,7 @@
                 solutionStructure: structure
             }
 
+            this.vm.freezed = true;
             axios
                 .post(this.vm.saveGeneratedProjectUrl, data)
                 .then(response => {
@@ -220,9 +221,11 @@
                     } else {
                         this.showError('There is error saving Project.');
                     }
+                    this.vm.freezed = false;
                 })
                 .catch(error => {
                     this.showError('There is error saving Project.', error);
+                    this.vm.freezed = false;
                 });
 
             function getNode(node) {

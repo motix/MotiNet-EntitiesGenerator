@@ -147,6 +147,7 @@ export default class SolutionStructureGenerator {
     static generate_CoreProject_Structure(module) {
         const projectName = ContentHelper.get_CoreProject_Name(module);
         const moduleName = ContentHelper.getModuleName(module);
+        const validationRequired = ContentHelper.moduleValidationRequired(module);
         const entitiesFolder = this.generate_CoreProject_EntitiesFolder_Structure(module);
 
         const projectFolder = {
@@ -160,7 +161,12 @@ export default class SolutionStructureGenerator {
                     name: projectName + '.csproj',
                     generator: new ContentGenerators.CoreProject_ProjectFileGenerator(module)
                 },
-                entitiesFolder,
+                entitiesFolder
+            ]
+        };
+
+        if (validationRequired) {
+            projectFolder.children.push(
                 {
                     type: 'file',
                     name: moduleName + 'ErrorDescriber.cs',
@@ -181,25 +187,28 @@ export default class SolutionStructureGenerator {
                             generator: new ContentGenerators.CoreProject_ErrorDescriberResourcesResxGenerator(module)
                         }
                     ]
-                },
-                {
-                    type: 'file',
-                    name: moduleName + 'Builder.cs',
-                    generator: new ContentGenerators.CoreProject_BuilderClassGenerator(module)
-                },
-                {
-                    type: 'folder',
-                    name: 'DependencyInjection',
-                    children: [
-                        {
-                            type: 'file',
-                            name: moduleName + 'ServiceCollectionExtensions.cs',
-                            generator: new ContentGenerators.CoreProject_DependencyInjectionClassGenerator(module)
-                        }
-                    ]
                 }
-            ]
-        };
+            );
+        }
+
+        projectFolder.children.push(
+            {
+                type: 'file',
+                name: moduleName + 'Builder.cs',
+                generator: new ContentGenerators.CoreProject_BuilderClassGenerator(module)
+            },
+            {
+                type: 'folder',
+                name: 'DependencyInjection',
+                children: [
+                    {
+                        type: 'file',
+                        name: moduleName + 'ServiceCollectionExtensions.cs',
+                        generator: new ContentGenerators.CoreProject_DependencyInjectionClassGenerator(module)
+                    }
+                ]
+            }
+        );
 
         return projectFolder;
     }
@@ -212,6 +221,8 @@ export default class SolutionStructureGenerator {
         };
 
         for (const item of module.items) {
+            const validationRequired = ContentHelper.itemValidationRequired(item);
+
             const itemFolder = {
                 type: 'folder',
                 name: '_' + item.name,
@@ -235,14 +246,17 @@ export default class SolutionStructureGenerator {
                         type: 'file',
                         name: item.name + 'Manager.cs',
                         generator: new ContentGenerators.CoreProject_EntityManagerClassGenerator(item)
-                    },
-                    {
-                        type: 'file',
-                        name: item.name + 'Validator.cs',
-                        generator: new ContentGenerators.CoreProject_EntityValidatorClassGenerator(item)
                     }
                 ]
             };
+
+            if (validationRequired) {
+                itemFolder.children.push({
+                    type: 'file',
+                    name: item.name + 'Validator.cs',
+                    generator: new ContentGenerators.CoreProject_EntityValidatorClassGenerator(item)
+                });
+            }
 
             folder.children.push(itemFolder);
         }

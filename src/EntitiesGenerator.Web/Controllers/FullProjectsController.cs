@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EntitiesGenerator.Mvc;
 using EntitiesGenerator.Web.ViewModels.Building;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using MotiNet.Entities;
 using MotiNet.Entities.Mvc.Controllers;
@@ -53,6 +54,36 @@ namespace EntitiesGenerator.Web.Controllers
             return true;
         }
 
+        protected override Expression<Func<Project, object>> EntityIdExpression => x => x.Id;
+
+        protected override void EntitySpecificationAction(IFindSpecification<Project> specification)
+            => specification.AddInclude($"{nameof(Project.Modules)}.{nameof(Module.Items)}.{nameof(Item.FeatureSettings)}");
+
+        protected override IEnumerable<Project> SortEntities(IEnumerable<Project> projects)
+            => projects.OrderBy(x => x.Name);
+
+        protected override void ProcessViewModelForGet(ProjectViewModel viewModel, Project model)
+        {
+            viewModel.Modules = null;
+            viewModel.FullModules = Mapper.Map<List<ModuleViewModel>>(model.OrderedModules);
+            foreach (var moduleViewModel in viewModel.FullModules)
+            {
+                moduleViewModel.Project = null;
+                moduleViewModel.Items = null;
+                moduleViewModel.FullItems = Mapper.Map<List<ItemViewModel>>(model.Modules.Single(x => x.Id == moduleViewModel.Id).OrderedItems);
+                foreach (var itemViewModel in moduleViewModel.FullItems)
+                {
+                    itemViewModel.Module = null;
+                    itemViewModel.DistributeFeatureSettings();
+                    foreach(var setting in itemViewModel.FeatureSettings)
+                    {
+                        setting.Item = null;
+                    }
+                    itemViewModel.FeatureSettings = null;
+                }
+            }
+        }
+
         private void SaveNode(FileFolderViewModel node, string path)
         {
             path = Path.Combine(path, node.Name);
@@ -71,30 +102,6 @@ namespace EntitiesGenerator.Web.Controllers
                 foreach (var child in node.Children)
                 {
                     SaveNode(child, path);
-                }
-            }
-        }
-
-        protected override Expression<Func<Project, object>> EntityIdExpression => x => x.Id;
-
-        protected override void EntitySpecificationAction(IFindSpecification<Project> specification)
-            => specification.AddInclude($"{nameof(Project.Modules)}.{nameof(Module.Items)}");
-
-        protected override IEnumerable<Project> SortEntities(IEnumerable<Project> projects)
-            => projects.OrderBy(x => x.Name);
-
-        protected override void ProcessViewModelForGet(ProjectViewModel viewModel, Project model)
-        {
-            viewModel.Modules = null;
-            viewModel.FullModules = Mapper.Map<List<ModuleViewModel>>(model.OrderedModules);
-            foreach (var moduleViewModel in viewModel.FullModules)
-            {
-                moduleViewModel.Project = null;
-                moduleViewModel.Items = null;
-                moduleViewModel.FullItems = Mapper.Map<List<ItemViewModel>>(model.Modules.Single(x => x.Id == moduleViewModel.Id).OrderedItems);
-                foreach (var itemViewModel in moduleViewModel.FullItems)
-                {
-                    itemViewModel.Module = null;
                 }
             }
         }

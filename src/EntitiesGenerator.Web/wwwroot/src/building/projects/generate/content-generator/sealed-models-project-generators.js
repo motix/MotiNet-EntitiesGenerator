@@ -1,7 +1,34 @@
 ﻿import 'prismjs/components/prism-csharp';
 import ContentHelper from '../content-helper';
 
-import { CSharpContentGenerator } from './content-generator';
+import { CSharpContentGenerator, ProjectFileGenerator} from './content-generator';
+
+export class SealedModelsProject_ProjectFileGenerator extends ProjectFileGenerator {
+    generate() {
+        const moduleNamespace = ContentHelper.getModuleNamespace(this.module);
+        const coreProjectName = ContentHelper.get_CoreProject_Name(this.module);
+
+        var content = `<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>${moduleNamespace}</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MotiNet.ComponentModel.Annotations" Version="${ContentHelper.MotiNetCoreVersion}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\\${coreProjectName}\\${coreProjectName}.csproj" />
+  </ItemGroup>
+
+</Project>
+`;
+
+        return content;
+    }
+}
 
 export class SealedModelsProject_EntityClassGenerator extends CSharpContentGenerator {
     constructor(item) {

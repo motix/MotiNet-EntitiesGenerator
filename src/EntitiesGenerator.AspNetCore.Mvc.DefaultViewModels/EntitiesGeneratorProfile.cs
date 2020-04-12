@@ -24,7 +24,8 @@ namespace EntitiesGenerator.Mvc
 
             CreateMap(builder.FeatureSettingType, typeof(FeatureSettingBaseViewModel))
                 .IncludeAllDerived()
-                .ReverseMap();
+                .ReverseMap()
+                .IncludeAllDerived();
             CreateMap(builder.DomainSpecificTypes[nameof(EntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
                       typeof(EntityFeatureSettingViewModel))
                 .ReverseMap();

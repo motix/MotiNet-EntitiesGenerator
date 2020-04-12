@@ -131,4 +131,21 @@
 
         return content;
     }
+
+    static moduleValidationRequired(module) {
+        for (const item of module.items) {
+            if (ContentHelper.itemValidationRequired(item)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    static itemValidationRequired(item) {
+        return null !==
+            (item.codeBasedEntityFeatureSetting ||
+                item.NameBasedEntityFeatureSetting ||
+                item.ScopedNameBasedEntityFeatureSetting);
+    }
 }

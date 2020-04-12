@@ -7,10 +7,12 @@
     MvcHelper.SetActiveSubMenuItem(ViewData, "Projects");
 
     var emptyItem = new ItemViewModel();
+    var emptyEntityFeatureSetting = new EntityFeatureSettingViewModel();
 
     displayNameCollector.Collect(x => emptyItem.Position, Html)
                         .Collect(x => emptyItem.Name, Html)
-                        .Collect(x => emptyItem.Module, Html);
+                        .Collect(x => emptyItem.Module, Html)
+                        .Collect(x => emptyEntityFeatureSetting.ParameterListLineBreak, Html);
 }
 
 @section Head {

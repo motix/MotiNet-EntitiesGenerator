@@ -169,6 +169,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parameter List Line Break.
+        /// </summary>
+        public static string ParameterListLineBreak {
+            get {
+                return ResourceManager.GetString("ParameterListLineBreak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Position.
         /// </summary>
         public static string Position {

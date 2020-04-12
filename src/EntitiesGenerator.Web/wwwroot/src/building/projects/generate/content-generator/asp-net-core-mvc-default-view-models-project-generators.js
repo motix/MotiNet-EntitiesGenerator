@@ -1,7 +1,51 @@
 ﻿import 'prismjs/components/prism-csharp';
 import ContentHelper from '../content-helper';
 
-import { ContentGenerator, CSharpContentGenerator } from './content-generator';
+import { ContentGenerator, CSharpContentGenerator, ProjectFileGenerator } from './content-generator';
+
+export class AspNetCoreMvcDefaultViewModelsProject_ProjectFileGenerator extends ProjectFileGenerator {
+    generate() {
+        const moduleNamespace = ContentHelper.getModuleNamespace(this.module);
+        const coreProjectName = ContentHelper.get_CoreProject_Name(this.module);
+
+        var content = `<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>${moduleNamespace}.Mvc</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="MotiNet.ComponentModel.Annotations" Version="${ContentHelper.MotiNetCoreVersion}" />
+    <PackageReference Include="MotiNet.Extensions.AutoMapper" Version="${ContentHelper.MotiNetCoreVersion}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\\${coreProjectName}\\${coreProjectName}.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DisplayNames.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DisplayNames.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="DisplayNames.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DisplayNames.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
+`;
+
+        return content;
+    }
+}
 
 export class AspNetCoreMvcDefaultViewModelsProject_EntityViewModelsClassGenerator extends CSharpContentGenerator {
     constructor(item) {

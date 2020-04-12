@@ -1,7 +1,36 @@
 ﻿import 'prismjs/components/prism-csharp';
 import ContentHelper from '../content-helper';
 
-import { CSharpContentGenerator } from './content-generator';
+import { CSharpContentGenerator, ProjectFileGenerator} from './content-generator';
+
+export class EntityFrameworkCoreSealedModelsProject_ProjectFileGenerator extends ProjectFileGenerator {
+    generate() {
+        const moduleNamespace = ContentHelper.getModuleNamespace(this.module);
+        const entityFrameworkCoreProjectName = ContentHelper.get_EntityFrameworkCoreProject_Name(this.module);
+        const sealedModelsProjectName = ContentHelper.get_SealedModelsProject_Name(this.module);
+
+        var content = `<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>${moduleNamespace}.EntityFrameworkCore</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MotiNet.Extensions.Entities.EntityFrameworkCore" Version="${ContentHelper.MotiNetEntitiesVersion}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\\${entityFrameworkCoreProjectName}\\${entityFrameworkCoreProjectName}.csproj" />
+    <ProjectReference Include="..\\${sealedModelsProjectName}\\${sealedModelsProjectName}.csproj" />
+  </ItemGroup>
+
+</Project>
+`;
+
+        return content;
+    }
+}
 
 export class EntityFrameworkCoreSealedModelsProject_DbContextClassGenerator extends CSharpContentGenerator {
     constructor(module) {

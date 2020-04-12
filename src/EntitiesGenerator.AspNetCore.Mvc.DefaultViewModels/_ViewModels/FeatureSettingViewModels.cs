@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntitiesGenerator.Mvc
 {
-    public abstract class FeatureSettingBaseViewModel
+    public abstract partial class FeatureSettingBaseViewModel
     {
         protected FeatureSettingBaseViewModel() => Id = Guid.NewGuid().ToString();
 
@@ -15,9 +15,17 @@ namespace EntitiesGenerator.Mvc
 
         [Display(Name = nameof(Item), ResourceType = typeof(DisplayNames))]
         public ItemLiteViewModel Item { get; set; }
+
+        // Customizations
+
+        public string Type => GetType().Name.Replace("FeatureSettingViewModel", string.Empty);
     }
 
-    public class EntityFeatureSettingViewModel : FeatureSettingBaseViewModel { }
+    public class EntityFeatureSettingViewModel : FeatureSettingBaseViewModel
+    {
+        [Display(Name = nameof(ParameterListLineBreak), ResourceType = typeof(DisplayNames))]
+        public bool ParameterListLineBreak { get; set; }
+    }
 
     public class TimeTrackedEntityFeatureSettingViewModel : FeatureSettingBaseViewModel { }
 }
