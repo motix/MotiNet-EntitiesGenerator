@@ -70,6 +70,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Display Name.
+        /// </summary>
+        public static string DisplayName {
+            get {
+                return ResourceManager.GetString("DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Feature Settings.
         /// </summary>
         public static string FeatureSettings {
@@ -84,6 +93,15 @@ namespace EntitiesGenerator.Mvc {
         public static string GenerateLocation {
             get {
                 return ResourceManager.GetString("GenerateLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Has Code Generator.
+        /// </summary>
+        public static string HasCodeGenerator {
+            get {
+                return ResourceManager.GetString("HasCodeGenerator", resourceCulture);
             }
         }
         
@@ -201,6 +219,15 @@ namespace EntitiesGenerator.Mvc {
         public static string Relationships {
             get {
                 return ResourceManager.GetString("Relationships", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scope Name.
+        /// </summary>
+        public static string ScopeName {
+            get {
+                return ResourceManager.GetString("ScopeName", resourceCulture);
             }
         }
         

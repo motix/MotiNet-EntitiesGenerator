@@ -32,6 +32,24 @@ namespace EntitiesGenerator.Mvc
             CreateMap(builder.DomainSpecificTypes[nameof(TimeTrackedEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
                       typeof(TimeTrackedEntityFeatureSettingViewModel))
                 .ReverseMap();
+            CreateMap(builder.DomainSpecificTypes[nameof(CodeBasedEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
+                      typeof(CodeBasedEntityFeatureSettingViewModel))
+                .ReverseMap();
+            CreateMap(builder.DomainSpecificTypes[nameof(NameBasedEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
+                      typeof(NameBasedEntityFeatureSettingViewModel))
+                .ReverseMap();
+            CreateMap(builder.DomainSpecificTypes[nameof(ScopedNameBasedEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
+                      typeof(ScopedNameBasedEntityFeatureSettingViewModel))
+                .ReverseMap();
+            CreateMap(builder.DomainSpecificTypes[nameof(ReadableIdEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
+                      typeof(ReadableIdEntityFeatureSettingViewModel))
+                .ReverseMap();
+            CreateMap(builder.DomainSpecificTypes[nameof(OnOffEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
+                      typeof(OnOffEntityFeatureSettingViewModel))
+                .ReverseMap();
+            CreateMap(builder.DomainSpecificTypes[nameof(PreprocessedEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
+                      typeof(PreprocessedEntityFeatureSettingViewModel))
+                .ReverseMap();
 
             CreateMap(builder.ItemsRelationshipType, typeof(ItemsRelationshipViewModel))
                 .ReverseMap();

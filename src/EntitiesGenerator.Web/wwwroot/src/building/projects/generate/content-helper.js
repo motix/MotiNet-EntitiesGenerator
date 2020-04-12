@@ -58,7 +58,33 @@
         return ContentHelper.getModuleNamespace(module) + '.Mvc';
     }
 
+    // ScopedNameBasedEntity
+
     // Utilities
+
+    static get featureSettingTypes() {
+        return [
+            'Entity',
+            'TimeTrackedEntity',
+            'CodeBasedEntity',
+            'NameBasedEntity',
+            'ScopedNameBasedEntity',
+            'ReadableIdEntity',
+            'OnOffEntity',
+            'PreprocessedEntity'
+        ];
+    }
+
+    static get featureSettingPropertyNames() {
+        const names = [];
+
+        for (const type of ContentHelper.featureSettingTypes) {
+            const name = type.substr(0, 1).toLowerCase() + type.substr(1, type.length - 1) + 'FeatureSetting';
+            names.push(name);
+        }
+
+        return names;
+    }
 
     static newGuid() {
         return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
@@ -122,8 +148,7 @@
   </resheader>
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-{items}
+  </resheader>{items}
 </root>
 `;
 
@@ -134,7 +159,7 @@
 
     static moduleValidationRequired(module) {
         for (const item of module.items) {
-            if (ContentHelper.itemValidationRequired(item)) {
+            if (ContentHelper.entityValidationRequired(item)) {
                 return true;
             }
         }
@@ -142,10 +167,36 @@
         return false;
     }
 
-    static itemValidationRequired(item) {
+    static entityValidationRequired(item) {
         return null !==
             (item.codeBasedEntityFeatureSetting ||
-                item.NameBasedEntityFeatureSetting ||
-                item.ScopedNameBasedEntityFeatureSetting);
+                item.nameBasedEntityFeatureSetting ||
+                item.scopedNameBasedEntityFeatureSetting);
+    }
+
+    static getEntityGenericParameters(item) {
+        if (item.scopedNameBasedEntityFeatureSetting !== null) {
+            return `<T${item.name}, T${item.scopedNameBasedEntityFeatureSetting.scopeName}>`;
+        }
+
+        return `<T${item.name}>`;
+    }
+
+    static subEntityManaged(item, subEntityName) {
+        for (const otherItem of item.module.items) {
+            if (otherItem !== item && otherItem.name === subEntityName) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    static entityParametersLineBreakApplied(item, breakFirstEntity) {
+        if (item === item.module.items[0]) {
+            return breakFirstEntity;
+        }
+
+        return item.parameterListLineBreak;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace EntitiesGenerator.Mvc
 {
@@ -21,6 +22,13 @@ namespace EntitiesGenerator.Mvc
         [LocalizedRequired]
         [Display(Name = nameof(Name), ResourceType = typeof(DisplayNames))]
         public string Name { get; set; }
+
+        [LocalizedRequired]
+        [Display(Name = nameof(DisplayName), ResourceType = typeof(DisplayNames))]
+        public string DisplayName { get; set; }
+
+        [Display(Name = nameof(ParameterListLineBreak), ResourceType = typeof(DisplayNames))]
+        public bool ParameterListLineBreak { get; set; }
     }
 
     // Full
@@ -37,22 +45,36 @@ namespace EntitiesGenerator.Mvc
     partial class ItemViewModel
     {
         public EntityFeatureSettingViewModel EntityFeatureSetting { get; set; }
-    
+
         public TimeTrackedEntityFeatureSettingViewModel TimeTrackedEntityFeatureSetting { get; set; }
+
+        public CodeBasedEntityFeatureSettingViewModel CodeBasedEntityFeatureSetting { get; set; }
+
+        public NameBasedEntityFeatureSettingViewModel NameBasedEntityFeatureSetting { get; set; }
+
+        public ScopedNameBasedEntityFeatureSettingViewModel ScopedNameBasedEntityFeatureSetting { get; set; }
+
+        public ReadableIdEntityFeatureSettingViewModel ReadableIdEntityFeatureSetting { get; set; }
+
+        public OnOffEntityFeatureSettingViewModel OnOffEntityFeatureSetting { get; set; }
+
+        public PreprocessedEntityFeatureSettingViewModel PreprocessedEntityFeatureSetting { get; set; }
 
         public void CollectFeatureSettings()
         {
-            FeatureSettings = new List<FeatureSettingBaseViewModel>();
-
-            if (EntityFeatureSetting != null)
+            FeatureSettings = new List<FeatureSettingBaseViewModel>
             {
-                FeatureSettings.Add(EntityFeatureSetting);
-            }
+                EntityFeatureSetting,
+                TimeTrackedEntityFeatureSetting,
+                CodeBasedEntityFeatureSetting,
+                NameBasedEntityFeatureSetting,
+                ScopedNameBasedEntityFeatureSetting,
+                ReadableIdEntityFeatureSetting,
+                OnOffEntityFeatureSetting,
+                PreprocessedEntityFeatureSetting
+            };
 
-            if (TimeTrackedEntityFeatureSetting != null)
-            {
-                FeatureSettings.Add(TimeTrackedEntityFeatureSetting);
-            }
+            FeatureSettings = FeatureSettings.Where(x => x != null).ToList();
         }
 
         public void DistributeFeatureSettings()
@@ -66,6 +88,30 @@ namespace EntitiesGenerator.Mvc
                 else if (setting is TimeTrackedEntityFeatureSettingViewModel)
                 {
                     TimeTrackedEntityFeatureSetting = (TimeTrackedEntityFeatureSettingViewModel)setting;
+                }
+                else if (setting is CodeBasedEntityFeatureSettingViewModel)
+                {
+                    CodeBasedEntityFeatureSetting = (CodeBasedEntityFeatureSettingViewModel)setting;
+                }
+                else if (setting is NameBasedEntityFeatureSettingViewModel)
+                {
+                    NameBasedEntityFeatureSetting = (NameBasedEntityFeatureSettingViewModel)setting;
+                }
+                else if (setting is ScopedNameBasedEntityFeatureSettingViewModel)
+                {
+                    ScopedNameBasedEntityFeatureSetting = (ScopedNameBasedEntityFeatureSettingViewModel)setting;
+                }
+                else if (setting is ReadableIdEntityFeatureSettingViewModel)
+                {
+                    ReadableIdEntityFeatureSetting = (ReadableIdEntityFeatureSettingViewModel)setting;
+                }
+                else if (setting is OnOffEntityFeatureSettingViewModel)
+                {
+                    OnOffEntityFeatureSetting = (OnOffEntityFeatureSettingViewModel)setting;
+                }
+                else if (setting is PreprocessedEntityFeatureSettingViewModel)
+                {
+                    PreprocessedEntityFeatureSetting = (PreprocessedEntityFeatureSettingViewModel)setting;
                 }
                 else
                 {

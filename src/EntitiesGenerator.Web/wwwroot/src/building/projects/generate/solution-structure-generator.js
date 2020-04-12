@@ -221,7 +221,7 @@ export default class SolutionStructureGenerator {
         };
 
         for (const item of module.items) {
-            const validationRequired = ContentHelper.itemValidationRequired(item);
+            const validationRequired = ContentHelper.entityValidationRequired(item);
 
             const itemFolder = {
                 type: 'folder',

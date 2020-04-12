@@ -13,6 +13,12 @@ namespace EntitiesGenerator.EntityFrameworkCore
     {
         public DbSet<EntityFeatureSetting> EntityFeatureSettings { get; set; }
         public DbSet<TimeTrackedEntityFeatureSetting> TimeTrackedEntityFeatureSettings { get; set; }
+        public DbSet<CodeBasedEntityFeatureSetting> CodeBasedEntityFeatureSettings { get; set; }
+        public DbSet<NameBasedEntityFeatureSetting> NameBasedEntityFeatureSettings { get; set; }
+        public DbSet<ScopedNameBasedEntityFeatureSetting> ScopedNameBasedEntityFeatureSettings { get; set; }
+        public DbSet<ReadableIdEntityFeatureSetting> ReadableIdEntityFeatureSettings { get; set; }
+        public DbSet<OnOffEntityFeatureSetting> OnOffEntityFeatureSettings { get; set; }
+        public DbSet<PreprocessedEntityFeatureSetting> PreprocessedEntityFeatureSettings { get; set; }
 
         protected EntitiesGeneratorDbContextBase(DbContextOptions options) : base(options) { }
 

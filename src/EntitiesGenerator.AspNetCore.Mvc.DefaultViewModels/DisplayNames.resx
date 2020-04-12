@@ -120,11 +120,17 @@
   <data name="Active" xml:space="preserve">
     <value>Active</value>
   </data>
+  <data name="DisplayName" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
   <data name="FeatureSettings" xml:space="preserve">
     <value>Feature Settings</value>
   </data>
   <data name="GenerateLocation" xml:space="preserve">
     <value>Generate Location</value>
+  </data>
+  <data name="HasCodeGenerator" xml:space="preserve">
+    <value>Has Code Generator</value>
   </data>
   <data name="HasOwnNamespace" xml:space="preserve">
     <value>Has Own Namespace</value>
@@ -164,6 +170,9 @@
   </data>
   <data name="Relationships" xml:space="preserve">
     <value>Relationships</value>
+  </data>
+  <data name="ScopeName" xml:space="preserve">
+    <value>Scope Name</value>
   </data>
   <data name="WorkingLocation" xml:space="preserve">
     <value>Working Location</value>

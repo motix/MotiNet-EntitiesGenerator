@@ -20,12 +20,4 @@ namespace EntitiesGenerator.Mvc
 
         public string Type => GetType().Name.Replace("FeatureSettingViewModel", string.Empty);
     }
-
-    public class EntityFeatureSettingViewModel : FeatureSettingBaseViewModel
-    {
-        [Display(Name = nameof(ParameterListLineBreak), ResourceType = typeof(DisplayNames))]
-        public bool ParameterListLineBreak { get; set; }
-    }
-
-    public class TimeTrackedEntityFeatureSettingViewModel : FeatureSettingBaseViewModel { }
 }

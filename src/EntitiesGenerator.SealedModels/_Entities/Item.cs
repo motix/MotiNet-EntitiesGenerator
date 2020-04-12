@@ -28,6 +28,12 @@ namespace EntitiesGenerator
         [Required]
         [StringLength(StringLengths.TitleContent)]
         public string NormalizedName { get; set; }
+
+        [Required]
+        [StringLength(StringLengths.TitleContent)]
+        public string DisplayName { get; set; }
+
+        public bool ParameterListLineBreak { get; set; }
     }
 
     // Relationships

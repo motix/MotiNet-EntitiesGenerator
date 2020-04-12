@@ -3,14 +3,16 @@ using EntitiesGenerator.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EntitiesGenerator.Web.Data.Migrations
 {
     [DbContext(typeof(EntitiesGeneratorDbContext))]
-    partial class EntitiesGeneratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200412120655_HasCodeGenerator")]
+    partial class HasCodeGenerator
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,11 +51,6 @@ namespace EntitiesGenerator.Web.Data.Migrations
                         .HasColumnType("nvarchar(36)")
                         .HasMaxLength(36);
 
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
                     b.Property<string>("ModuleId")
                         .IsRequired()
                         .HasColumnType("nvarchar(36)")
@@ -68,9 +65,6 @@ namespace EntitiesGenerator.Web.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
-
-                    b.Property<bool>("ParameterListLineBreak")
-                        .HasColumnType("bit");
 
                     b.Property<int>("Position")
                         .HasColumnType("int");
@@ -202,6 +196,9 @@ namespace EntitiesGenerator.Web.Data.Migrations
             modelBuilder.Entity("EntitiesGenerator.EntityFeatureSetting", b =>
                 {
                     b.HasBaseType("EntitiesGenerator.FeatureSettingBase");
+
+                    b.Property<bool>("ParameterListLineBreak")
+                        .HasColumnType("bit");
 
                     b.HasDiscriminator().HasValue("EntityFeatureSetting");
                 });

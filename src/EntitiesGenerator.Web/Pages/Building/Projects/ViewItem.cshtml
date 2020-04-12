@@ -6,13 +6,17 @@
     ViewData["Title"] = Model.Entity.Name;
     MvcHelper.SetActiveSubMenuItem(ViewData, "Projects");
 
-    var emptyEntityFeatureSetting = new EntityFeatureSettingViewModel();
+    var emptyCodeBasedEntityFeatureSetting = new CodeBasedEntityFeatureSetting();
+    var emptyScopedNameBasedEntityFeatureSetting = new ScopedNameBasedEntityFeatureSettingViewModel();
 
     displayNameCollector.Collect(x => Model.Entity.Position, Html)
                         .Collect(x => Model.Entity.Name, Html)
+                        .Collect(x => Model.Entity.DisplayName, Html)
+                        .Collect(x => Model.Entity.ParameterListLineBreak, Html)
                         .Collect(x => Model.Entity.Module, Html)
                         .Collect(x => Model.Entity.FeatureSettings, Html)
-                        .Collect(x => emptyEntityFeatureSetting.ParameterListLineBreak, Html);
+                        .Collect(x => emptyCodeBasedEntityFeatureSetting.HasCodeGenerator, Html)
+                        .Collect(x => emptyScopedNameBasedEntityFeatureSetting.ScopeName, Html);
 }
 
 @section Head {
