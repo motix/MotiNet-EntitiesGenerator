@@ -1,4 +1,5 @@
-﻿import 'prismjs/components/prism-csharp';
+﻿import pluralize from 'pluralize';
+import 'prismjs/components/prism-csharp';
 import ContentHelper from '../content-helper';
 
 import { CSharpContentGenerator, ProjectFileGenerator } from './content-generator';
@@ -106,12 +107,75 @@ export class SealedModelsProject_EntityClassGenerator extends CSharpContentGener
             relationshipsProperties = relationshipsProperties.substr(1);
         }
 
-        var content = `using System.ComponentModel.DataAnnotations;
+        var content = `using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ${namespace}
 {
     // Entity
     public sealed partial class ${entityName}
+    {${entityProperties}
+    }
+
+    // Relationships
+    partial class ${entityName}
+    {${relationshipsProperties}
+    }
+}
+`;
+
+        return content;
+    }
+}
+
+export class SealedModelsProject_SubEntityClassGenerator extends CSharpContentGenerator {
+    constructor(item) {
+        super();
+
+        this.item = item;
+    }
+
+    generate() {
+        const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
+        const entityName = this.item.name;
+
+        var subEntityName;
+        var entityProperties = '';
+        var relationshipsProperties = '';
+
+        if (this.item.codeBasedEntityFeatureSetting !== null) {
+            subEntityName = this.item.scopedNameBasedEntityFeatureSetting.scopeName;
+            const pluralEntityName = pluralize(entityName);
+
+            entityProperties += `
+
+        [StringLength(StringLengths.Guid)]
+        public string Id { get; set; }`;
+
+            relationshipsProperties += `
+
+        public ICollection<${entityName}> ${pluralEntityName} { get; set; }`;
+        } else {
+            throw 'Unsupported feature when generating sub-entity class.'
+        }
+
+        if (entityProperties !== '') {
+            entityProperties = entityProperties.substr(1);
+        }
+
+        if (relationshipsProperties !== '') {
+            relationshipsProperties = relationshipsProperties.substr(1);
+        }
+
+        var content = `using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace ${namespace}
+{
+    // Entity
+    public sealed partial class ${subEntityName}
     {${entityProperties}
     }
 
@@ -136,6 +200,7 @@ export class SealedModelsProject_EntityAccessorClassGenerator extends CSharpCont
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
+        const genericParameters = ContentHelper.getEntitySpecificGenericParameters(this.item);
         const lowerCaseEntityName = ContentHelper.getLowerCaseEntityName(entityName);
 
         var methods = '';
@@ -192,14 +257,37 @@ export class SealedModelsProject_EntityAccessorClassGenerator extends CSharpCont
         public void SetScope(${entityName} ${lowerCaseEntityName}, ${scopeName} ${lowerCaseScopeName}) => ${lowerCaseEntityName}.${scopeName} = ${lowerCaseScopeName};`;
         }
 
+        if (this.item.readableIdEntityFeatureSetting !== null) {
+            if (this.item.codeBasedEntityFeatureSetting !== null) {
+                methods += `
+
+        public object GetIdSource(${entityName} ${lowerCaseEntityName}) => ${lowerCaseEntityName}.Code;`;
+            } else if (this.item.nameBasedEntityFeatureSetting !== null ||
+                this.item.scopedNameBasedEntityFeatureSetting !== null) {
+                methods += `
+
+        public object GetIdSource(${entityName} ${lowerCaseEntityName}) => ${lowerCaseEntityName}.Name;`;
+            } else {
+                methods += `
+
+        // TODO:: Implement
+        public object GetIdSource(${entityName} ${lowerCaseEntityName}) => throw new NotImplementedException();`;
+            }
+            methods += `
+
+        public void SetId(${entityName} ${lowerCaseEntityName}, string id) => ${lowerCaseEntityName}.Id = id;`;
+        }
+
         if (methods !== '') {
             methods = methods.substr(1);
         }
 
 
-        var content = `namespace ${namespace}
+        var content = `using System;
+
+namespace ${namespace}
 {
-    public class ${entityName}Accessor : I${entityName}Accessor<${entityName}>
+    public class ${entityName}Accessor : I${entityName}Accessor${genericParameters}
     {${methods}
     }
 }
@@ -231,6 +319,14 @@ export class SealedModelsProject_DependencyInjectionClassGenerator extends CShar
             const makeGenericTypeParameterList = ContentHelper.getMakeGenericTypeParameterList(item);
 
             moduleGenericParameters += `${moduleGenericParametersLineBreak}${entityName},`;
+
+            if (item.scopedNameBasedEntityFeatureSetting !== null) {
+                const scopeName = item.scopedNameBasedEntityFeatureSetting.scopeName;
+
+                if (!ContentHelper.subEntityManaged(item, scopeName)) {
+                    moduleGenericParameters += ` ${scopeName},`;
+                }
+            }
 
             registrations += `
             services.TryAddScoped(

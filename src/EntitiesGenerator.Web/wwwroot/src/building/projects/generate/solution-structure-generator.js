@@ -223,7 +223,7 @@ export default class SolutionStructureGenerator {
         for (const item of module.items) {
             const validationRequired = ContentHelper.entityValidationRequired(item);
 
-            const itemFolder = {
+            const entityFolder = {
                 type: 'folder',
                 name: '_' + item.name,
                 children: [
@@ -251,14 +251,14 @@ export default class SolutionStructureGenerator {
             };
 
             if (validationRequired) {
-                itemFolder.children.push({
+                entityFolder.children.push({
                     type: 'file',
                     name: item.name + 'Validator.cs',
                     generator: new ContentGenerators.CoreProject_EntityValidatorClassGenerator(item)
                 });
             }
 
-            folder.children.push(itemFolder);
+            folder.children.push(entityFolder);
         }
 
         return folder;
@@ -310,13 +310,23 @@ export default class SolutionStructureGenerator {
         };
 
         for (const item of module.items) {
-            const itemFolder = {
+            folder.children.push({
                 type: 'file',
                 name: item.name + '.cs',
                 generator: new ContentGenerators.SealedModelsProject_EntityClassGenerator(item)
-            };
+            });
 
-            folder.children.push(itemFolder);
+            if (item.scopedNameBasedEntityFeatureSetting !== null) {
+                const subEntityName = item.scopedNameBasedEntityFeatureSetting.scopeName;
+
+                if (!ContentHelper.subEntityManaged(item, subEntityName)) {
+                    folder.children.push({
+                        type: 'file',
+                        name: subEntityName + '.cs',
+                        generator: new ContentGenerators.SealedModelsProject_SubEntityClassGenerator(item)
+                    });
+                }
+            }
         }
 
         return folder;
@@ -330,13 +340,11 @@ export default class SolutionStructureGenerator {
         };
 
         for (const item of module.items) {
-            const itemFolder = {
+            folder.children.push({
                 type: 'file',
                 name: item.name + 'Accessor.cs',
                 generator: new ContentGenerators.SealedModelsProject_EntityAccessorClassGenerator(item)
-            };
-
-            folder.children.push(itemFolder);
+            });
         }
 
         return folder;
@@ -419,13 +427,11 @@ export default class SolutionStructureGenerator {
         };
 
         for (const item of module.items) {
-            const itemFolder = {
+            folder.children.push({
                 type: 'file',
                 name: item.name + 'Store.cs',
                 generator: new ContentGenerators.EntityFrameworkCoreSealedModelsProject_EntityStoreClassGenerator(item)
-            };
-
-            folder.children.push(itemFolder);
+            });
         }
 
         return folder;
@@ -475,13 +481,11 @@ export default class SolutionStructureGenerator {
         };
 
         for (const item of module.items) {
-            const itemFolder = {
+            folder.children.push({
                 type: 'file',
                 name: 'AspNet' + item.name + 'Manager.cs',
                 generator: new ContentGenerators.AspNetCoreProject_EntityManagerClassGenerator(item)
-            };
-
-            folder.children.push(itemFolder);
+            });
         }
 
         return folder;
@@ -541,13 +545,11 @@ export default class SolutionStructureGenerator {
         };
 
         for (const item of module.items) {
-            const itemFolder = {
+            folder.children.push({
                 type: 'file',
                 name: item.name + 'ViewModels.cs',
                 generator: new ContentGenerators.AspNetCoreMvcDefaultViewModelsProject_EntityViewModelsClassGenerator(item)
-            };
-
-            folder.children.push(itemFolder);
+            });
         }
 
         return folder;

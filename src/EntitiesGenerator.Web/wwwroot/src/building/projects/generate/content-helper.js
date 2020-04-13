@@ -190,6 +190,14 @@
         return `<T${item.name}>`;
     }
 
+    static getEntitySpecificGenericParameters(item) {
+        if (item.scopedNameBasedEntityFeatureSetting !== null) {
+            return `<${item.name}, ${item.scopedNameBasedEntityFeatureSetting.scopeName}>`;
+        }
+
+        return `<${item.name}>`;
+    }
+
     static getMakeGenericTypeParameterList(item) {
         if (item.scopedNameBasedEntityFeatureSetting !== null) {
             return `builder.${item.name}Type, builder.${item.scopedNameBasedEntityFeatureSetting.scopeName}Type`;
