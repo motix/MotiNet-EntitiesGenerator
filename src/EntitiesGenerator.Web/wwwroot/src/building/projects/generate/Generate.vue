@@ -44,8 +44,9 @@
                         <div>
                             <small class="text-muted"><i v-html="selectedNodePath"></i></small>
                         </div>
-                        <prism :language="selectedNode.generator.language"
-                               v-if="selectedNodeContentAvailable">{{selectedNode.generator.generate()}}</prism>
+                        <small v-if="selectedNodeContentAvailable">
+                            <prism :language="selectedNode.generator.language">{{selectedNode.generator.generate()}}</prism>
+                        </small>
                         <div class="text-muted" v-else>
                             <i>Content not available for this item.</i>
                         </div>
