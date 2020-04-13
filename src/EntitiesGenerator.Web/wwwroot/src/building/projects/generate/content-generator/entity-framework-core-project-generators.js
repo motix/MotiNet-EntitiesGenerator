@@ -33,9 +33,8 @@ export class EntityFrameworkCoreProject_DbContextClassGenerator extends CSharpCo
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleName = ContentHelper.getModuleName(this.module);
-        const moduleGenericParametersWhiteSpace = `                                        ` + ContentHelper.generateWhiteSpace(moduleName.length);
-        const moduleGenericParametersLastLineBreak = this.module.items.length === 0 ? '' : `
-${moduleGenericParametersWhiteSpace}`;
+        const moduleGenericParametersWhiteSpace = '                                        ' + ContentHelper.generateWhiteSpace(moduleName.length);
+        const moduleGenericParametersLastLineBreak = this.module.items.length === 0 ? '' : '\n' + moduleGenericParametersWhiteSpace;
 
         var moduleGenericParameters = '';
         var moduleGenericParameterSpecifications = '';
@@ -46,8 +45,8 @@ ${moduleGenericParametersWhiteSpace}`;
         for (const item of this.module.items) {
             const entityName = item.name;
             const pluralEntityName = pluralize(entityName);
-            const moduleGenericParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, false) ? `
-${moduleGenericParametersWhiteSpace}` : (item === this.module.items[0] ? '' : ' ');
+            const moduleGenericParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, false) ?
+                '\n' + moduleGenericParametersWhiteSpace : (item === this.module.items[0] ? '' : ' ');
 
             moduleGenericParameters += `${moduleGenericParametersLineBreak}T${entityName},`;
 

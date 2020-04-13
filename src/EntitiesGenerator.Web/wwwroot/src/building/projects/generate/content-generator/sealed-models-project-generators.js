@@ -42,10 +42,17 @@ export class SealedModelsProject_EntityClassGenerator extends CSharpContentGener
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
 
+        var interfaces = '';
         var entityProperties = '';
         var relationshipsProperties = '';
 
-        if (this.item.entityFeatureSetting !== null ||
+        if (ContentHelper.entityIdWiseRequired) {
+            interfaces += `
+          IIdWiseEntity<string>,`;
+        }
+
+        if (ContentHelper.entityIdWiseRequired ||
+            this.item.entityFeatureSetting !== null ||
             this.item.codeBasedEntityFeatureSetting !== null ||
             this.item.nameBasedEntityFeatureSetting !== null ||
             this.item.scopedNameBasedEntityFeatureSetting !== null ||
@@ -57,6 +64,9 @@ export class SealedModelsProject_EntityClassGenerator extends CSharpContentGener
         }
 
         if (this.item.timeTrackedEntityFeatureSetting !== null) {
+            interfaces += `
+          ITimeWiseEntity,`;
+
             entityProperties += `
 
         public DateTime DataCreateDate { get; set; }
@@ -65,6 +75,9 @@ export class SealedModelsProject_EntityClassGenerator extends CSharpContentGener
         }
 
         if (this.item.codeBasedEntityFeatureSetting !== null) {
+            interfaces += `
+          ICodeWiseEntity,`;
+
             entityProperties += `
 
         [Required]
@@ -74,6 +87,9 @@ export class SealedModelsProject_EntityClassGenerator extends CSharpContentGener
 
         if (this.item.nameBasedEntityFeatureSetting !== null ||
             this.item.scopedNameBasedEntityFeatureSetting !== null) {
+            interfaces += `
+          INameWiseEntity,`;
+
             entityProperties += `
 
         [Required]
@@ -99,6 +115,15 @@ export class SealedModelsProject_EntityClassGenerator extends CSharpContentGener
         public ${scopeName} ${scopeName} { get; set; }`;
         }
 
+        if (this.item.onOffEntityFeatureSetting !== null) {
+            interfaces += `
+          IIsActiveWiseEntity,`;
+
+            entityProperties += `
+
+        public bool IsActive { get; set; }`;
+        }
+
         if (entityProperties !== '') {
             entityProperties = entityProperties.substr(1);
         }
@@ -107,14 +132,20 @@ export class SealedModelsProject_EntityClassGenerator extends CSharpContentGener
             relationshipsProperties = relationshipsProperties.substr(1);
         }
 
-        var content = `using System;
+        if (interfaces !== '') {
+            interfaces = interfaces.substr(0, '        '.length + 1) + ':' + interfaces.substr('        '.length + 2);
+            interfaces = interfaces.substr(0, interfaces.length - 1);
+        }
+
+        var content = `using MotiNet.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ${namespace}
 {
     // Entity
-    public sealed partial class ${entityName}
+    public sealed partial class ${entityName}${interfaces}
     {${entityProperties}
     }
 
@@ -141,12 +172,15 @@ export class SealedModelsProject_SubEntityClassGenerator extends CSharpContentGe
         const entityName = this.item.name;
 
         var subEntityName;
+        var interfaces = '';
         var entityProperties = '';
         var relationshipsProperties = '';
 
         if (this.item.codeBasedEntityFeatureSetting !== null) {
             subEntityName = this.item.scopedNameBasedEntityFeatureSetting.scopeName;
             const pluralEntityName = pluralize(entityName);
+            interfaces += `
+          IIdWiseEntity<string>,`;
 
             entityProperties += `
 
@@ -168,14 +202,20 @@ export class SealedModelsProject_SubEntityClassGenerator extends CSharpContentGe
             relationshipsProperties = relationshipsProperties.substr(1);
         }
 
-        var content = `using System;
+        if (interfaces !== '') {
+            interfaces = interfaces.substr(0, '        '.length + 1) + ':' + interfaces.substr('        '.length + 2);
+            interfaces = interfaces.substr(0, interfaces.length - 1);
+        }
+
+        var content = `using MotiNet.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ${namespace}
 {
     // Entity
-    public sealed partial class ${subEntityName}
+    public sealed partial class ${subEntityName}${interfaces}
     {${entityProperties}
     }
 
@@ -273,6 +313,7 @@ export class SealedModelsProject_EntityAccessorClassGenerator extends CSharpCont
         // TODO:: Implement
         public object GetIdSource(${entityName} ${lowerCaseEntityName}) => throw new NotImplementedException();`;
             }
+
             methods += `
 
         public void SetId(${entityName} ${lowerCaseEntityName}, string id) => ${lowerCaseEntityName}.Id = id;`;
@@ -281,7 +322,6 @@ export class SealedModelsProject_EntityAccessorClassGenerator extends CSharpCont
         if (methods !== '') {
             methods = methods.substr(1);
         }
-
 
         var content = `using System;
 

@@ -205,7 +205,8 @@
             const structure = getNode(this.vm.solutionStructure);
             const data = {
                 projectId: this.vm.entity.id,
-                solutionStructure: structure
+                solutionStructure: structure,
+                clearOutput: false
             }
 
             this.vm.freezed = true;
