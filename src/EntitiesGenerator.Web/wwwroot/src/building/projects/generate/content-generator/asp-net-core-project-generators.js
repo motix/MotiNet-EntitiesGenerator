@@ -40,7 +40,70 @@ export class AspNetCoreProject_EntityManagerClassGenerator extends CSharpContent
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
+        const entityGenericParameters = ContentHelper.getEntityGenericParameters(this.item);
         const lowerCaseEntityName = ContentHelper.getLowerCaseEntityName(entityName);
+
+        // Generic parameter specifications
+
+        var entityGenericParameterSpecifications = `
+        where T${entityName} : class`;
+
+        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
+            entityGenericParameterSpecifications += `
+        where T${this.item.scopedNameBasedEntityFeatureSetting.scopeName} : class`;
+        }
+
+        // Constructor parameters, base constructor parameters
+
+        var constructorParameters = `
+            I${entityName}Store${entityGenericParameters} store,
+            I${entityName}Accessor${entityGenericParameters} accessor`;
+
+        var baseConstructorParameters = 'store, accessor';
+
+        if (ContentHelper.entityValidationRequired(this.item)) {
+            constructorParameters += `,
+            IEnumerable<IValidator${entityGenericParameters}> validators`;
+
+            baseConstructorParameters += ', validators'
+        }
+
+        constructorParameters += `,
+            ILogger<${entityName}Manager${entityGenericParameters}> logger`;
+
+        baseConstructorParameters += ', logger'
+
+        if (this.item.codeBasedEntityFeatureSetting !== null) {
+            constructorParameters += `,
+            ILookupNormalizer<T${entityName}> codeNormalizer`;
+
+            baseConstructorParameters += ', codeNormalizer'
+
+            if (this.item.codeBasedEntityFeatureSetting.hasCodeGenerator === true) {
+                constructorParameters += `,
+            IEntityCodeGenerator<T${entityName}> codeGenerator`;
+
+                baseConstructorParameters += ', codeGenerator'
+            }
+        }
+
+        if (this.item.nameBasedEntityFeatureSetting !== null ||
+            this.item.scopedNameBasedEntityFeatureSetting !== null) {
+            constructorParameters += `,
+            ILookupNormalizer<T${entityName}> nameNormalizer`;
+
+            baseConstructorParameters += ', nameNormalizer'
+        }
+
+        if (this.item.preprocessedEntityFeatureSetting !== null) {
+            constructorParameters += `,
+            IEntityPreprocessor<T${entityName}> preprocessor`;
+
+            baseConstructorParameters += ', preprocessor'
+        }
+
+        constructorParameters += `,
+            IHttpContextAccessor contextAccessor`;
 
         var content = `using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -50,17 +113,12 @@ using System.Threading;
 
 namespace ${namespace}
 {
-    public class AspNet${entityName}Manager<T${entityName}> : ${entityName}Manager<T${entityName}> where T${entityName} : class
+    public class AspNet${entityName}Manager${entityGenericParameters} : ${entityName}Manager${entityGenericParameters}${entityGenericParameterSpecifications}
     {
         private readonly CancellationToken _cancel;
         
-        public AspNet${entityName}Manager(
-            I${entityName}Store<T${entityName}> store,
-            I${entityName}Accessor<T${entityName}> ${lowerCaseEntityName}Accessor,
-            IEnumerable<IValidator<T${entityName}>> ${lowerCaseEntityName}Validators,
-            ILogger<${entityName}Manager<T${entityName}>> logger,
-            IHttpContextAccessor contextAccessor)
-            : base(store, ${lowerCaseEntityName}Accessor, ${lowerCaseEntityName}Validators, logger)
+        public AspNet${entityName}Manager(${constructorParameters})
+            : base(${baseConstructorParameters})
             => _cancel = contextAccessor?.HttpContext?.RequestAborted ?? CancellationToken.None;
 
         public override CancellationToken CancellationToken => _cancel;
@@ -87,9 +145,11 @@ export class AspNetCoreProject_DependencyInjectionClassGenerator extends CSharpC
 
         for (const item of this.module.items) {
             const entityName = item.name;
+            const emptyGenericParameters = ContentHelper.getEmptyEntityGenericParameters(item);
+            const makeGenericTypeParameterList = ContentHelper.getMakeGenericTypeParameterList(item);
 
             registrations += `
-            builder.Services.AddScoped(typeof(I${entityName}Manager<>).MakeGenericType(builder.${entityName}Type), typeof(AspNet${entityName}Manager<>).MakeGenericType(builder.${entityName}Type));`;
+            builder.Services.AddScoped(typeof(I${entityName}Manager${emptyGenericParameters}).MakeGenericType(${makeGenericTypeParameterList}), typeof(AspNet${entityName}Manager${emptyGenericParameters}).MakeGenericType(${makeGenericTypeParameterList}));`;
         }
 
         if (this.module.items.length > 0) {

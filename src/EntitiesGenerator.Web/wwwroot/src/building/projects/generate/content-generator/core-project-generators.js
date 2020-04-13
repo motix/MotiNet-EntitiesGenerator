@@ -313,6 +313,7 @@ export class CoreProject_EntityManagerClassGenerator extends CSharpContentGenera
             propertiesAssignments += `
             CodeNormalizer = codeNormalizer ?? throw new ArgumentNullException(nameof(codeNormalizer));
 `;
+
             if (this.item.codeBasedEntityFeatureSetting.hasCodeGenerator === true) {
                 constructorParameters += `,
             IEntityCodeGenerator<T${entityName}> codeGenerator`;
