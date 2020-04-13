@@ -30,7 +30,7 @@ namespace EntitiesGenerator.Web.Controllers
                 return false;
             }
 
-            if (Directory.Exists(project.GenerateLocation))
+            if (viewModel.ClearOutput && Directory.Exists(project.GenerateLocation))
             {
                 var folders = Directory.GetDirectories(project.GenerateLocation);
                 foreach(var folder in folders)
