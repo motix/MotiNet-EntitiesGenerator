@@ -33,6 +33,9 @@ export class EntityFrameworkCoreProject_DbContextClassGenerator extends CSharpCo
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleName = ContentHelper.getModuleName(this.module);
+        const moduleGenericParametersWhiteSpace = `                                        ` + ContentHelper.generateWhiteSpace(moduleName.length);
+        const moduleGenericParametersLastLineBreak = this.module.items.length === 0 ? '' : `
+${moduleGenericParametersWhiteSpace}`;
 
         var moduleGenericParameters = '';
         var moduleGenericParameterSpecifications = '';
@@ -43,9 +46,10 @@ export class EntityFrameworkCoreProject_DbContextClassGenerator extends CSharpCo
         for (const item of this.module.items) {
             const entityName = item.name;
             const pluralEntityName = pluralize(entityName);
+            const moduleGenericParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, false) ? `
+${moduleGenericParametersWhiteSpace}` : (item === this.module.items[0] ? '' : ' ');
 
-            moduleGenericParameters += `
-        T${entityName},`;
+            moduleGenericParameters += `${moduleGenericParametersLineBreak}T${entityName},`;
 
             moduleGenericParameterSpecifications += `
         where T${entityName} : class`;
@@ -60,6 +64,30 @@ export class EntityFrameworkCoreProject_DbContextClassGenerator extends CSharpCo
             methods += `
 
         protected virtual void Configure${entityName}(EntityTypeBuilder<T${entityName}> builder) { }`;
+
+            if (item.scopedNameBasedEntityFeatureSetting !== null) {
+                const scopeName = item.scopedNameBasedEntityFeatureSetting.scopeName;
+
+                if (!ContentHelper.subEntityManaged(item, scopeName)) {
+                    const pluralScopeName = pluralize(scopeName);
+
+                    moduleGenericParameters += ` T${scopeName},`;
+
+                    moduleGenericParameterSpecifications += `
+        where T${scopeName} : class`;
+
+                    properties += `
+        public DbSet<T${scopeName}> ${pluralScopeName} { get; set; }
+`;
+
+                    registrations += `
+            modelBuilder.Entity<T${scopeName}>(Configure${scopeName});`;
+
+                    methods += `
+
+        protected virtual void Configure${scopeName}(EntityTypeBuilder<T${scopeName}> builder) { }`;
+                }
+            }
         }
 
         var content = `using Microsoft.EntityFrameworkCore;
@@ -68,9 +96,8 @@ using System;
 
 namespace ${namespace}.EntityFrameworkCore
 {
-    public abstract class ${moduleName}DbContextBase<${moduleGenericParameters}
-        // Key
-        TKey>
+    public abstract class ${moduleName}DbContextBase<${moduleGenericParameters}${moduleGenericParametersLastLineBreak}// Key
+${moduleGenericParametersWhiteSpace}TKey>
         : DbContext${moduleGenericParameterSpecifications}
         // Key
         where TKey : IEquatable<TKey>
