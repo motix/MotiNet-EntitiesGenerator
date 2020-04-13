@@ -36,7 +36,7 @@ export class CoreProject_EntityManagerInterfaceGenerator extends CSharpContentGe
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
-        const genericParameters = ContentHelper.getEntityGenericParameters(this.item);
+        const entityGenericParameters = ContentHelper.getEntityGenericParameters(this.item);
 
         // Features comment
 
@@ -78,7 +78,7 @@ export class CoreProject_EntityManagerInterfaceGenerator extends CSharpContentGe
         }
         if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
             interfaces += `
-          IScopedNameBasedEntityManager${genericParameters},`;
+          IScopedNameBasedEntityManager${entityGenericParameters},`;
         }
         if (this.item.readableIdEntityFeatureSetting !== null) {
             interfaces += `
@@ -100,11 +100,11 @@ export class CoreProject_EntityManagerInterfaceGenerator extends CSharpContentGe
 
         // Generic parameter specifications
 
-        var genericParameterSpecifications = `
+        var entityGenericParameterSpecifications = `
         where T${entityName} : class`;
 
         if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            genericParameterSpecifications += `
+            entityGenericParameterSpecifications += `
         where T${this.item.scopedNameBasedEntityFeatureSetting.scopeName} : class`;
         }
 
@@ -116,7 +116,7 @@ namespace ${namespace}
 {
     // Entity Features:${featuresComment}
 
-    public interface I${entityName}Manager${genericParameters}${interfaces}${genericParameterSpecifications}
+    public interface I${entityName}Manager${entityGenericParameters}${interfaces}${entityGenericParameterSpecifications}
     { }
 }
 `;
@@ -135,7 +135,7 @@ export class CoreProject_EntityStoreInterfaceGenerator extends CSharpContentGene
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
-        const genericParameters = ContentHelper.getEntityGenericParameters(this.item);
+        const entityGenericParameters = ContentHelper.getEntityGenericParameters(this.item);
 
         // Interfaces
 
@@ -159,7 +159,7 @@ export class CoreProject_EntityStoreInterfaceGenerator extends CSharpContentGene
         }
         if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
             interfaces += `
-          IScopedNameBasedEntityStore${genericParameters},`;
+          IScopedNameBasedEntityStore${entityGenericParameters},`;
         }
         if (this.item.onOffEntityFeatureSetting !== null) {
             interfaces += `
@@ -175,11 +175,11 @@ export class CoreProject_EntityStoreInterfaceGenerator extends CSharpContentGene
 
         // Generic parameter specifications
 
-        var genericParameterSpecifications = `
+        var entityGenericParameterSpecifications = `
         where T${entityName} : class`;
 
         if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            genericParameterSpecifications += `
+            entityGenericParameterSpecifications += `
         where T${this.item.scopedNameBasedEntityFeatureSetting.scopeName} : class`;
         }
 
@@ -190,7 +190,7 @@ using System;
 
 namespace ${namespace}
 {
-    public interface I${entityName}Store${genericParameters}${interfaces}${genericParameterSpecifications}
+    public interface I${entityName}Store${entityGenericParameters}${interfaces}${entityGenericParameterSpecifications}
     { }
 }
 `;
@@ -209,7 +209,7 @@ export class CoreProject_EntityAccessorInterfaceGenerator extends CSharpContentG
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
-        const genericParameters = ContentHelper.getEntityGenericParameters(this.item);
+        const entityGenericParameters = ContentHelper.getEntityGenericParameters(this.item);
 
         // Interfaces
 
@@ -233,7 +233,7 @@ export class CoreProject_EntityAccessorInterfaceGenerator extends CSharpContentG
         }
         if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
             interfaces += `
-          IScopedNameBasedEntityAccessor${genericParameters},`;
+          IScopedNameBasedEntityAccessor${entityGenericParameters},`;
         }
         if (this.item.readableIdEntityFeatureSetting !== null) {
             interfaces += `
@@ -247,11 +247,11 @@ export class CoreProject_EntityAccessorInterfaceGenerator extends CSharpContentG
 
         // Generic parameter specifications
 
-        var genericParameterSpecifications = `
+        var entityGenericParameterSpecifications = `
         where T${entityName} : class`;
 
         if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            genericParameterSpecifications += `
+            entityGenericParameterSpecifications += `
         where T${this.item.scopedNameBasedEntityFeatureSetting.scopeName} : class`;
         }
 
@@ -261,7 +261,7 @@ export class CoreProject_EntityAccessorInterfaceGenerator extends CSharpContentG
 
 namespace ${namespace}
 {
-    public interface I${entityName}Accessor${genericParameters}${interfaces}${genericParameterSpecifications}
+    public interface I${entityName}Accessor${entityGenericParameters}${interfaces}${entityGenericParameterSpecifications}
     { }
 }
 `;
@@ -280,32 +280,32 @@ export class CoreProject_EntityManagerClassGenerator extends CSharpContentGenera
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
-        const genericParameters = ContentHelper.getEntityGenericParameters(this.item);
+        const entityGenericParameters = ContentHelper.getEntityGenericParameters(this.item);
 
         // Generic parameter specifications
 
-        var genericParameterSpecifications = `
+        var entityGenericParameterSpecifications = `
         where T${entityName} : class`;
 
         if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            genericParameterSpecifications += `
+            entityGenericParameterSpecifications += `
         where T${this.item.scopedNameBasedEntityFeatureSetting.scopeName} : class`;
         }
 
         // Constructor parameters, properties assignments
 
         var constructorParameters = `
-            I${entityName}Store${genericParameters} store,
-            I${entityName}Accessor${genericParameters} accessor`;
+            I${entityName}Store${entityGenericParameters} store,
+            I${entityName}Accessor${entityGenericParameters} accessor`;
         var propertiesAssignments = '';
 
         if (ContentHelper.entityValidationRequired(this.item)) {
             constructorParameters += `,
-            IEnumerable<IValidator${genericParameters}> validators`;
+            IEnumerable<IValidator${entityGenericParameters}> validators`;
         }
 
         constructorParameters += `,
-            ILogger<${entityName}Manager${genericParameters}> logger`;
+            ILogger<${entityName}Manager${entityGenericParameters}> logger`;
 
         if (this.item.codeBasedEntityFeatureSetting !== null) {
             constructorParameters += `,
@@ -388,9 +388,9 @@ export class CoreProject_EntityManagerClassGenerator extends CSharpContentGenera
         if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
             properties += `
 
-        public IScopedNameBasedEntityStore${genericParameters} ScopedNameBasedEntityStore => Store as IScopedNameBasedEntityStore${genericParameters};
+        public IScopedNameBasedEntityStore${entityGenericParameters} ScopedNameBasedEntityStore => Store as IScopedNameBasedEntityStore${entityGenericParameters};
 
-        public IScopedNameBasedEntityAccessor${genericParameters} ScopedNameBasedEntityAccessor => Accessor as IScopedNameBasedEntityAccessor${genericParameters};`;
+        public IScopedNameBasedEntityAccessor${entityGenericParameters} ScopedNameBasedEntityAccessor => Accessor as IScopedNameBasedEntityAccessor${entityGenericParameters};`;
         }
 
         if (this.item.readableIdEntityFeatureSetting !== null) {
@@ -407,9 +407,9 @@ export class CoreProject_EntityManagerClassGenerator extends CSharpContentGenera
 
         properties += `
 
-        public I${entityName}Store${genericParameters} ${entityName}Store => Store as I${entityName}Store${genericParameters};
+        public I${entityName}Store${entityGenericParameters} ${entityName}Store => Store as I${entityName}Store${entityGenericParameters};
 
-        public I${entityName}Accessor${genericParameters} ${entityName}Accessor => Accessor as I${entityName}Accessor${genericParameters};`;
+        public I${entityName}Accessor${entityGenericParameters} ${entityName}Accessor => Accessor as I${entityName}Accessor${entityGenericParameters};`;
 
         if (this.item.codeBasedEntityFeatureSetting !== null) {
             properties += `
@@ -448,7 +448,7 @@ using System.Collections.Generic;
 
 namespace ${namespace}
 {
-    public class ${entityName}Manager${genericParameters} : ManagerBase${genericParameters}, I${entityName}Manager${genericParameters}${genericParameterSpecifications}
+    public class ${entityName}Manager${entityGenericParameters} : ManagerBase${entityGenericParameters}, I${entityName}Manager${entityGenericParameters}${entityGenericParameterSpecifications}
     {
         public ${entityName}Manager(${constructorParameters})
             : base(${baseConstructorParameters})
@@ -473,15 +473,15 @@ export class CoreProject_EntityValidatorClassGenerator extends CSharpContentGene
         const moduleName = ContentHelper.getModuleName(this.item.module);
         const entityName = this.item.name;
         const lowerCaseEntityName = ContentHelper.getLowerCaseEntityName(entityName);
-        const genericParameters = ContentHelper.getEntityGenericParameters(this.item);
+        const entityGenericParameters = ContentHelper.getEntityGenericParameters(this.item);
 
         // Generic parameter specifications
 
-        var genericParameterSpecifications = `
+        var entityGenericParameterSpecifications = `
         where T${entityName} : class`;
 
         if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            genericParameterSpecifications += `
+            entityGenericParameterSpecifications += `
         where T${this.item.scopedNameBasedEntityFeatureSetting.scopeName} : class`;
         }
 
@@ -516,7 +516,7 @@ export class CoreProject_EntityValidatorClassGenerator extends CSharpContentGene
 
         public Task<GenericResult> ValidateAsync(object manager, T${subEntityName} ${lowerCaseSubEntityName})
         {
-            throw new NeverValidateSubEntityException<T${subEntityName}, I${entityName}Manager${genericParameters}>();
+            throw new NeverValidateSubEntityException<T${subEntityName}, I${entityName}Manager${entityGenericParameters}>();
         }`;
         }
 
@@ -527,21 +527,21 @@ using System.Threading.Tasks;
 
 namespace ${namespace}
 {
-    public class ${entityName}Validator${genericParameters} : IValidator${genericParameters}${genericParameterSpecifications}
+    public class ${entityName}Validator${entityGenericParameters} : IValidator${entityGenericParameters}${entityGenericParameterSpecifications}
     {
-        public ${entityName}Validator(I${entityName}Accessor${genericParameters} accessor, ${moduleName}ErrorDescriber errorDescriber)
+        public ${entityName}Validator(I${entityName}Accessor${entityGenericParameters} accessor, ${moduleName}ErrorDescriber errorDescriber)
         {
             Accessor = accessor;
             ErrorDescriber = errorDescriber;
         }
 
-        protected I${entityName}Accessor${genericParameters} Accessor { get; }
+        protected I${entityName}Accessor${entityGenericParameters} Accessor { get; }
 
         private ${moduleName}ErrorDescriber ErrorDescriber { get; }
 
         public async Task<GenericResult> ValidateAsync(object manager, T${entityName} ${lowerCaseEntityName})
         {
-            var theManager = this.GetManager<T${entityName}, I${entityName}Manager${genericParameters}>(manager);
+            var theManager = this.GetManager<T${entityName}, I${entityName}Manager${entityGenericParameters}>(manager);
             var errors = new List<GenericError>();${validations}
 
             return GenericResult.GetResult(errors);
@@ -800,7 +800,7 @@ export class CoreProject_DependencyInjectionClassGenerator extends CSharpContent
         const moduleName = ContentHelper.getModuleName(this.module);
 
         var moduleGenericParameters = '';
-        var genericParameterSpecifications = '';
+        var moduleGenericParameterSpecifications = '';
         var registrations = '';
         var builderConstructorParameters = '';
         var features = '';
@@ -812,7 +812,7 @@ export class CoreProject_DependencyInjectionClassGenerator extends CSharpContent
 
         for (const item of this.module.items) {
             const entityName = item.name;
-            const genericParameters = ContentHelper.getEntityGenericParameters(item);
+            const entityGenericParameters = ContentHelper.getEntityGenericParameters(item);
             const moduleGenericParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, false) ? (`
                                   ` + ContentHelper.generateWhiteSpace(moduleName.length * 2)) : (item === this.module.items[0] ? '' : ' ');
             const builderConstructorParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, true) ? `
@@ -820,7 +820,7 @@ export class CoreProject_DependencyInjectionClassGenerator extends CSharpContent
 
             moduleGenericParameters += `${moduleGenericParametersLineBreak}T${entityName},`;
 
-            genericParameterSpecifications += `
+            moduleGenericParameterSpecifications += `
             where T${entityName} : class`;
 
             builderConstructorParameters += `,${builderConstructorParametersLineBreak}typeof(T${entityName})`;
@@ -831,7 +831,7 @@ export class CoreProject_DependencyInjectionClassGenerator extends CSharpContent
                 if (!ContentHelper.subEntityManaged(item, subEntityName)) {
                     moduleGenericParameters += ` T${subEntityName},`;
 
-                    genericParameterSpecifications += `
+                    moduleGenericParameterSpecifications += `
             where T${subEntityName} : class`;
 
                     builderConstructorParameters += `, typeof(T${subEntityName})`;
@@ -839,11 +839,11 @@ export class CoreProject_DependencyInjectionClassGenerator extends CSharpContent
             }
 
             registrations += `
-            services.TryAddScoped<I${entityName}Manager${genericParameters}, ${entityName}Manager${genericParameters}>();`;
+            services.TryAddScoped<I${entityName}Manager${entityGenericParameters}, ${entityName}Manager${entityGenericParameters}>();`;
 
             if (ContentHelper.entityValidationRequired(item)) {
                 registrations += `
-            services.TryAddScoped<IValidator<T${entityName}>, ${entityName}Validator${genericParameters}>();`;
+            services.TryAddScoped<IValidator<T${entityName}>, ${entityName}Validator${entityGenericParameters}>();`;
             }
 
             if (item.codeBasedEntityFeatureSetting !== null ||
@@ -875,7 +875,7 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class ${moduleName}ServiceCollectionExtensions
     {
         public static ${moduleName}Builder Add${moduleName}${moduleGenericParameters}(
-            this IServiceCollection services)${genericParameterSpecifications}
+            this IServiceCollection services)${moduleGenericParameterSpecifications}
         {${registrations}${features}
             return new ${moduleName}Builder(
                 services${builderConstructorParameters});

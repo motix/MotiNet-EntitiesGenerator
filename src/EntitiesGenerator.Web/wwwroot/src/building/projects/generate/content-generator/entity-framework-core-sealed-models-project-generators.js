@@ -43,13 +43,13 @@ export class EntityFrameworkCoreSealedModelsProject_DbContextClassGenerator exte
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleName = ContentHelper.getModuleName(this.module);
 
-        var genericParameters = '';
+        var moduleGenericParameters = '';
         var methods = '';
 
         for (const item of this.module.items) {
             const entityName = item.name;
 
-            genericParameters += `
+            moduleGenericParameters += `
             ${entityName},`;
 
             methods += `
@@ -65,7 +65,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace ${namespace}.EntityFrameworkCore
 {
     public abstract class ${moduleName}DbContextBase
-        : ${moduleName}DbContextBase<${genericParameters}
+        : ${moduleName}DbContextBase<${moduleGenericParameters}
             // Key
             string>
     {

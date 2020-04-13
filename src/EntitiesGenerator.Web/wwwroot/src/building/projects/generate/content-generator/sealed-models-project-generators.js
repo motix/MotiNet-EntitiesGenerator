@@ -200,7 +200,7 @@ export class SealedModelsProject_EntityAccessorClassGenerator extends CSharpCont
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
-        const genericParameters = ContentHelper.getEntitySpecificGenericParameters(this.item);
+        const entityGenericParameters = ContentHelper.getEntitySpecificGenericParameters(this.item);
         const lowerCaseEntityName = ContentHelper.getLowerCaseEntityName(entityName);
 
         var methods = '';
@@ -287,7 +287,7 @@ export class SealedModelsProject_EntityAccessorClassGenerator extends CSharpCont
 
 namespace ${namespace}
 {
-    public class ${entityName}Accessor : I${entityName}Accessor${genericParameters}
+    public class ${entityName}Accessor : I${entityName}Accessor${entityGenericParameters}
     {${methods}
     }
 }

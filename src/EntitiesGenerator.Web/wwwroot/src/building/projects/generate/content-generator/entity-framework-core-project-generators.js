@@ -34,8 +34,8 @@ export class EntityFrameworkCoreProject_DbContextClassGenerator extends CSharpCo
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleName = ContentHelper.getModuleName(this.module);
 
-        var genericParameters = '';
-        var genericParameterSpecifications = '';
+        var moduleGenericParameters = '';
+        var moduleGenericParameterSpecifications = '';
         var properties = '';
         var registrations = '';
         var methods = '';
@@ -44,10 +44,10 @@ export class EntityFrameworkCoreProject_DbContextClassGenerator extends CSharpCo
             const entityName = item.name;
             const pluralEntityName = pluralize(entityName);
 
-            genericParameters += `
+            moduleGenericParameters += `
         T${entityName},`;
 
-            genericParameterSpecifications += `
+            moduleGenericParameterSpecifications += `
         where T${entityName} : class`;
 
             properties += `
@@ -68,10 +68,10 @@ using System;
 
 namespace ${namespace}.EntityFrameworkCore
 {
-    public abstract class ${moduleName}DbContextBase<${genericParameters}
+    public abstract class ${moduleName}DbContextBase<${moduleGenericParameters}
         // Key
         TKey>
-        : DbContext${genericParameterSpecifications}
+        : DbContext${moduleGenericParameterSpecifications}
         // Key
         where TKey : IEquatable<TKey>
     {
