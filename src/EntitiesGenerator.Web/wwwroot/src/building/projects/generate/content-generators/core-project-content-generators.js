@@ -1,17 +1,20 @@
-﻿import 'prismjs/components/prism-csharp';
+﻿// Core
+
+import 'prismjs/components/prism-csharp';
+import { IdentifierHelper } from '../content-helper';
 import ContentHelper from '../content-helper';
 
+import * as SG from '../structure-generators/structure-generators';
 import { ContentGenerator, CSharpContentGenerator, ProjectFileGenerator } from './content-generator';
 
 export class CoreProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
-        const moduleNamespace = ContentHelper.getModuleNamespace(this.module);
+        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(SG.CoreProjectSG);
 
-        var content = `<Project Sdk="Microsoft.NET.Sdk">
+        const content = `<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <RootNamespace>${moduleNamespace}</RootNamespace>
+    <TargetFramework>netstandard2.1</TargetFramework>${defaultNamespace}
   </PropertyGroup>
 
   <ItemGroup>
@@ -110,7 +113,7 @@ export class CoreProject_EntityManagerInterfaceGenerator extends CSharpContentGe
 
         // Content
 
-        var content = `using MotiNet.Entities;
+        const content = `using MotiNet.Entities;
 
 namespace ${namespace}
 {
@@ -185,7 +188,7 @@ export class CoreProject_EntityStoreInterfaceGenerator extends CSharpContentGene
 
         // Content
 
-        var content = `using MotiNet.Entities;
+        const content = `using MotiNet.Entities;
 using System;
 
 namespace ${namespace}
@@ -257,7 +260,7 @@ export class CoreProject_EntityAccessorInterfaceGenerator extends CSharpContentG
 
         // Content
 
-        var content = `using MotiNet.Entities;
+        const content = `using MotiNet.Entities;
 
 namespace ${namespace}
 {
@@ -442,7 +445,7 @@ export class CoreProject_EntityManagerClassGenerator extends CSharpContentGenera
 
         // Content
 
-        var content = `using Microsoft.Extensions.Logging;
+        const content = `using Microsoft.Extensions.Logging;
 using MotiNet.Entities;
 using System;
 using System.Collections.Generic;
@@ -471,7 +474,7 @@ export class CoreProject_EntityValidatorClassGenerator extends CSharpContentGene
 
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
-        const moduleName = ContentHelper.getModuleName(this.item.module);
+        const moduleCommonName = IdentifierHelper.getModuleCommonName(this.item.module);
         const entityName = this.item.name;
         const lowerCaseEntityName = ContentHelper.getLowerCaseEntityName(entityName);
         const entityGenericParameters = ContentHelper.getEntityGenericParameters(this.item);
@@ -521,7 +524,7 @@ export class CoreProject_EntityValidatorClassGenerator extends CSharpContentGene
         }`;
         }
 
-        var content = `using MotiNet;
+        const content = `using MotiNet;
 using MotiNet.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -530,7 +533,7 @@ namespace ${namespace}
 {
     public class ${entityName}Validator${entityGenericParameters} : IValidator${entityGenericParameters}${entityGenericParameterSpecifications}
     {
-        public ${entityName}Validator(I${entityName}Accessor${entityGenericParameters} accessor, ${moduleName}ErrorDescriber errorDescriber)
+        public ${entityName}Validator(I${entityName}Accessor${entityGenericParameters} accessor, ${moduleCommonName}ErrorDescriber errorDescriber)
         {
             Accessor = accessor;
             ErrorDescriber = errorDescriber;
@@ -538,7 +541,7 @@ namespace ${namespace}
 
         protected I${entityName}Accessor${entityGenericParameters} Accessor { get; }
 
-        private ${moduleName}ErrorDescriber ErrorDescriber { get; }
+        private ${moduleCommonName}ErrorDescriber ErrorDescriber { get; }
 
         public async Task<GenericResult> ValidateAsync(object manager, T${entityName} ${lowerCaseEntityName})
         {
@@ -564,7 +567,7 @@ export class CoreProject_ErrorDescriberClassGenerator extends CSharpContentGener
 
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
-        const moduleName = ContentHelper.getModuleName(this.module);
+        const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
 
         var describers = '';
 
@@ -622,13 +625,13 @@ export class CoreProject_ErrorDescriberClassGenerator extends CSharpContentGener
         #endregion`;
         }
 
-        var content = `using Microsoft.Extensions.Localization;
+        const content = `using Microsoft.Extensions.Localization;
 using ${namespace}.Resources;
 using MotiNet;
 
 namespace ${namespace}
 {
-    public class ${moduleName}ErrorDescriber
+    public class ${moduleCommonName}ErrorDescriber
     {
         #region Fields
 
@@ -638,9 +641,9 @@ namespace ${namespace}
 
         #region Constructors
 
-        public ${moduleName}ErrorDescriber(IStringLocalizer<${moduleName}ErrorDescriberResources> localizer) => _localizer = localizer;
+        public ${moduleCommonName}ErrorDescriber(IStringLocalizer<${moduleCommonName}ErrorDescriberResources> localizer) => _localizer = localizer;
 
-        protected ${moduleName}ErrorDescriber(IStringLocalizer localizer) => _localizer = localizer;
+        protected ${moduleCommonName}ErrorDescriber(IStringLocalizer localizer) => _localizer = localizer;
 
         #endregion${describers}
     }
@@ -660,11 +663,11 @@ export class CoreProject_ErrorDescriberResourcesClassGenerator extends CSharpCon
 
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
-        const moduleName = ContentHelper.getModuleName(this.module);
+        const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
 
-        var content = `namespace ${namespace}.Resources
+        const content = `namespace ${namespace}.Resources
 {
-    public class ${moduleName}ErrorDescriberResources { }
+    public class ${moduleCommonName}ErrorDescriberResources { }
 }
 `;
 
@@ -725,7 +728,7 @@ export class CoreProject_BuilderClassGenerator extends CSharpContentGenerator {
 
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
-        const moduleName = ContentHelper.getModuleName(this.module);
+        const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
 
         var constructorParameters = '';
         var constructBuilderParameters = '';
@@ -763,19 +766,19 @@ export class CoreProject_BuilderClassGenerator extends CSharpContentGenerator {
             }
         }
 
-        var content = `using Microsoft.Extensions.DependencyInjection;
+        const content = `using Microsoft.Extensions.DependencyInjection;
 using MotiNet.Entities;
 using System;
 
 namespace ${namespace}
 {
-    public class ${moduleName}Builder : BuilderBase
+    public class ${moduleCommonName}Builder : BuilderBase
     {
-        public ${moduleName}Builder(
+        public ${moduleCommonName}Builder(
             IServiceCollection services${constructorParameters})
             : base(services)
             => BuilderHelper.ConstructBuilder(
-                this, typeof(${moduleName}Builder).GetConstructors()[0],
+                this, typeof(${moduleCommonName}Builder).GetConstructors()[0],
                 services${constructBuilderParameters});
 
         #region Properties
@@ -798,7 +801,7 @@ export class CoreProject_DependencyInjectionClassGenerator extends CSharpContent
 
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
-        const moduleName = ContentHelper.getModuleName(this.module);
+        const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
 
         var moduleGenericParameters = '';
         var moduleGenericParameterSpecifications = '';
@@ -808,14 +811,14 @@ export class CoreProject_DependencyInjectionClassGenerator extends CSharpContent
 
         if (ContentHelper.moduleValidationRequired(this.module)) {
             features += `
-            services.TryAddScoped<${moduleName}ErrorDescriber, ${moduleName}ErrorDescriber>();`;
+            services.TryAddScoped<${moduleCommonName}ErrorDescriber, ${moduleCommonName}ErrorDescriber>();`;
         }
 
         for (const item of this.module.items) {
             const entityName = item.name;
             const entityGenericParameters = ContentHelper.getEntityGenericParameters(item);
             const moduleGenericParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, false) ? (`
-                                  ` + ContentHelper.generateWhiteSpace(moduleName.length * 2)) : (item === this.module.items[0] ? '' : ' ');
+                                  ` + ContentHelper.generateWhiteSpace(moduleCommonName.length * 2)) : (item === this.module.items[0] ? '' : ' ');
             const builderConstructorParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, true) ? `
                 ` : ' ';
 
@@ -867,18 +870,18 @@ export class CoreProject_DependencyInjectionClassGenerator extends CSharpContent
 ` + features + '\n';
         }
 
-        var content = `using Microsoft.Extensions.DependencyInjection.Extensions;
+        const content = `using Microsoft.Extensions.DependencyInjection.Extensions;
 using MotiNet.Entities;
 using ${namespace};
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class ${moduleName}ServiceCollectionExtensions
+    public static class ${moduleCommonName}ServiceCollectionExtensions
     {
-        public static ${moduleName}Builder Add${moduleName}${moduleGenericParameters}(
+        public static ${moduleCommonName}Builder Add${moduleCommonName}${moduleGenericParameters}(
             this IServiceCollection services)${moduleGenericParameterSpecifications}
         {${registrations}${features}
-            return new ${moduleName}Builder(
+            return new ${moduleCommonName}Builder(
                 services${builderConstructorParameters});
         }
     }

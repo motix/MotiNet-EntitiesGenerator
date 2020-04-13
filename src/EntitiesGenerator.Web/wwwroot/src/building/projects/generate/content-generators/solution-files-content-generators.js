@@ -3,6 +3,7 @@ import 'prismjs/components/prism-git';
 import 'prismjs/components/prism-markdown';
 import ContentHelper from '../content-helper';
 
+import * as SG from '../structure-generators/structure-generators';
 import { ContentGenerator } from './content-generator';
 
 export class SolutionFileGenerator extends ContentGenerator {
@@ -21,6 +22,7 @@ export class SolutionFileGenerator extends ContentGenerator {
 
         const srcFolderGuid = ContentHelper.newGuid();
         const moduleFolderGuids = {};
+
         for (const module of this.project.modules) {
             if (module.hasOwnNamespace) {
                 moduleFolderGuids[module.name] = ContentHelper.newGuid();
@@ -30,6 +32,7 @@ export class SolutionFileGenerator extends ContentGenerator {
         var foldersSection = `Project("{${solutionFolderTypeGuid}}") = "src", "src", "{${srcFolderGuid}}"
 EndProject
 `;
+
         for (const moduleName in moduleFolderGuids) {
             foldersSection += `Project("{${solutionFolderTypeGuid}}") = "${moduleName}", "${moduleName}", "{${moduleFolderGuids[moduleName]}}"
 EndProject
@@ -40,21 +43,22 @@ EndProject
             projectsSection: '',
             projectsNestingSection: ''
         }
+
         for (const module of this.project.modules) {
             if (module.hasOwnNamespace) {
                 sections.projectsNestingSection += `
 		{${moduleFolderGuids[module.name]}} = {${srcFolderGuid}}`;
             }
 
-            writeProject(module, ContentHelper.get_CoreProject_Name(module), sections);
-            writeProject(module, ContentHelper.get_SealedModelsProject_Name(module), sections);
-            writeProject(module, ContentHelper.get_EntityFrameworkCoreProject_Name(module), sections);
-            writeProject(module, ContentHelper.get_EntityFrameworkCoreSealedModelsProject_Name(module), sections);
-            writeProject(module, ContentHelper.get_AspNetCoreProject_Name(module), sections);
-            writeProject(module, ContentHelper.get_AspNetCoreMvcDefaultViewModelsProject_Name(module), sections);
+            writeProject(module, SG.CoreProjectSG.getProjectName(module), sections);
+            writeProject(module, SG.SmProjectSG.getProjectName(module), sections);
+            writeProject(module, SG.EfProjectSG.getProjectName(module), sections);
+            writeProject(module, SG.EfSmProjectSG.getProjectName(module), sections);
+            writeProject(module, SG.AspProjectSG.getProjectName(module), sections);
+            writeProject(module, SG.AspDvProjectSG.getProjectName(module), sections);
         }
 
-        var content = `
+        const content = `
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28606.126

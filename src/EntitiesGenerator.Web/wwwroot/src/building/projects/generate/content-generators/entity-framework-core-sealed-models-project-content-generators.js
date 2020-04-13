@@ -1,19 +1,22 @@
-﻿import 'prismjs/components/prism-csharp';
+﻿// EntityFrameworkCore.SealedModels
+
+import 'prismjs/components/prism-csharp';
+import { IdentifierHelper } from '../content-helper';
 import ContentHelper from '../content-helper';
 
-import { CSharpContentGenerator, ProjectFileGenerator} from './content-generator';
+import * as SG from '../structure-generators/structure-generators';
+import { CSharpContentGenerator, ProjectFileGenerator } from './content-generator';
 
-export class EntityFrameworkCoreSealedModelsProject_ProjectFileGenerator extends ProjectFileGenerator {
+export class EfSmProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
-        const moduleNamespace = ContentHelper.getModuleNamespace(this.module);
-        const entityFrameworkCoreProjectName = ContentHelper.get_EntityFrameworkCoreProject_Name(this.module);
-        const sealedModelsProjectName = ContentHelper.get_SealedModelsProject_Name(this.module);
+        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(SG.EfSmProjectSG);
+        const entityFrameworkCoreProjectName = SG.EfProjectSG.getProjectName(this.module);
+        const sealedModelsProjectName = SG.SmProjectSG.getProjectName(this.module);
 
-        var content = `<Project Sdk="Microsoft.NET.Sdk">
+        const content = `<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <RootNamespace>${moduleNamespace}.EntityFrameworkCore</RootNamespace>
+    <TargetFramework>netstandard2.1</TargetFramework>${defaultNamespace}
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,7 +35,7 @@ export class EntityFrameworkCoreSealedModelsProject_ProjectFileGenerator extends
     }
 }
 
-export class EntityFrameworkCoreSealedModelsProject_DbContextClassGenerator extends CSharpContentGenerator {
+export class EfSmProject_DbContextClassGenerator extends CSharpContentGenerator {
     constructor(module) {
         super();
 
@@ -41,8 +44,8 @@ export class EntityFrameworkCoreSealedModelsProject_DbContextClassGenerator exte
 
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
-        const moduleName = ContentHelper.getModuleName(this.module);
-        const moduleGenericParametersWhiteSpace = '                        ' + ContentHelper.generateWhiteSpace(moduleName.length);
+        const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
+        const moduleGenericParametersWhiteSpace = '                        ' + ContentHelper.generateWhiteSpace(moduleCommonName.length);
         const moduleGenericParametersLastLineBreak = this.module.items.length === 0 ? '' : '\n' + moduleGenericParametersWhiteSpace;
 
         var moduleGenericParameters = '';
@@ -70,18 +73,18 @@ export class EntityFrameworkCoreSealedModelsProject_DbContextClassGenerator exte
             }
         }
 
-        var content = `using Microsoft.EntityFrameworkCore;
+        const content = `using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ${namespace}.EntityFrameworkCore
 {
-    public abstract class ${moduleName}DbContextBase
-        : ${moduleName}DbContextBase<${moduleGenericParameters}${moduleGenericParametersLastLineBreak}// Key
+    public abstract class ${moduleCommonName}DbContextBase
+        : ${moduleCommonName}DbContextBase<${moduleGenericParameters}${moduleGenericParametersLastLineBreak}// Key
 ${moduleGenericParametersWhiteSpace}string>
     {
-        protected ${moduleName}DbContextBase(DbContextOptions options) : base(options) { }
+        protected ${moduleCommonName}DbContextBase(DbContextOptions options) : base(options) { }
 
-        protected ${moduleName}DbContextBase() { }${methods}
+        protected ${moduleCommonName}DbContextBase() { }${methods}
     }
 }
 `;
@@ -90,7 +93,7 @@ ${moduleGenericParametersWhiteSpace}string>
     }
 }
 
-export class EntityFrameworkCoreSealedModelsProject_EntityStoreClassGenerator extends CSharpContentGenerator {
+export class EfSmProject_EntityStoreClassGenerator extends CSharpContentGenerator {
     constructor(item) {
         super();
 
@@ -192,7 +195,7 @@ export class EntityFrameworkCoreSealedModelsProject_EntityStoreClassGenerator ex
             properties += '\n' + ContentHelper.generateDisposePattern();
         }
 
-        var content = `using Microsoft.EntityFrameworkCore;
+        const content = `using Microsoft.EntityFrameworkCore;
 using MotiNet.Entities;
 using MotiNet.Entities.EntityFrameworkCore;
 using System.Threading;
@@ -212,7 +215,7 @@ namespace ${namespace}.EntityFrameworkCore
     }
 }
 
-export class EntityFrameworkCoreSealedModelsProject_DependencyInjectionClassGenerator extends CSharpContentGenerator {
+export class EfSmProject_DependencyInjectionClassGenerator extends CSharpContentGenerator {
     constructor(module) {
         super();
 
@@ -221,7 +224,7 @@ export class EntityFrameworkCoreSealedModelsProject_DependencyInjectionClassGene
 
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
-        const moduleName = ContentHelper.getModuleName(this.module);
+        const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
 
         var registrations = '';
 
@@ -237,16 +240,16 @@ export class EntityFrameworkCoreSealedModelsProject_DependencyInjectionClassGene
 `;
         }
 
-        var content = `using Microsoft.EntityFrameworkCore;
+        const content = `using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ${namespace};
 using ${namespace}.EntityFrameworkCore;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class EntityFrameworkCore${moduleName}BuilderExtensions
+    public static class EntityFrameworkCore${moduleCommonName}BuilderExtensions
     {
-        public static ${moduleName}Builder AddEntityFrameworkCoreWithSealedModels<TContext>(this ${moduleName}Builder builder)
+        public static ${moduleCommonName}Builder AddEntityFrameworkCoreWithSealedModels<TContext>(this ${moduleCommonName}Builder builder)
             where TContext : DbContext
         {
             var services = builder.Services;

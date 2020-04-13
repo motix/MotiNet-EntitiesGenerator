@@ -1,18 +1,21 @@
-﻿import 'prismjs/components/prism-csharp';
+﻿// AspNetCore
+
+import 'prismjs/components/prism-csharp';
+import { IdentifierHelper } from '../content-helper';
 import ContentHelper from '../content-helper';
 
+import * as SG from '../structure-generators/structure-generators';
 import { CSharpContentGenerator, ProjectFileGenerator } from './content-generator';
 
-export class AspNetCoreProject_ProjectFileGenerator extends ProjectFileGenerator {
+export class AspProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
-        const moduleNamespace = ContentHelper.getModuleNamespace(this.module);
-        const coreProjectName = ContentHelper.get_CoreProject_Name(this.module);
+        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(SG.AspProjectSG);
+        const coreProjectName = SG.CoreProjectSG.getProjectName(this.module);
 
-        var content = `<Project Sdk="Microsoft.NET.Sdk">
+        const content = `<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>${moduleNamespace}</RootNamespace>
+    <TargetFramework>netcoreapp3.1</TargetFramework>${defaultNamespace}
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,7 +33,7 @@ export class AspNetCoreProject_ProjectFileGenerator extends ProjectFileGenerator
     }
 }
 
-export class AspNetCoreProject_EntityManagerClassGenerator extends CSharpContentGenerator {
+export class AspProject_EntityManagerClassGenerator extends CSharpContentGenerator {
     constructor(item) {
         super();
 
@@ -105,7 +108,7 @@ export class AspNetCoreProject_EntityManagerClassGenerator extends CSharpContent
         constructorParameters += `,
             IHttpContextAccessor contextAccessor`;
 
-        var content = `using Microsoft.AspNetCore.Http;
+        const content = `using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MotiNet.Entities;
 using System.Collections.Generic;
@@ -130,7 +133,7 @@ namespace ${namespace}
     }
 }
 
-export class AspNetCoreProject_DependencyInjectionClassGenerator extends CSharpContentGenerator {
+export class AspProject_DependencyInjectionClassGenerator extends CSharpContentGenerator {
     constructor(module) {
         super();
 
@@ -139,7 +142,7 @@ export class AspNetCoreProject_DependencyInjectionClassGenerator extends CSharpC
 
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
-        const moduleName = ContentHelper.getModuleName(this.module);
+        const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
 
         var registrations = '';
 
@@ -156,15 +159,15 @@ export class AspNetCoreProject_DependencyInjectionClassGenerator extends CSharpC
             registrations += '\n';
         }
 
-        var content = `using Microsoft.AspNetCore.Http;
+        const content = `using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ${namespace};
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class AspNet${moduleName}BuilderExtensions
+    public static class AspNet${moduleCommonName}BuilderExtensions
     {
-        public static ${moduleName}Builder AddAspNetCore(this ${moduleName}Builder builder)
+        public static ${moduleCommonName}Builder AddAspNetCore(this ${moduleCommonName}Builder builder)
         {
             // Hosting doesn't add IHttpContextAccessor by default
             builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();

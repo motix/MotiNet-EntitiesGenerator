@@ -1,64 +1,65 @@
-﻿export default class ContentHelper {
+﻿import './types';
+
+export class IdentifierHelper {
+    /**
+     * @param {Module} module
+     */
+    static getModuleCommonName(module) {
+        return module.hasOwnNamespace ? module.name : module.project.namespace.substr(module.project.namespace.lastIndexOf('.') + 1);
+    }
+
+    /**
+     * @param {Module} module
+     */
+    static getModuleRootNamespace(module) {
+        const projectRootNamespace = module.project.namespace === null ? module.project.name : module.project.namespace;
+        const moduleNamespace = module.hasOwnNamespace ? `.${module.name}` : '';
+        return projectRootNamespace + moduleNamespace;
+    }
+}
+
+export default class ContentHelper {
     static get MotiNetCoreVersion() { return '1.1.0-beta-0009' };
     static get MotiNetEntitiesVersion() { return '1.1.0-beta-0018' };
 
-    // Project name
+    // Organized
 
-    static get_CoreProject_Name(module) {
-        return ContentHelper.getModuleNamespace(module) + '.Core';
+    // String Generations
+
+    static newGuid() {
+        return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        ).toUpperCase();
     }
 
-    static get_SealedModelsProject_Name(module) {
-        return ContentHelper.getModuleNamespace(module) + '.SealedModels';
-    }
 
-    static get_EntityFrameworkCoreProject_Name(module) {
-        return ContentHelper.getModuleNamespace(module) + '.EntityFrameworkCore';
-    }
-
-    static get_EntityFrameworkCoreSealedModelsProject_Name(module) {
-        return ContentHelper.getModuleNamespace(module) + '.EntityFrameworkCore.SealedModels';
-    }
-
-    static get_AspNetCoreProject_Name(module) {
-        return ContentHelper.getModuleNamespace(module) + '.AspNetCore';
-    }
-
-    static get_AspNetCoreMvcDefaultViewModelsProject_Name(module) {
-        return ContentHelper.getModuleNamespace(module) + '.AspNetCore.Mvc.DefaultViewModels';
-    }
-
-    static get_WebProject_Name(project) {
-        return project.namespace === null ? project.name : project.namespace + '.Web';
-    }
+    // Todo::
 
     // Project namespace
 
     static get_CoreProject_Namespace(module) {
-        return ContentHelper.getModuleNamespace(module);
+        return IdentifierHelper.getModuleRootNamespace(module);
     }
 
-    static get_SealedModelsProject_Namespace(module) {
-        return ContentHelper.getModuleNamespace(module);
+    static get_SmProject_Namespace(module) {
+        return IdentifierHelper.getModuleRootNamespace(module);
     }
 
-    static get_EntityFrameworkCoreProject_Namespace(module) {
+    static get_EfProject_Namespace(module) {
         return null;
     }
 
-    static get_EntityFrameworkCoreSealedModelsProject_Namespace(module) {
-        return ContentHelper.getModuleNamespace(module) + '.EntityFrameworkCore';
+    static get_EfSmProject_Namespace(module) {
+        return IdentifierHelper.getModuleRootNamespace(module) + '.EntityFrameworkCore';
     }
 
-    static get_AspNetCoreProject_Namespace(module) {
-        return ContentHelper.getModuleNamespace(module);
+    static get_AspProject_Namespace(module) {
+        return IdentifierHelper.getModuleRootNamespace(module);
     }
 
-    static get_AspNetCoreMvcDefaultViewModelsProject_Namespace(module) {
-        return ContentHelper.getModuleNamespace(module) + '.Mvc';
+    static get_AspDvProject_Namespace(module) {
+        return IdentifierHelper.getModuleRootNamespace(module) + '.Mvc';
     }
-
-    // ScopedNameBasedEntity
 
     // Utilities
 
@@ -86,19 +87,9 @@
         return names;
     }
 
-    static newGuid() {
-        return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-        ).toUpperCase();
-    }
-
     static getModuleNamespace(module) {
         return (module.project.namespace === null ? module.project.name : module.project.namespace) +
             (module.hasOwnNamespace ? '.' + module.name : '');
-    }
-
-    static getModuleName(module) {
-        return module.hasOwnNamespace ? module.name : module.project.namespace.substr(module.project.namespace.lastIndexOf('.') + 1);
     }
 
     static getLowerCaseEntityName(name) {
@@ -135,7 +126,7 @@
     }
 
     static generateResourceFileContent(items) {
-        var content = `<?xml version="1.0" encoding="utf-8"?>
+        const content = `<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -148,11 +139,9 @@
   </resheader>
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>{items}
+  </resheader>${items}
 </root>
 `;
-
-        content = content.replace('{items}', items);
 
         return content;
     }

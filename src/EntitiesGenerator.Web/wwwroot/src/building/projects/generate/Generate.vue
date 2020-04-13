@@ -69,7 +69,7 @@
     import VueConfigHelper from '../../../shared/utilities/VueConfigHelper';
 
     import EditPageController from '../../../shared/components/pages/EditPageController';
-    import SolutionStructureGenerator from './solution-structure-generator';
+    import SolutionStructureGenerator from './structure-generators/solution-structure-generator';
     import SolutionNode from './SolutionNode.vue';
 
     export class GeneratePageController extends EditPageController {

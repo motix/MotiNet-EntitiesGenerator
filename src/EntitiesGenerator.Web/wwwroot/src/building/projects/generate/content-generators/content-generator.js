@@ -16,4 +16,12 @@ export class ProjectFileGenerator extends ContentGenerator {
     }
 
     get language() { return 'xml'; }
+
+    getProjectDefaultNamespaceIfRequired(structureGeneratorClass) {
+        const projectName = structureGeneratorClass.getProjectName(this.module);
+        const namespace = structureGeneratorClass.getDefaultNamespace(this.module);
+
+        return projectName === namespace ? '' : `
+    <RootNamespace>${namespace}</RootNamespace>`;
+    }
 }

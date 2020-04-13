@@ -1,15 +1,21 @@
-﻿import pluralize from 'pluralize';
+﻿// EntityFrameworkCore
+
+import pluralize from 'pluralize';
 import 'prismjs/components/prism-csharp';
+import { IdentifierHelper } from '../content-helper';
 import ContentHelper from '../content-helper';
 
+import * as SG from '../structure-generators/structure-generators';
 import { CSharpContentGenerator, ProjectFileGenerator} from './content-generator';
 
-export class EntityFrameworkCoreProject_ProjectFileGenerator extends ProjectFileGenerator {
+export class EfProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
-        var content = `<Project Sdk="Microsoft.NET.Sdk">
+        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(SG.EfProjectSG);
+
+        const content = `<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>${defaultNamespace}
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +29,7 @@ export class EntityFrameworkCoreProject_ProjectFileGenerator extends ProjectFile
     }
 }
 
-export class EntityFrameworkCoreProject_DbContextClassGenerator extends CSharpContentGenerator {
+export class EfProject_DbContextClassGenerator extends CSharpContentGenerator {
     constructor(module) {
         super();
 
@@ -32,8 +38,8 @@ export class EntityFrameworkCoreProject_DbContextClassGenerator extends CSharpCo
 
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
-        const moduleName = ContentHelper.getModuleName(this.module);
-        const moduleGenericParametersWhiteSpace = '                                        ' + ContentHelper.generateWhiteSpace(moduleName.length);
+        const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
+        const moduleGenericParametersWhiteSpace = '                                        ' + ContentHelper.generateWhiteSpace(moduleCommonName.length);
         const moduleGenericParametersLastLineBreak = this.module.items.length === 0 ? '' : '\n' + moduleGenericParametersWhiteSpace;
 
         var moduleGenericParameters = '';
@@ -89,21 +95,21 @@ export class EntityFrameworkCoreProject_DbContextClassGenerator extends CSharpCo
             }
         }
 
-        var content = `using Microsoft.EntityFrameworkCore;
+        const content = `using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 
 namespace ${namespace}.EntityFrameworkCore
 {
-    public abstract class ${moduleName}DbContextBase<${moduleGenericParameters}${moduleGenericParametersLastLineBreak}// Key
+    public abstract class ${moduleCommonName}DbContextBase<${moduleGenericParameters}${moduleGenericParametersLastLineBreak}// Key
 ${moduleGenericParametersWhiteSpace}TKey>
         : DbContext${moduleGenericParameterSpecifications}
         // Key
         where TKey : IEquatable<TKey>
     {
-        protected ${moduleName}DbContextBase(DbContextOptions options) : base(options) { }
+        protected ${moduleCommonName}DbContextBase(DbContextOptions options) : base(options) { }
 
-        protected ${moduleName}DbContextBase() { }
+        protected ${moduleCommonName}DbContextBase() { }
 ${properties}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {${registrations}

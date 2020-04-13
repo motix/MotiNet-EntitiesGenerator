@@ -1,19 +1,22 @@
-﻿import pluralize from 'pluralize';
+﻿// SealedModels
+
+import pluralize from 'pluralize';
 import 'prismjs/components/prism-csharp';
+import { IdentifierHelper } from '../content-helper';
 import ContentHelper from '../content-helper';
 
+import * as SG from '../structure-generators/structure-generators';
 import { CSharpContentGenerator, ProjectFileGenerator } from './content-generator';
 
-export class SealedModelsProject_ProjectFileGenerator extends ProjectFileGenerator {
+export class SmProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
-        const moduleNamespace = ContentHelper.getModuleNamespace(this.module);
-        const coreProjectName = ContentHelper.get_CoreProject_Name(this.module);
+        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(SG.SmProjectSG);
+        const coreProjectName = SG.CoreProjectSG.getProjectName(this.module);
 
-        var content = `<Project Sdk="Microsoft.NET.Sdk">
+        const content = `<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <RootNamespace>${moduleNamespace}</RootNamespace>
+    <TargetFramework>netstandard2.1</TargetFramework>${defaultNamespace}
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,7 +34,7 @@ export class SealedModelsProject_ProjectFileGenerator extends ProjectFileGenerat
     }
 }
 
-export class SealedModelsProject_EntityClassGenerator extends CSharpContentGenerator {
+export class SmProject_EntityClassGenerator extends CSharpContentGenerator {
     constructor(item) {
         super();
 
@@ -137,7 +140,7 @@ export class SealedModelsProject_EntityClassGenerator extends CSharpContentGener
             interfaces = interfaces.substr(0, interfaces.length - 1);
         }
 
-        var content = `using MotiNet.Entities;
+        const content = `using MotiNet.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -160,11 +163,12 @@ namespace ${namespace}
     }
 }
 
-export class SealedModelsProject_SubEntityClassGenerator extends CSharpContentGenerator {
-    constructor(item) {
+export class SmProject_SubEntityClassGenerator extends CSharpContentGenerator {
+    constructor(item, subEntityName) {
         super();
 
         this.item = item;
+        this.subEntityName = subEntityName;
     }
 
     generate() {
@@ -207,7 +211,7 @@ export class SealedModelsProject_SubEntityClassGenerator extends CSharpContentGe
             interfaces = interfaces.substr(0, interfaces.length - 1);
         }
 
-        var content = `using MotiNet.Entities;
+        const content = `using MotiNet.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -230,7 +234,7 @@ namespace ${namespace}
     }
 }
 
-export class SealedModelsProject_EntityAccessorClassGenerator extends CSharpContentGenerator {
+export class SmProject_EntityAccessorClassGenerator extends CSharpContentGenerator {
     constructor(item) {
         super();
 
@@ -323,7 +327,7 @@ export class SealedModelsProject_EntityAccessorClassGenerator extends CSharpCont
             methods = methods.substr(1);
         }
 
-        var content = `using System;
+        const content = `using System;
 
 namespace ${namespace}
 {
@@ -337,7 +341,7 @@ namespace ${namespace}
     }
 }
 
-export class SealedModelsProject_DependencyInjectionClassGenerator extends CSharpContentGenerator {
+export class SmProject_DependencyInjectionClassGenerator extends CSharpContentGenerator {
     constructor(module) {
         super();
 
@@ -346,7 +350,7 @@ export class SealedModelsProject_DependencyInjectionClassGenerator extends CShar
 
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
-        const moduleName = ContentHelper.getModuleName(this.module);
+        const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
 
         var moduleGenericParameters = '';
         var registrations = '';
@@ -355,7 +359,7 @@ export class SealedModelsProject_DependencyInjectionClassGenerator extends CShar
             const entityName = item.name;
             const emptyGenericParameters = ContentHelper.getEmptyEntityGenericParameters(item);
             const moduleGenericParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, false) ? (`
-                            ` + ContentHelper.generateWhiteSpace(moduleName.length)) : (item === this.module.items[0] ? '' : ' ');
+                            ` + ContentHelper.generateWhiteSpace(moduleCommonName.length)) : (item === this.module.items[0] ? '' : ' ');
             const makeGenericTypeParameterList = ContentHelper.getMakeGenericTypeParameterList(item);
 
             moduleGenericParameters += `${moduleGenericParametersLineBreak}${entityName},`;
@@ -379,18 +383,18 @@ export class SealedModelsProject_DependencyInjectionClassGenerator extends CShar
             moduleGenericParameters = '<' + ContentHelper.trimParameterList(moduleGenericParameters) + '>';
         }
 
-        var content = `using ${namespace};
+        const content = `using ${namespace};
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class SealedModels${moduleName}BuilderExtensions
+    public static class SealedModels${moduleCommonName}BuilderExtensions
     {
-        public static ${moduleName}Builder Add${moduleName}WithSealedModels(this IServiceCollection services)
-            => services.Add${moduleName}${moduleGenericParameters}()
+        public static ${moduleCommonName}Builder Add${moduleCommonName}WithSealedModels(this IServiceCollection services)
+            => services.Add${moduleCommonName}${moduleGenericParameters}()
                        .AddSealedModels();
 
-        public static ${moduleName}Builder AddSealedModels(this ${moduleName}Builder builder)
+        public static ${moduleCommonName}Builder AddSealedModels(this ${moduleCommonName}Builder builder)
         {
             var services = builder.Services;
 ${registrations}
