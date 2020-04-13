@@ -5,5 +5,7 @@
         public string ProjectId { get; set; }
 
         public FileFolderViewModel SolutionStructure { get; set; }
+
+        public bool ClearOutput { get; set; }
     }
 }
