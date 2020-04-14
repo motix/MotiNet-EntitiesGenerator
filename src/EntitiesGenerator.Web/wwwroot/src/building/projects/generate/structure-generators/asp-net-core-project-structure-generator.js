@@ -20,13 +20,13 @@ export class AspProjectSG {
     }
 
     /**
-     * @param {Module} module
      * @param {AllFeaturesGenerator} features
+     * @param {Module} module
      */
-    generateProjectStructure(module, features) {
+    generateProjectStructure(features, module) {
         const projectName = AspProjectSG.getProjectName(module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(module);
-        const managersFolder = this.generateManagersFolderStructure(module);
+        const managersFolder = this.generateManagersFolderStructure(features, module);
 
         const projectFolder = {
             type: 'folder',
@@ -37,7 +37,7 @@ export class AspProjectSG {
                     type: 'file',
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
-                    generator: new CG.AspProject_ProjectFileGenerator(module)
+                    generator: new CG.AspProject_ProjectFileGenerator(features, module)
                 },
                 managersFolder,
                 {
@@ -47,7 +47,7 @@ export class AspProjectSG {
                         {
                             type: 'file',
                             name: 'AspNet' + moduleCommonName + 'BuilderExtensions.cs',
-                            generator: new CG.AspProject_DependencyInjectionClassGenerator(module)
+                            generator: new CG.AspProject_DependencyInjectionClassGenerator(features, module)
                         }
                     ]
                 }
@@ -58,9 +58,10 @@ export class AspProjectSG {
     }
 
     /**
+     * @param {AllFeaturesGenerator} features
      * @param {Module} module
      */
-    generateManagersFolderStructure(module) {
+    generateManagersFolderStructure(features, module) {
         const folder = {
             type: 'folder',
             name: '_Managers',
@@ -71,7 +72,7 @@ export class AspProjectSG {
             folder.children.push({
                 type: 'file',
                 name: 'AspNet' + item.name + 'Manager.cs',
-                generator: new CG.AspProject_EntityManagerClassGenerator(item)
+                generator: new CG.AspProject_EntityManagerClassGenerator(features, item)
             });
         }
 

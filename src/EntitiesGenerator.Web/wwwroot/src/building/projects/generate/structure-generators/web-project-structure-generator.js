@@ -20,10 +20,10 @@ export class WebProjectSG {
     }
 
     /**
-     * @param {Project} project
      * @param {AllFeaturesGenerator} features
+     * @param {Project} project
      */
-    generateProjectStructure(project, features) {
+    generateProjectStructure(features, project) {
         const projectName = WebProjectSG.getProjectName(project);
 
         const projectFolder = {

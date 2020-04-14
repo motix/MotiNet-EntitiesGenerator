@@ -4,15 +4,9 @@ import 'prismjs/components/prism-markdown';
 import ContentHelper from '../content-helper';
 
 import * as SG from '../structure-generators/structure-generators';
-import { ContentGenerator } from './content-generator';
+import { ContentGenerator, ProjectSpecificContentGenerator } from './content-generator';
 
-export class SolutionFileGenerator extends ContentGenerator {
-    constructor(project) {
-        super();
-
-        this.project = project;
-    }
-
+export class SolutionFileGenerator extends ProjectSpecificContentGenerator {
     get language() { return 'solution-file'; }
 
     generate() {
@@ -94,13 +88,7 @@ EndProject
     }
 }
 
-export class SolutionReadmeGenerator extends ContentGenerator {
-    constructor(project) {
-        super();
-
-        this.project = project;
-    }
-
+export class SolutionReadmeGenerator extends ProjectSpecificContentGenerator {
     get language() { return 'markdown'; }
 
     generate() {

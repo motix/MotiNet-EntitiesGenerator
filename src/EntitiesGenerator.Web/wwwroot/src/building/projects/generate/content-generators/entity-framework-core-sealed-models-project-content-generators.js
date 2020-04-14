@@ -5,7 +5,7 @@ import { IdentifierHelper } from '../content-helper';
 import ContentHelper from '../content-helper';
 
 import * as SG from '../structure-generators/structure-generators';
-import { CSharpContentGenerator, ProjectFileGenerator } from './content-generator';
+import { CSharpModuleSpecificContentGenerator, CSharpEntitySpecificContentGenerator, ProjectFileGenerator } from './content-generator';
 
 export class EfSmProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
@@ -35,13 +35,7 @@ export class EfSmProject_ProjectFileGenerator extends ProjectFileGenerator {
     }
 }
 
-export class EfSmProject_DbContextClassGenerator extends CSharpContentGenerator {
-    constructor(module) {
-        super();
-
-        this.module = module;
-    }
-
+export class EfSmProject_DbContextClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
@@ -93,13 +87,7 @@ ${moduleGenericParametersWhiteSpace}string>
     }
 }
 
-export class EfSmProject_EntityStoreClassGenerator extends CSharpContentGenerator {
-    constructor(item) {
-        super();
-
-        this.item = item;
-    }
-
+export class EfSmProject_EntityStoreClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
@@ -215,13 +203,7 @@ namespace ${namespace}.EntityFrameworkCore
     }
 }
 
-export class EfSmProject_DependencyInjectionClassGenerator extends CSharpContentGenerator {
-    constructor(module) {
-        super();
-
-        this.module = module;
-    }
-
+export class EfSmProject_DependencyInjectionClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);

@@ -20,10 +20,10 @@ export class EfProjectSG {
     }
 
     /**
-     * @param {Module} module
      * @param {AllFeaturesGenerator} features
+     * @param {Module} module
      */
-    generateProjectStructure(module, features) {
+    generateProjectStructure(features, module) {
         const projectName = EfProjectSG.getProjectName(module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(module);
 
@@ -36,12 +36,12 @@ export class EfProjectSG {
                     type: 'file',
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
-                    generator: new CG.EfProject_ProjectFileGenerator(module)
+                    generator: new CG.EfProject_ProjectFileGenerator(features, module)
                 },
                 {
                     type: 'file',
                     name: moduleCommonName + 'DbContextBase.cs',
-                    generator: new CG.EfProject_DbContextClassGenerator(module)
+                    generator: new CG.EfProject_DbContextClassGenerator(features, module)
                 }
             ]
         }

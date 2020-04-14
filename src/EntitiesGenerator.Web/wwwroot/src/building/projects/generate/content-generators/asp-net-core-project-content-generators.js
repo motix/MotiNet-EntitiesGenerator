@@ -5,7 +5,7 @@ import { IdentifierHelper } from '../content-helper';
 import ContentHelper from '../content-helper';
 
 import * as SG from '../structure-generators/structure-generators';
-import { CSharpContentGenerator, ProjectFileGenerator } from './content-generator';
+import { CSharpModuleSpecificContentGenerator, CSharpEntitySpecificContentGenerator, ProjectFileGenerator } from './content-generator';
 
 export class AspProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
@@ -33,13 +33,7 @@ export class AspProject_ProjectFileGenerator extends ProjectFileGenerator {
     }
 }
 
-export class AspProject_EntityManagerClassGenerator extends CSharpContentGenerator {
-    constructor(item) {
-        super();
-
-        this.item = item;
-    }
-
+export class AspProject_EntityManagerClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
@@ -133,13 +127,7 @@ namespace ${namespace}
     }
 }
 
-export class AspProject_DependencyInjectionClassGenerator extends CSharpContentGenerator {
-    constructor(module) {
-        super();
-
-        this.module = module;
-    }
-
+export class AspProject_DependencyInjectionClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);

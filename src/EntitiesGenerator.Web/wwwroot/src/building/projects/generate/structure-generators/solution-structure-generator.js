@@ -4,16 +4,17 @@
 //    fileType:     solutionFile | projectFile
 //}
 
+import AllFeaturesGenerator from '../feature-generators/all-features-generator';
 import * as SG from './structure-generators';
 import * as CG from '../content-generators/content-generators';
-import AllFeaturesGenerator from '../feature-generators/all-features-generator';
 
 export default class SolutionStructureGenerator {
     /**
      * @param {Project} project
      */
     static generateSolutionStructure(project) {
-        const srcFolder = this.generateSrcStructure(project);
+        const features = new AllFeaturesGenerator();
+        const srcFolder = this.generateSrcStructure(features, project);
 
         const solutionFolder = {
             type: 'folder',
@@ -24,7 +25,7 @@ export default class SolutionStructureGenerator {
                     type: 'file',
                     fileType: 'solutionFile',
                     name: project.name + '.sln',
-                    generator: new CG.SolutionFileGenerator(project)
+                    generator: new CG.SolutionFileGenerator(features, project)
                 },
                 srcFolder,
                 {
@@ -34,24 +35,24 @@ export default class SolutionStructureGenerator {
                         {
                             type: 'file',
                             name: 'README.md',
-                            generator: new CG.SolutionReadmeGenerator(project)
+                            generator: new CG.SolutionReadmeGenerator(features, project)
                         },
                         {
                             type: 'file',
                             name: 'NuGet.config',
-                            generator: new CG.SolutionNuGetGenerator()
+                            generator: new CG.SolutionNuGetGenerator(features)
                         }
                     ]
                 },
                 {
                     type: 'excludedFile',
                     name: '.gitattributes',
-                    generator: new CG.SolutionGitattributesGenerator()
+                    generator: new CG.SolutionGitattributesGenerator(features)
                 },
                 {
                     type: 'excludedFile',
                     name: '.gitignore',
-                    generator: new CG.SolutionGitignoreGenerator()
+                    generator: new CG.SolutionGitignoreGenerator(features)
                 }
             ]
         };
@@ -102,9 +103,10 @@ export default class SolutionStructureGenerator {
     }
 
     /**
-    * @param {Project} project
-    */
-    static generateSrcStructure(project) {
+     * @param {AllFeaturesGenerator} features
+     * @param {Project} project
+     */
+    static generateSrcStructure(features, project) {
         const srcFolder = {
             type: 'folder',
             name: 'src',
@@ -112,21 +114,21 @@ export default class SolutionStructureGenerator {
             ]
         };
 
-        const features = new AllFeaturesGenerator();
         for (const module of project.modules) {
-            const moduleStructure = this.generateModuleStructure(module);
+            const moduleStructure = this.generateModuleStructure(features, module);
             srcFolder.children = srcFolder.children.concat(moduleStructure);
         }
 
-        srcFolder.children.push(new SG.WebProjectSG().generateProjectStructure(project, features));
+        srcFolder.children.push(new SG.WebProjectSG().generateProjectStructure(features, project));
 
         return srcFolder;
     }
 
     /**
+     * @param {AllFeaturesGenerator} features
      * @param {Module} module
      */
-    static generateModuleStructure(module) {
+    static generateModuleStructure(features, module) {
         const moduleStructure = [];
         var moduleProjects;
 
@@ -142,14 +144,12 @@ export default class SolutionStructureGenerator {
             moduleProjects = moduleStructure;
         }
 
-        const features = new AllFeaturesGenerator();
-
-        moduleProjects.push(new SG.CoreProjectSG().generateProjectStructure(module, features));
-        moduleProjects.push(new SG.SmProjectSG().generateProjectStructure(module, features));
-        moduleProjects.push(new SG.EfProjectSG().generateProjectStructure(module, features));
-        moduleProjects.push(new SG.EfSmProjectSG().generateProjectStructure(module, features));
-        moduleProjects.push(new SG.AspProjectSG().generateProjectStructure(module, features));
-        moduleProjects.push(new SG.AspDvProjectSG().generateProjectStructure(module, features));
+        moduleProjects.push(new SG.CoreProjectSG().generateProjectStructure(features, module));
+        moduleProjects.push(new SG.SmProjectSG().generateProjectStructure(features, module));
+        moduleProjects.push(new SG.EfProjectSG().generateProjectStructure(features, module));
+        moduleProjects.push(new SG.EfSmProjectSG().generateProjectStructure(features, module));
+        moduleProjects.push(new SG.AspProjectSG().generateProjectStructure(features, module));
+        moduleProjects.push(new SG.AspDvProjectSG().generateProjectStructure(features, module));
 
         return moduleStructure;
     }

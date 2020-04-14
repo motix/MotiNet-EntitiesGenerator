@@ -20,14 +20,14 @@ export class SmProjectSG {
     }
 
     /**
-     * @param {Module} module
      * @param {AllFeaturesGenerator} features
+     * @param {Module} module
      */
-    generateProjectStructure(module, features) {
+    generateProjectStructure(features, module) {
         const projectName = SmProjectSG.getProjectName(module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(module);
-        const entitiesFolder = this.generateEntitiesFolderStructure(module, features);
-        const accessorsFolder = this.generateAccessorsFolderStructure(module);
+        const entitiesFolder = this.generateEntitiesFolderStructure(features, module);
+        const accessorsFolder = this.generateAccessorsFolderStructure(features, module);
 
         const projectFolder = {
             type: 'folder',
@@ -38,7 +38,7 @@ export class SmProjectSG {
                     type: 'file',
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
-                    generator: new CG.SmProject_ProjectFileGenerator(module)
+                    generator: new CG.SmProject_ProjectFileGenerator(features, module)
                 },
                 entitiesFolder,
                 accessorsFolder,
@@ -49,7 +49,7 @@ export class SmProjectSG {
                         {
                             type: 'file',
                             name: 'SealedModels' + moduleCommonName + 'BuilderExtensions.cs',
-                            generator: new CG.SmProject_DependencyInjectionClassGenerator(module)
+                            generator: new CG.SmProject_DependencyInjectionClassGenerator(features, module)
                         }
                     ]
                 }
@@ -60,10 +60,10 @@ export class SmProjectSG {
     }
 
     /**
-     * @param {Module} module
      * @param {AllFeaturesGenerator} features
+     * @param {Module} module
      */
-    generateEntitiesFolderStructure(module, features) {
+    generateEntitiesFolderStructure(features, module) {
         const folder = {
             type: 'folder',
             name: '_Entities',
@@ -74,7 +74,7 @@ export class SmProjectSG {
             folder.children.push({
                 type: 'file',
                 name: item.name + '.cs',
-                generator: new CG.SmProject_EntityClassGenerator(item)
+                generator: new CG.SmProject_EntityClassGenerator(features, item)
             });
 
             const unmanagedSubEntities = features.itemUnmanagedSubEntities(item);
@@ -82,7 +82,7 @@ export class SmProjectSG {
                 folder.children.push({
                     type: 'file',
                     name: subEntity + '.cs',
-                    generator: new CG.SmProject_SubEntityClassGenerator(item, subEntity)
+                    generator: new CG.SmProject_SubEntityClassGenerator(features, item, subEntity)
                 });
             }
         }
@@ -91,9 +91,10 @@ export class SmProjectSG {
     }
 
     /**
+     * @param {AllFeaturesGenerator} features
      * @param {Module} module
      */
-    generateAccessorsFolderStructure(module) {
+    generateAccessorsFolderStructure(features, module) {
         const folder = {
             type: 'folder',
             name: '_Accessors',
@@ -104,7 +105,7 @@ export class SmProjectSG {
             folder.children.push({
                 type: 'file',
                 name: item.name + 'Accessor.cs',
-                generator: new CG.SmProject_EntityAccessorClassGenerator(item)
+                generator: new CG.SmProject_EntityAccessorClassGenerator(features, item)
             });
         }
 

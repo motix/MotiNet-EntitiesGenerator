@@ -20,13 +20,13 @@ export class AspDvProjectSG {
     }
 
     /**
-     * @param {Module} module
      * @param {AllFeaturesGenerator} features
+     * @param {Module} module
      */
-    generateProjectStructure(module, features) {
+    generateProjectStructure(features, module) {
         const projectName = AspDvProjectSG.getProjectName(module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(module);
-        const viewModelsFolder = this.generateViewModelsFolderStructure(module, features);
+        const viewModelsFolder = this.generateViewModelsFolderStructure(features, module);
 
         const projectFolder = {
             type: 'folder',
@@ -37,18 +37,18 @@ export class AspDvProjectSG {
                     type: 'file',
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
-                    generator: new CG.AspDvProject_ProjectFileGenerator(module)
+                    generator: new CG.AspDvProject_ProjectFileGenerator(features, module)
                 },
                 viewModelsFolder,
                 {
                     type: 'file',
                     name: 'DisplayNames.resx',
-                    generator: new CG.AspDvProject_DisplayNamesResxGenerator(module)
+                    generator: new CG.AspDvProject_DisplayNamesResxGenerator(features, module)
                 },
                 {
                     type: 'file',
                     name: moduleCommonName + 'Profile.cs',
-                    generator: new CG.AspDvProject_ProfileClassGenerator(module)
+                    generator: new CG.AspDvProject_ProfileClassGenerator(features, module)
                 },
                 {
                     type: 'folder',
@@ -57,7 +57,7 @@ export class AspDvProjectSG {
                         {
                             type: 'file',
                             name: 'DefaultViewModels' + moduleCommonName + 'BuilderExtensions.cs',
-                            generator: new CG.AspDvProject_DependencyInjectionClassGenerator(module)
+                            generator: new CG.AspDvProject_DependencyInjectionClassGenerator(features, module)
                         }
                     ]
                 }
@@ -68,10 +68,10 @@ export class AspDvProjectSG {
     }
 
     /**
-     * @param {Module} module
      * @param {AllFeaturesGenerator} features
+     * @param {Module} module
      */
-    generateViewModelsFolderStructure(module, features) {
+    generateViewModelsFolderStructure(features, module) {
         const folder = {
             type: 'folder',
             name: '_ViewModels',
@@ -82,7 +82,7 @@ export class AspDvProjectSG {
             folder.children.push({
                 type: 'file',
                 name: item.name + 'ViewModels.cs',
-                generator: new CG.AspDvProject_EntityViewModelsClassGenerator(item)
+                generator: new CG.AspDvProject_EntityViewModelsClassGenerator(features, item)
             });
 
             const unmanagedSubEntities = features.itemUnmanagedSubEntities(item);
@@ -90,7 +90,7 @@ export class AspDvProjectSG {
                 folder.children.push({
                     type: 'file',
                     name: subEntity + 'ViewModels.cs',
-                    generator: new CG.AspDvProject_SubEntityViewModelsClassGenerator(item, subEntity)
+                    generator: new CG.AspDvProject_SubEntityViewModelsClassGenerator(features, item, subEntity)
                 });
             }
         }

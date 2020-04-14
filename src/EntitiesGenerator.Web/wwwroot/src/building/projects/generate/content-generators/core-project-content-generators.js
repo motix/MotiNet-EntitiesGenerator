@@ -5,7 +5,7 @@ import { IdentifierHelper } from '../content-helper';
 import ContentHelper from '../content-helper';
 
 import * as SG from '../structure-generators/structure-generators';
-import { ContentGenerator, CSharpContentGenerator, ProjectFileGenerator } from './content-generator';
+import { ModuleSpecificContentGenerator, CSharpModuleSpecificContentGenerator, CSharpEntitySpecificContentGenerator, ProjectFileGenerator } from './content-generator';
 
 export class CoreProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
@@ -29,13 +29,7 @@ export class CoreProject_ProjectFileGenerator extends ProjectFileGenerator {
     }
 }
 
-export class CoreProject_EntityManagerInterfaceGenerator extends CSharpContentGenerator {
-    constructor(item) {
-        super();
-
-        this.item = item;
-    }
-
+export class CoreProject_EntityManagerInterfaceGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
@@ -128,13 +122,7 @@ namespace ${namespace}
     }
 }
 
-export class CoreProject_EntityStoreInterfaceGenerator extends CSharpContentGenerator {
-    constructor(item) {
-        super();
-
-        this.item = item;
-    }
-
+export class CoreProject_EntityStoreInterfaceGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
@@ -202,13 +190,7 @@ namespace ${namespace}
     }
 }
 
-export class CoreProject_EntityAccessorInterfaceGenerator extends CSharpContentGenerator {
-    constructor(item) {
-        super();
-
-        this.item = item;
-    }
-
+export class CoreProject_EntityAccessorInterfaceGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
@@ -273,13 +255,7 @@ namespace ${namespace}
     }
 }
 
-export class CoreProject_EntityManagerClassGenerator extends CSharpContentGenerator {
-    constructor(item) {
-        super();
-
-        this.item = item;
-    }
-
+export class CoreProject_EntityManagerClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
@@ -465,13 +441,7 @@ namespace ${namespace}
     }
 }
 
-export class CoreProject_EntityValidatorClassGenerator extends CSharpContentGenerator {
-    constructor(item) {
-        super();
-
-        this.item = item;
-    }
-
+export class CoreProject_EntityValidatorClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.item.module);
@@ -558,13 +528,7 @@ namespace ${namespace}
     }
 }
 
-export class CoreProject_ErrorDescriberClassGenerator extends CSharpContentGenerator {
-    constructor(module) {
-        super();
-
-        this.module = module;
-    }
-
+export class CoreProject_ErrorDescriberClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
@@ -654,13 +618,7 @@ namespace ${namespace}
     }
 }
 
-export class CoreProject_ErrorDescriberResourcesClassGenerator extends CSharpContentGenerator {
-    constructor(module) {
-        super();
-
-        this.module = module;
-    }
-
+export class CoreProject_ErrorDescriberResourcesClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
@@ -675,13 +633,7 @@ export class CoreProject_ErrorDescriberResourcesClassGenerator extends CSharpCon
     }
 }
 
-export class CoreProject_ErrorDescriberResourcesResxGenerator extends ContentGenerator {
-    constructor(module) {
-        super();
-
-        this.module = module;
-    }
-
+export class CoreProject_ErrorDescriberResourcesResxGenerator extends ModuleSpecificContentGenerator {
     get language() { return 'markup'; }
 
     generate() {
@@ -719,13 +671,7 @@ export class CoreProject_ErrorDescriberResourcesResxGenerator extends ContentGen
     }
 }
 
-export class CoreProject_BuilderClassGenerator extends CSharpContentGenerator {
-    constructor(module) {
-        super();
-
-        this.module = module;
-    }
-
+export class CoreProject_BuilderClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
@@ -792,13 +738,7 @@ ${properties}
     }
 }
 
-export class CoreProject_DependencyInjectionClassGenerator extends CSharpContentGenerator {
-    constructor(module) {
-        super();
-
-        this.module = module;
-    }
-
+export class CoreProject_DependencyInjectionClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);

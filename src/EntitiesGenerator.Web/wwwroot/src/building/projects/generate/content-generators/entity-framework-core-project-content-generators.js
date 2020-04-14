@@ -6,7 +6,7 @@ import { IdentifierHelper } from '../content-helper';
 import ContentHelper from '../content-helper';
 
 import * as SG from '../structure-generators/structure-generators';
-import { CSharpContentGenerator, ProjectFileGenerator} from './content-generator';
+import { CSharpModuleSpecificContentGenerator, ProjectFileGenerator} from './content-generator';
 
 export class EfProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
@@ -29,13 +29,7 @@ export class EfProject_ProjectFileGenerator extends ProjectFileGenerator {
     }
 }
 
-export class EfProject_DbContextClassGenerator extends CSharpContentGenerator {
-    constructor(module) {
-        super();
-
-        this.module = module;
-    }
-
+export class EfProject_DbContextClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);

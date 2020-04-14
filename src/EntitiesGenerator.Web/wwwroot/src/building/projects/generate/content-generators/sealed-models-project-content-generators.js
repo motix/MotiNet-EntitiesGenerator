@@ -6,7 +6,8 @@ import { IdentifierHelper } from '../content-helper';
 import ContentHelper from '../content-helper';
 
 import * as SG from '../structure-generators/structure-generators';
-import { CSharpContentGenerator, ProjectFileGenerator } from './content-generator';
+import { CSharpModuleSpecificContentGenerator, CSharpEntitySpecificContentGenerator, ProjectFileGenerator } from './content-generator';
+import AllFeaturesGenerator from '../feature-generators/all-features-generator';
 
 export class SmProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
@@ -34,13 +35,7 @@ export class SmProject_ProjectFileGenerator extends ProjectFileGenerator {
     }
 }
 
-export class SmProject_EntityClassGenerator extends CSharpContentGenerator {
-    constructor(item) {
-        super();
-
-        this.item = item;
-    }
-
+export class SmProject_EntityClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
@@ -163,11 +158,15 @@ namespace ${namespace}
     }
 }
 
-export class SmProject_SubEntityClassGenerator extends CSharpContentGenerator {
-    constructor(item, subEntityName) {
-        super();
+export class SmProject_SubEntityClassGenerator extends CSharpEntitySpecificContentGenerator {
+    /**
+     * @param {AllFeaturesGenerator} features
+     * @param {Item} item
+     * @param {string} subEntityName
+     */
+    constructor(features, item, subEntityName) {
+        super(features, item);
 
-        this.item = item;
         this.subEntityName = subEntityName;
     }
 
@@ -234,13 +233,7 @@ namespace ${namespace}
     }
 }
 
-export class SmProject_EntityAccessorClassGenerator extends CSharpContentGenerator {
-    constructor(item) {
-        super();
-
-        this.item = item;
-    }
-
+export class SmProject_EntityAccessorClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
@@ -341,13 +334,7 @@ namespace ${namespace}
     }
 }
 
-export class SmProject_DependencyInjectionClassGenerator extends CSharpContentGenerator {
-    constructor(module) {
-        super();
-
-        this.module = module;
-    }
-
+export class SmProject_DependencyInjectionClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);

@@ -20,14 +20,14 @@ export class CoreProjectSG {
     }
 
     /**
-     * @param {Module} module
      * @param {AllFeaturesGenerator} features
+     * @param {Module} module
      */
-    generateProjectStructure(module, features) {
+    generateProjectStructure(features, module) {
         const projectName = CoreProjectSG.getProjectName(module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(module);
         const validationRequired = features.moduleValidationRequired(module);
-        const entitiesFolder = this.generateEntitiesFolderStructure(module, features);
+        const entitiesFolder = this.generateEntitiesFolderStructure(features, module);
 
         const projectFolder = {
             type: 'folder',
@@ -38,7 +38,7 @@ export class CoreProjectSG {
                     type: 'file',
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
-                    generator: new CG.CoreProject_ProjectFileGenerator(module)
+                    generator: new CG.CoreProject_ProjectFileGenerator(features, module)
                 },
                 entitiesFolder
             ]
@@ -49,7 +49,7 @@ export class CoreProjectSG {
                 {
                     type: 'file',
                     name: moduleCommonName + 'ErrorDescriber.cs',
-                    generator: new CG.CoreProject_ErrorDescriberClassGenerator(module)
+                    generator: new CG.CoreProject_ErrorDescriberClassGenerator(features, module)
                 },
                 {
                     type: 'folder',
@@ -58,12 +58,12 @@ export class CoreProjectSG {
                         {
                             type: 'file',
                             name: moduleCommonName + 'ErrorDescriberResources.cs',
-                            generator: new CG.CoreProject_ErrorDescriberResourcesClassGenerator(module)
+                            generator: new CG.CoreProject_ErrorDescriberResourcesClassGenerator(features, module)
                         },
                         {
                             type: 'file',
                             name: moduleCommonName + 'ErrorDescriberResources.resx',
-                            generator: new CG.CoreProject_ErrorDescriberResourcesResxGenerator(module)
+                            generator: new CG.CoreProject_ErrorDescriberResourcesResxGenerator(features, module)
                         }
                     ]
                 }
@@ -74,7 +74,7 @@ export class CoreProjectSG {
             {
                 type: 'file',
                 name: moduleCommonName + 'Builder.cs',
-                generator: new CG.CoreProject_BuilderClassGenerator(module)
+                generator: new CG.CoreProject_BuilderClassGenerator(features, module)
             },
             {
                 type: 'folder',
@@ -83,7 +83,7 @@ export class CoreProjectSG {
                     {
                         type: 'file',
                         name: moduleCommonName + 'ServiceCollectionExtensions.cs',
-                        generator: new CG.CoreProject_DependencyInjectionClassGenerator(module)
+                        generator: new CG.CoreProject_DependencyInjectionClassGenerator(features, module)
                     }
                 ]
             }
@@ -93,10 +93,10 @@ export class CoreProjectSG {
     }
 
     /**
-     * @param {Module} module
      * @param {AllFeaturesGenerator} features
+     * @param {Module} module
      */
-    generateEntitiesFolderStructure(module, features) {
+    generateEntitiesFolderStructure(features, module) {
         const folder = {
             type: 'folder',
             name: '_Entities',
@@ -113,22 +113,22 @@ export class CoreProjectSG {
                     {
                         type: 'file',
                         name: 'I' + item.name + 'Manager.cs',
-                        generator: new CG.CoreProject_EntityManagerInterfaceGenerator(item)
+                        generator: new CG.CoreProject_EntityManagerInterfaceGenerator(features, item)
                     },
                     {
                         type: 'file',
                         name: 'I' + item.name + 'Store.cs',
-                        generator: new CG.CoreProject_EntityStoreInterfaceGenerator(item)
+                        generator: new CG.CoreProject_EntityStoreInterfaceGenerator(features, item)
                     },
                     {
                         type: 'file',
                         name: 'I' + item.name + 'Accessor.cs',
-                        generator: new CG.CoreProject_EntityAccessorInterfaceGenerator(item)
+                        generator: new CG.CoreProject_EntityAccessorInterfaceGenerator(features, item)
                     },
                     {
                         type: 'file',
                         name: item.name + 'Manager.cs',
-                        generator: new CG.CoreProject_EntityManagerClassGenerator(item)
+                        generator: new CG.CoreProject_EntityManagerClassGenerator(features, item)
                     }
                 ]
             };
@@ -137,7 +137,7 @@ export class CoreProjectSG {
                 entityFolder.children.push({
                     type: 'file',
                     name: item.name + 'Validator.cs',
-                    generator: new CG.CoreProject_EntityValidatorClassGenerator(item)
+                    generator: new CG.CoreProject_EntityValidatorClassGenerator(features, item)
                 });
             }
 

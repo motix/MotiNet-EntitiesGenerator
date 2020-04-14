@@ -22,8 +22,6 @@ export default class ContentHelper {
     static get MotiNetCoreVersion() { return '1.1.0-beta-0009' };
     static get MotiNetEntitiesVersion() { return '1.1.0-beta-0018' };
 
-    // Organized
-
     // String Generations
 
     static newGuid() {

@@ -20,13 +20,13 @@ export class EfSmProjectSG {
     }
 
     /**
-     * @param {Module} module
      * @param {AllFeaturesGenerator} features
+     * @param {Module} module
      */
-    generateProjectStructure(module, features) {
+    generateProjectStructure(features, module) {
         const projectName = EfSmProjectSG.getProjectName(module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(module);
-        const storesFolder = this.generateStoresFolderStructure(module);
+        const storesFolder = this.generateStoresFolderStructure(features, module);
 
         const projectFolder = {
             type: 'folder',
@@ -37,12 +37,12 @@ export class EfSmProjectSG {
                     type: 'file',
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
-                    generator: new CG.EfSmProject_ProjectFileGenerator(module)
+                    generator: new CG.EfSmProject_ProjectFileGenerator(features, module)
                 },
                 {
                     type: 'file',
                     name: moduleCommonName + 'DbContextBase.cs',
-                    generator: new CG.EfSmProject_DbContextClassGenerator(module)
+                    generator: new CG.EfSmProject_DbContextClassGenerator(features, module)
                 },
                 storesFolder,
                 {
@@ -52,7 +52,7 @@ export class EfSmProjectSG {
                         {
                             type: 'file',
                             name: 'EntityFrameworkCore' + moduleCommonName + 'BuilderExtensions.cs',
-                            generator: new CG.EfSmProject_DependencyInjectionClassGenerator(module)
+                            generator: new CG.EfSmProject_DependencyInjectionClassGenerator(features, module)
                         }
                     ]
                 }
@@ -63,9 +63,10 @@ export class EfSmProjectSG {
     }
 
     /**
+     * @param {AllFeaturesGenerator} features
      * @param {Module} module
      */
-    generateStoresFolderStructure(module) {
+    generateStoresFolderStructure(features, module) {
         const folder = {
             type: 'folder',
             name: '_Stores',
@@ -76,7 +77,7 @@ export class EfSmProjectSG {
             folder.children.push({
                 type: 'file',
                 name: item.name + 'Store.cs',
-                generator: new CG.EfSmProject_EntityStoreClassGenerator(item)
+                generator: new CG.EfSmProject_EntityStoreClassGenerator(features, item)
             });
         }
 

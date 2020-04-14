@@ -5,7 +5,7 @@ import { IdentifierHelper } from '../content-helper';
 import ContentHelper from '../content-helper';
 
 import * as SG from '../structure-generators/structure-generators';
-import { ContentGenerator, CSharpContentGenerator, ProjectFileGenerator } from './content-generator';
+import { ModuleSpecificContentGenerator, CSharpModuleSpecificContentGenerator, CSharpEntitySpecificContentGenerator, ProjectFileGenerator } from './content-generator';
 
 export class AspDvProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
@@ -50,13 +50,7 @@ export class AspDvProject_ProjectFileGenerator extends ProjectFileGenerator {
     }
 }
 
-export class AspDvProject_EntityViewModelsClassGenerator extends CSharpContentGenerator {
-    constructor(item) {
-        super();
-
-        this.item = item;
-    }
-
+export class AspDvProject_EntityViewModelsClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
@@ -87,11 +81,16 @@ namespace ${namespace}.Mvc
     }
 }
 
-export class AspDvProject_SubEntityViewModelsClassGenerator extends CSharpContentGenerator {
-    constructor(item) {
-        super();
+export class AspDvProject_SubEntityViewModelsClassGenerator extends CSharpEntitySpecificContentGenerator {
+    /**
+     * @param {AllFeaturesGenerator} features
+     * @param {Item} item
+     * @param {string} subEntityName
+     */
+    constructor(features, item, subEntityName) {
+        super(features, item);
 
-        this.item = item;
+        this.subEntityName = subEntityName;
     }
 
     generate() {
@@ -101,13 +100,7 @@ export class AspDvProject_SubEntityViewModelsClassGenerator extends CSharpConten
     }
 }
 
-export class AspDvProject_DisplayNamesResxGenerator extends ContentGenerator {
-    constructor(module) {
-        super();
-
-        this.module = module;
-    }
-
+export class AspDvProject_DisplayNamesResxGenerator extends ModuleSpecificContentGenerator {
     get language() { return 'markup'; }
 
     generate() {
@@ -119,13 +112,7 @@ export class AspDvProject_DisplayNamesResxGenerator extends ContentGenerator {
     }
 }
 
-export class AspDvProject_ProfileClassGenerator extends CSharpContentGenerator {
-    constructor(module) {
-        super();
-
-        this.module = module;
-    }
-
+export class AspDvProject_ProfileClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
@@ -163,13 +150,7 @@ namespace ${namespace}.Mvc
     }
 }
 
-export class AspDvProject_DependencyInjectionClassGenerator extends CSharpContentGenerator {
-    constructor(module) {
-        super();
-
-        this.module = module;
-    }
-
+export class AspDvProject_DependencyInjectionClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
         const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
