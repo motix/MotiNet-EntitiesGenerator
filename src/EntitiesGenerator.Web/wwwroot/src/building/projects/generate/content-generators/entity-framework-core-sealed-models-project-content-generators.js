@@ -148,18 +148,18 @@ export class EfSmProject_EntityStoreClassGenerator extends CSharpEntitySpecificC
 
         if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
             const scopeName = this.item.scopedNameBasedEntityFeatureSetting.scopeName;
-            const lowerCaseScopeName = ContentHelper.getLowerCaseEntityName(scopeName);
+            const lowerFirstScopeName = _.lowerFirst(scopeName);
 
             bases += `,
           IScopedNameBasedEntityStoreMarker<${entityName}, ${scopeName}, TDbContext>`;
 
             methods += `
 
-        public ${entityName} FindByName(string normalizedName, ${scopeName} ${lowerCaseScopeName})
-            => ScopedNameBasedEntityStoreHelper.FindEntityByName(this, normalizedName, ${lowerCaseScopeName}, x => x.${scopeName}Id);
+        public ${entityName} FindByName(string normalizedName, ${scopeName} ${lowerFirstScopeName})
+            => ScopedNameBasedEntityStoreHelper.FindEntityByName(this, normalizedName, ${lowerFirstScopeName}, x => x.${scopeName}Id);
 
-        public Task<${entityName}> FindByNameAsync(string normalizedName, ${scopeName} ${lowerCaseScopeName}, CancellationToken cancellationToken)
-            => ScopedNameBasedEntityStoreHelper.FindEntityByNameAsync(this, normalizedName, ${lowerCaseScopeName}, x => x.${scopeName}Id, cancellationToken);
+        public Task<${entityName}> FindByNameAsync(string normalizedName, ${scopeName} ${lowerFirstScopeName}, CancellationToken cancellationToken)
+            => ScopedNameBasedEntityStoreHelper.FindEntityByNameAsync(this, normalizedName, ${lowerFirstScopeName}, x => x.${scopeName}Id, cancellationToken);
 
         public ${scopeName} FindScopeById(object id)
             => ScopedNameBasedEntityStoreHelper.FindScopeById(this, id);

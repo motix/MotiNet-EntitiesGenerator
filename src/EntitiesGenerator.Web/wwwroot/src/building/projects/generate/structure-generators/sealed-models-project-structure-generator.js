@@ -70,21 +70,16 @@ export class SmProjectSG {
             children: []
         };
 
-        for (const item of module.items) {
+        const entities = features.moduleEntityNames(module);
+
+        for (const entity of entities) {
             folder.children.push({
                 type: 'file',
-                name: item.name + '.cs',
-                generator: new CG.SmProject_EntityClassGenerator(features, item)
+                name: `${entity.name}.cs`,
+                generator: entity.isUnmanagedSubEntity === true ?
+                    new CG.SmProject_SubEntityClassGenerator(features, entity.item, entity.name) :
+                    new CG.SmProject_EntityClassGenerator(features, entity.item)
             });
-
-            const unmanagedSubEntities = features.itemUnmanagedSubEntities(item);
-            for (const subEntity of unmanagedSubEntities) {
-                folder.children.push({
-                    type: 'file',
-                    name: subEntity + '.cs',
-                    generator: new CG.SmProject_SubEntityClassGenerator(features, item, subEntity)
-                });
-            }
         }
 
         return folder;

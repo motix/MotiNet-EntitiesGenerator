@@ -38,7 +38,6 @@ export class AspProject_EntityManagerClassGenerator extends CSharpEntitySpecific
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
         const entityGenericParameters = ContentHelper.getEntityGenericParameters(this.item);
-        const lowerCaseEntityName = ContentHelper.getLowerCaseEntityName(entityName);
 
         // Generic parameter specifications
 

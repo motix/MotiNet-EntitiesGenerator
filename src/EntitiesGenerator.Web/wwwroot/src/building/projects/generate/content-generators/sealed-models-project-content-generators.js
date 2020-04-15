@@ -238,7 +238,7 @@ export class SmProject_EntityAccessorClassGenerator extends CSharpEntitySpecific
         const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
         const entityName = this.item.name;
         const entityGenericParameters = ContentHelper.getEntitySpecificGenericParameters(this.item);
-        const lowerCaseEntityName = ContentHelper.getLowerCaseEntityName(entityName);
+        const lowerFirstEntityName = _.lowerFirst(entityName);
 
         var methods = '';
 
@@ -249,71 +249,71 @@ export class SmProject_EntityAccessorClassGenerator extends CSharpEntitySpecific
             this.item.readableIdEntityFeatureSetting !== null) {
             methods += `
 
-        public object GetId(${entityName} ${lowerCaseEntityName}) => ${lowerCaseEntityName}.Id;`;
+        public object GetId(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Id;`;
         }
 
         if (this.item.timeTrackedEntityFeatureSetting !== null) {
             methods += `
 
-        public DateTime GetDataCreateDate(${entityName} ${lowerCaseEntityName}) => ${lowerCaseEntityName}.DataCreateDate;
+        public DateTime GetDataCreateDate(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.DataCreateDate;
 
-        public void SetDataCreateDate(${entityName} ${lowerCaseEntityName}, DateTime dataCreateDate) => ${lowerCaseEntityName}.DataCreateDate = dataCreateDate;
+        public void SetDataCreateDate(${entityName} ${lowerFirstEntityName}, DateTime dataCreateDate) => ${lowerFirstEntityName}.DataCreateDate = dataCreateDate;
 
-        public void SetDataLastModifyDate(${entityName} ${lowerCaseEntityName}, DateTime dataLastModifyDate) => ${lowerCaseEntityName}.DataLastModifyDate = dataLastModifyDate;`;
+        public void SetDataLastModifyDate(${entityName} ${lowerFirstEntityName}, DateTime dataLastModifyDate) => ${lowerFirstEntityName}.DataLastModifyDate = dataLastModifyDate;`;
         }
 
         if (this.item.codeBasedEntityFeatureSetting !== null) {
             methods += `
 
-        public string GetCode(${entityName} ${lowerCaseEntityName}) => ${lowerCaseEntityName}.Code;
+        public string GetCode(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Code;
 
-        public void SetCode(${entityName} ${lowerCaseEntityName}, string code) => ${lowerCaseEntityName}.Code = code;`;
+        public void SetCode(${entityName} ${lowerFirstEntityName}, string code) => ${lowerFirstEntityName}.Code = code;`;
         }
 
         if (this.item.nameBasedEntityFeatureSetting !== null ||
             this.item.scopedNameBasedEntityFeatureSetting !== null) {
             methods += `
 
-        public string GetName(${entityName} ${lowerCaseEntityName}) => ${lowerCaseEntityName}.Name;
+        public string GetName(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Name;
 
-        public void SetNormalizedName(${entityName} ${lowerCaseEntityName}, string normalizedName) => ${lowerCaseEntityName}.NormalizedName = normalizedName;`;
+        public void SetNormalizedName(${entityName} ${lowerFirstEntityName}, string normalizedName) => ${lowerFirstEntityName}.NormalizedName = normalizedName;`;
         }
 
         if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
             const scopeName = this.item.scopedNameBasedEntityFeatureSetting.scopeName;
-            const lowerCaseScopeName = ContentHelper.getLowerCaseEntityName(scopeName);
+            const lowerFirstScopeName = _.lowerFirst(scopeName);
 
             methods += `
 
-        public object GetScopeId(${entityName} ${lowerCaseEntityName}) => ${lowerCaseEntityName}.${scopeName}Id;
+        public object GetScopeId(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.${scopeName}Id;
 
-        public void SetScopeId(${entityName} ${lowerCaseEntityName}, object ${lowerCaseScopeName}Id) => ${lowerCaseEntityName}.${scopeName}Id = (string)${lowerCaseScopeName}Id;
+        public void SetScopeId(${entityName} ${lowerFirstEntityName}, object ${lowerFirstScopeName}Id) => ${lowerFirstEntityName}.${scopeName}Id = (string)${lowerFirstScopeName}Id;
 
-        public ${scopeName} GetScope(${entityName} ${lowerCaseEntityName}) => ${lowerCaseEntityName}.${scopeName};
+        public ${scopeName} GetScope(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.${scopeName};
 
-        public void SetScope(${entityName} ${lowerCaseEntityName}, ${scopeName} ${lowerCaseScopeName}) => ${lowerCaseEntityName}.${scopeName} = ${lowerCaseScopeName};`;
+        public void SetScope(${entityName} ${lowerFirstEntityName}, ${scopeName} ${lowerFirstScopeName}) => ${lowerFirstEntityName}.${scopeName} = ${lowerFirstScopeName};`;
         }
 
         if (this.item.readableIdEntityFeatureSetting !== null) {
             if (this.item.codeBasedEntityFeatureSetting !== null) {
                 methods += `
 
-        public object GetIdSource(${entityName} ${lowerCaseEntityName}) => ${lowerCaseEntityName}.Code;`;
+        public object GetIdSource(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Code;`;
             } else if (this.item.nameBasedEntityFeatureSetting !== null ||
                 this.item.scopedNameBasedEntityFeatureSetting !== null) {
                 methods += `
 
-        public object GetIdSource(${entityName} ${lowerCaseEntityName}) => ${lowerCaseEntityName}.Name;`;
+        public object GetIdSource(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Name;`;
             } else {
                 methods += `
 
         // TODO:: Implement
-        public object GetIdSource(${entityName} ${lowerCaseEntityName}) => throw new NotImplementedException();`;
+        public object GetIdSource(${entityName} ${lowerFirstEntityName}) => throw new NotImplementedException();`;
             }
 
             methods += `
 
-        public void SetId(${entityName} ${lowerCaseEntityName}, string id) => ${lowerCaseEntityName}.Id = id;`;
+        public void SetId(${entityName} ${lowerFirstEntityName}, string id) => ${lowerFirstEntityName}.Id = id;`;
         }
 
         if (methods !== '') {

@@ -270,6 +270,12 @@
 
             this.vm.solutionStructure = solutionStructure;
 
+            this.vm.select(solutionStructure
+                .children[1]  // src
+                .children[0]  // .Core
+                .children[5]  // DI
+                .children[0]) // DI.cs
+
             function setId(node) {
                 node.id = id;
                 id++;

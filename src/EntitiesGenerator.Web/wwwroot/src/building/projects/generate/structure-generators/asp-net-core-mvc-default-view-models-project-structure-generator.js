@@ -78,21 +78,16 @@ export class AspDvProjectSG {
             children: []
         };
 
-        for (const item of module.items) {
+        const entities = features.moduleEntityNames(module);
+
+        for (const entity of entities) {
             folder.children.push({
                 type: 'file',
-                name: item.name + 'ViewModels.cs',
-                generator: new CG.AspDvProject_EntityViewModelsClassGenerator(features, item)
+                name: `${entity.name}ViewModels.cs`,
+                generator: entity.isUnmanagedSubEntity === true ?
+                    new CG.AspDvProject_SubEntityViewModelsClassGenerator(features, entity.item, entity.name) :
+                    new CG.AspDvProject_EntityViewModelsClassGenerator(features, entity.item)
             });
-
-            const unmanagedSubEntities = features.itemUnmanagedSubEntities(item);
-            for (const subEntity of unmanagedSubEntities) {
-                folder.children.push({
-                    type: 'file',
-                    name: subEntity + 'ViewModels.cs',
-                    generator: new CG.AspDvProject_SubEntityViewModelsClassGenerator(features, item, subEntity)
-                });
-            }
         }
 
         return folder;

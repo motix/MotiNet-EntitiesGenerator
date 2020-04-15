@@ -1,6 +1,4 @@
-﻿import ContentHelper from '../content-helper';
-
-export default class FeatureGenerator {
+﻿export default class FeatureGenerator {
     get featureType() {
         return null;
     }
@@ -17,7 +15,7 @@ export default class FeatureGenerator {
      * @return {FeatureSetting}
      */
     itemFeatureSetting(item) {
-        const propertyName = ContentHelper.getLowerCaseEntityName(`${this.featureType}Setting`);
+        const propertyName = _.lowerFirst(`${this.featureType}FeatureSetting`);
         return item[propertyName];
     }
 
@@ -45,12 +43,29 @@ export default class FeatureGenerator {
 
     /**
      * @param {Item} item
-     * @return {string[]}
+     * @return {EntityNameListItem[]}
      */
-    itemUnmanagedSubEntities(item) {
+    itemEntityNames(item) {
         this.throwIfItemNotHasFeature(item);
 
-        return [];
+        return [{
+            item: item,
+            name: item.name,
+            lineBreak: item.parameterListLineBreak
+        }];
+    }
+
+    /**
+     * @param {Item} item
+     */
+    itemGenericTypeParameters(item) {
+        const entities = this.itemEntityNames(item);
+        const parameters = _.map(entities, value => `T${value.name}`);
+
+        var str = parameters.join(', ');
+        str = `<${str}>`;
+
+        return str;
     }
 
     /**
@@ -62,6 +77,140 @@ export default class FeatureGenerator {
             console.error(error);
             throw error.message;
         }
+    }
+
+    // Project specific content
+
+    // Core
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityManagerInterface_FeaturesCommentData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+
+        data.push(this.featureType);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityManagerInterface_ManagerInterfacesData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityStoreInterface_StoreInterfacesData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityAccessorInterface_AccessorInterfacesData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityManagerClass_ConstructorParametersData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityManagerClass_PropertiesAssignmentsData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityManagerClass_PropertiesDeclarations1Data(item, data) {
+        this.throwIfItemNotHasFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityManagerClass_PropertiesDeclarations2Data(item, data) {
+        this.throwIfItemNotHasFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityValidatorClass_ValidationsData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityValidatorClass_SubEntityValidationsData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_ErrorDescriberClass_DescribersData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_ErrorDescriberResourcesClass_ItemsData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {ParameterListItem[]} data
+     */
+    core_BuilderClass_ConstructorParametersData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {ParameterListItem[]} data
+     */
+    core_BuilderClass_ConstructBuilderParametersData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_BuilderClass_PropertiesDeclarationsData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_DependencyInjectionClass_EntityServiceRegistrationsData(item, data) {
+        this.throwIfItemNotHasFeature(item);
     }
 }
 

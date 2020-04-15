@@ -1,7 +1,7 @@
 ﻿// Core
 
 import 'prismjs/components/prism-csharp';
-import { IdentifierHelper } from '../content-helper';
+import { IdentifierHelper, StringHelper } from '../content-helper';
 import ContentHelper from '../content-helper';
 
 import * as SG from '../structure-generators/structure-generators';
@@ -31,157 +31,98 @@ export class CoreProject_ProjectFileGenerator extends ProjectFileGenerator {
 
 export class CoreProject_EntityManagerInterfaceGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
+        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.item.module);
         const entityName = this.item.name;
-        const entityGenericParameters = ContentHelper.getEntityGenericParameters(this.item);
+        const featuresCommentData = [];
+        const entityGenericTypeParameters = this.features.itemGenericTypeParameters(this.item);
+        const entityGenericTypeConstraints = this.features.itemGenericTypeConstraints(this.item, 2);
+        const managerInterfacesData = [];
 
-        // Features comment
-
-        var featuresComment = '';
-
-        for (var i = 0; i < ContentHelper.featureSettingTypes.length; i++) {
-            const settingType = ContentHelper.featureSettingTypes[i];
-            const settingName = ContentHelper.featureSettingPropertyNames[i];
-
-            if (this.item[settingName] !== null) {
-                featuresComment += `
-    // - ${settingType}`;
+        for (const feature of this.features.allFeatures) {
+            if (feature.itemHasFeature(this.item)) {
+                feature.core_EntityManagerInterface_FeaturesCommentData(this.item, featuresCommentData);
+                feature.core_EntityManagerInterface_ManagerInterfacesData(this.item, managerInterfacesData);
             }
         }
 
-        if (featuresComment === '') {
-            featuresComment = ' None';
-        }
-
-        // Interfaces
-
-        var interfaces = '';
-
-        if (this.item.entityFeatureSetting !== null) {
-            interfaces += `
-          IEntityManager<T${entityName}>,`;
-        }
-        if (this.item.timeTrackedEntityFeatureSetting !== null) {
-            interfaces += `
-          ITimeTrackedEntityManager<T${entityName}>,`;
-        }
-        if (this.item.codeBasedEntityFeatureSetting !== null) {
-            interfaces += `
-          ICodeBasedEntityManager<T${entityName}>,`;
-        }
-        if (this.item.nameBasedEntityFeatureSetting !== null) {
-            interfaces += `
-          INameBasedEntityManager<T${entityName}>,`;
-        }
-        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            interfaces += `
-          IScopedNameBasedEntityManager${entityGenericParameters},`;
-        }
-        if (this.item.readableIdEntityFeatureSetting !== null) {
-            interfaces += `
-          IReadableIdEntityManager<T${entityName}>,`;
-        }
-        if (this.item.onOffEntityFeatureSetting !== null) {
-            interfaces += `
-          IOnOffEntityManager<T${entityName}>,`;
-        }
-        if (this.item.preprocessedEntityFeatureSetting !== null) {
-            interfaces += `
-          IPreprocessedEntityManager<T${entityName}>,`;
-        }
-
-        if (interfaces !== '') {
-            interfaces = interfaces.substr(0, '        '.length + 1) + ':' + interfaces.substr('        '.length + 2);
-            interfaces = interfaces.substr(0, interfaces.length - 1);
-        }
-
-        // Generic parameter specifications
-
-        var entityGenericParameterSpecifications = `
-        where T${entityName} : class`;
-
-        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            entityGenericParameterSpecifications += `
-        where T${this.item.scopedNameBasedEntityFeatureSetting.scopeName} : class`;
-        }
-
-        // Content
+        const featuresComment = this.generateFeatureComments(featuresCommentData);
+        const managerInterfaces = StringHelper.generateBaseBlock(managerInterfacesData, 2, { start: 1 });
 
         const content = `using MotiNet.Entities;
 
 namespace ${namespace}
 {
-    // Entity Features:${featuresComment}
+${featuresComment}
 
-    public interface I${entityName}Manager${entityGenericParameters}${interfaces}${entityGenericParameterSpecifications}
+    public interface I${entityName}Manager${entityGenericTypeParameters}${managerInterfaces}
+${entityGenericTypeConstraints}
     { }
 }
 `;
 
         return content;
     }
+
+    /**
+     * @param {string[]} data
+     */
+    generateFeatureComments(data) {
+        var comments = '// Entity Features:'
+
+        if (data.length === 0) {
+            comments += ' None'
+        } else {
+            for (const comment of data) {
+                comments += '\n' + `// - ${comment}`;
+            }
+        }
+
+        comments = StringHelper.indent(comments, 1);
+
+        return comments;
+    }
+
+    /**
+     * @param {string[]} data
+     */
+    generateManagerInterfaces(data) {
+        if (data.length === 0) {
+            return '';
+        }
+
+        var interfaces = data.join('\n');
+
+        interfaces = StringHelper.addBaseBlockColon(interfaces, 2);
+        interfaces = '\n' + interfaces;
+
+        return interfaces;
+    }
 }
 
 export class CoreProject_EntityStoreInterfaceGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
+        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.item.module);
         const entityName = this.item.name;
-        const entityGenericParameters = ContentHelper.getEntityGenericParameters(this.item);
+        const entityGenericTypeParameters = this.features.itemGenericTypeParameters(this.item);
+        const entityGenericTypeConstraints = this.features.itemGenericTypeConstraints(this.item, 2);
+        const storeInterfacesData = [];
 
-        // Interfaces
-
-        var interfaces = '';
-
-        if (this.item.entityFeatureSetting !== null) {
-            interfaces += `
-          IEntityStore<T${entityName}>,`;
-        }
-        if (this.item.timeTrackedEntityFeatureSetting !== null) {
-            interfaces += `
-          ITimeTrackedEntityStore<T${entityName}>,`;
-        }
-        if (this.item.codeBasedEntityFeatureSetting !== null) {
-            interfaces += `
-          ICodeBasedEntityStore<T${entityName}>,`;
-        }
-        if (this.item.nameBasedEntityFeatureSetting !== null) {
-            interfaces += `
-          INameBasedEntityStore<T${entityName}>,`;
-        }
-        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            interfaces += `
-          IScopedNameBasedEntityStore${entityGenericParameters},`;
-        }
-        if (this.item.onOffEntityFeatureSetting !== null) {
-            interfaces += `
-          IOnOffEntityStore<T${entityName}>,`;
+        for (const feature of this.features.allFeatures) {
+            if (feature.itemHasFeature(this.item)) {
+                feature.core_EntityStoreInterface_StoreInterfacesData(this.item, storeInterfacesData);
+            }
         }
 
-        if (interfaces === '') {
-            interfaces = ' : IDisposable';
-        } else {
-            interfaces = interfaces.substr(0, '        '.length + 1) + ':' + interfaces.substr('        '.length + 2);
-            interfaces = interfaces.substr(0, interfaces.length - 1);
-        }
-
-        // Generic parameter specifications
-
-        var entityGenericParameterSpecifications = `
-        where T${entityName} : class`;
-
-        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            entityGenericParameterSpecifications += `
-        where T${this.item.scopedNameBasedEntityFeatureSetting.scopeName} : class`;
-        }
-
-        // Content
+        const storeInterfaces = storeInterfacesData.length === 0 ? ' : IDisposable' :
+            StringHelper.generateBaseBlock(storeInterfacesData, 2, { start: 1 });
 
         const content = `using MotiNet.Entities;
 using System;
 
 namespace ${namespace}
 {
-    public interface I${entityName}Store${entityGenericParameters}${interfaces}${entityGenericParameterSpecifications}
+    public interface I${entityName}Store${entityGenericTypeParameters}${storeInterfaces}
+${entityGenericTypeConstraints}
     { }
 }
 `;
@@ -192,61 +133,26 @@ namespace ${namespace}
 
 export class CoreProject_EntityAccessorInterfaceGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
+        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.item.module);
         const entityName = this.item.name;
-        const entityGenericParameters = ContentHelper.getEntityGenericParameters(this.item);
+        const entityGenericTypeParameters = this.features.itemGenericTypeParameters(this.item);
+        const entityGenericTypeConstraints = this.features.itemGenericTypeConstraints(this.item, 2);
+        const accessorInterfacesData = [];
 
-        // Interfaces
-
-        var interfaces = '';
-
-        if (this.item.entityFeatureSetting !== null) {
-            interfaces += `
-          IEntityAccessor<T${entityName}>,`;
-        }
-        if (this.item.timeTrackedEntityFeatureSetting !== null) {
-            interfaces += `
-          ITimeTrackedEntityAccessor<T${entityName}>,`;
-        }
-        if (this.item.codeBasedEntityFeatureSetting !== null) {
-            interfaces += `
-          ICodeBasedEntityAccessor<T${entityName}>,`;
-        }
-        if (this.item.nameBasedEntityFeatureSetting !== null) {
-            interfaces += `
-          INameBasedEntityAccessor<T${entityName}>,`;
-        }
-        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            interfaces += `
-          IScopedNameBasedEntityAccessor${entityGenericParameters},`;
-        }
-        if (this.item.readableIdEntityFeatureSetting !== null) {
-            interfaces += `
-          IReadableIdEntityAccessor<T${entityName}>,`;
+        for (const feature of this.features.allFeatures) {
+            if (feature.itemHasFeature(this.item)) {
+                feature.core_EntityAccessorInterface_AccessorInterfacesData(this.item, accessorInterfacesData);
+            }
         }
 
-        if (interfaces !== '') {
-            interfaces = interfaces.substr(0, '        '.length + 1) + ':' + interfaces.substr('        '.length + 2);
-            interfaces = interfaces.substr(0, interfaces.length - 1);
-        }
-
-        // Generic parameter specifications
-
-        var entityGenericParameterSpecifications = `
-        where T${entityName} : class`;
-
-        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            entityGenericParameterSpecifications += `
-        where T${this.item.scopedNameBasedEntityFeatureSetting.scopeName} : class`;
-        }
-
-        // Content
+        const accessorInterfaces = StringHelper.generateBaseBlock(accessorInterfacesData, 2, { start: 1 });
 
         const content = `using MotiNet.Entities;
 
 namespace ${namespace}
 {
-    public interface I${entityName}Accessor${entityGenericParameters}${interfaces}${entityGenericParameterSpecifications}
+    public interface I${entityName}Accessor${entityGenericTypeParameters}${accessorInterfaces}
+${entityGenericTypeConstraints}
     { }
 }
 `;
@@ -257,169 +163,49 @@ namespace ${namespace}
 
 export class CoreProject_EntityManagerClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
+        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.item.module);
         const entityName = this.item.name;
-        const entityGenericParameters = ContentHelper.getEntityGenericParameters(this.item);
+        const entityGenericTypeParameters = this.features.itemGenericTypeParameters(this.item);
+        const entityGenericTypeConstraints = this.features.itemGenericTypeConstraints(this.item, 2);
+        const constructorParametersData = [];
+        const baseConstructorParametersData = [];
+        const propertiesAssignmentsData = [];
+        const propertiesDeclarations1Data = [];
+        const propertiesDeclarations2Data = [];
 
-        // Generic parameter specifications
+        constructorParametersData.push(
+            `I${entityName}Store${entityGenericTypeParameters} store`,
+            `I${entityName}Accessor${entityGenericTypeParameters} accessor`
+        );
+        baseConstructorParametersData.push('store', 'accessor');
 
-        var entityGenericParameterSpecifications = `
-        where T${entityName} : class`;
-
-        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            entityGenericParameterSpecifications += `
-        where T${this.item.scopedNameBasedEntityFeatureSetting.scopeName} : class`;
-        }
-
-        // Constructor parameters, properties assignments
-
-        var constructorParameters = `
-            I${entityName}Store${entityGenericParameters} store,
-            I${entityName}Accessor${entityGenericParameters} accessor`;
-        var propertiesAssignments = '';
-
-        if (ContentHelper.entityValidationRequired(this.item)) {
-            constructorParameters += `,
-            IEnumerable<IValidator${entityGenericParameters}> validators`;
-        }
-
-        constructorParameters += `,
-            ILogger<${entityName}Manager${entityGenericParameters}> logger`;
-
-        if (this.item.codeBasedEntityFeatureSetting !== null) {
-            constructorParameters += `,
-            ILookupNormalizer<T${entityName}> codeNormalizer`;
-            propertiesAssignments += `
-            CodeNormalizer = codeNormalizer ?? throw new ArgumentNullException(nameof(codeNormalizer));
-`;
-
-            if (this.item.codeBasedEntityFeatureSetting.hasCodeGenerator === true) {
-                constructorParameters += `,
-            IEntityCodeGenerator<T${entityName}> codeGenerator`;
-                propertiesAssignments += `
-            CodeGenerator = codeGenerator ?? throw new ArgumentNullException(nameof(codeGenerator));
-`;
-            }
-        }
-
-        if (this.item.nameBasedEntityFeatureSetting !== null ||
-            this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            constructorParameters += `,
-            ILookupNormalizer<T${entityName}> nameNormalizer`;
-            propertiesAssignments += `
-            NameNormalizer = nameNormalizer ?? throw new ArgumentNullException(nameof(nameNormalizer));
-`;
-        }
-
-        if (this.item.preprocessedEntityFeatureSetting !== null) {
-            constructorParameters += `,
-            IEntityPreprocessor<T${entityName}> preprocessor`;
-            propertiesAssignments += `
-            EntityPreprocessor = preprocessor ?? throw new ArgumentNullException(nameof(preprocessor));
-`;
-        }
-
-        if (propertiesAssignments === '') {
-            propertiesAssignments = ' ';
+        if (this.features.itemValidationRequired(this.item)) {
+            constructorParametersData.push(`IEnumerable<IValidator${entityGenericTypeParameters}> validators`);
+            baseConstructorParametersData.push('validators');
         } else {
-            propertiesAssignments += '        ';
+            baseConstructorParametersData.push('null');
         }
 
-        // Base constructor parameters
+        constructorParametersData.push(`ILogger<${entityName}Manager${entityGenericTypeParameters}> logger`);
+        baseConstructorParametersData.push('logger');
 
-        const baseConstructorParameters = `store, accessor, ${ContentHelper.entityValidationRequired(this.item) ? 'validators' : 'null'}, logger`;
-
-        // Properties
-
-        var properties = '';
-
-        if (this.item.entityFeatureSetting !== null) {
-            properties += `
-
-        public IEntityStore<T${entityName}> EntityStore => Store as IEntityStore<T${entityName}>;
-
-        public IEntityAccessor<T${entityName}> EntityAccessor => Accessor as IEntityAccessor<T${entityName}>;`;
-        }
-
-        if (this.item.timeTrackedEntityFeatureSetting !== null) {
-            properties += `
-
-        public ITimeTrackedEntityStore<T${entityName}> TimeTrackedEntityStore => Store as ITimeTrackedEntityStore<T${entityName}>;
-
-        public ITimeTrackedEntityAccessor<T${entityName}> TimeTrackedEntityAccessor => Accessor as ITimeTrackedEntityAccessor<T${entityName}>;`;
-        }
-
-        if (this.item.codeBasedEntityFeatureSetting !== null) {
-            properties += `
-
-        public ICodeBasedEntityStore<T${entityName}> CodeBasedEntityStore => Store as ICodeBasedEntityStore<T${entityName}>;
-
-        public ICodeBasedEntityAccessor<T${entityName}> CodeBasedEntityAccessor => Accessor as ICodeBasedEntityAccessor<T${entityName}>;`;
-        }
-
-        if (this.item.nameBasedEntityFeatureSetting !== null) {
-            properties += `
-
-        public INameBasedEntityStore<T${entityName}> NameBasedEntityStore => Store as INameBasedEntityStore<T${entityName}>;
-
-        public INameBasedEntityAccessor<T${entityName}> NameBasedEntityAccessor => Accessor as INameBasedEntityAccessor<T${entityName}>;`;
-        }
-
-        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            properties += `
-
-        public IScopedNameBasedEntityStore${entityGenericParameters} ScopedNameBasedEntityStore => Store as IScopedNameBasedEntityStore${entityGenericParameters};
-
-        public IScopedNameBasedEntityAccessor${entityGenericParameters} ScopedNameBasedEntityAccessor => Accessor as IScopedNameBasedEntityAccessor${entityGenericParameters};`;
-        }
-
-        if (this.item.readableIdEntityFeatureSetting !== null) {
-            properties += `
-
-        public IReadableIdEntityAccessor<T${entityName}> ReadableIdEntityAccessor => Accessor as IReadableIdEntityAccessor<T${entityName}>;`;
-        }
-
-        if (this.item.onOffEntityFeatureSetting !== null) {
-            properties += `
-
-        public IOnOffEntityStore<T${entityName}> OnOffEntityStore => Store as IOnOffEntityStore<T${entityName}>;`;
-        }
-
-        properties += `
-
-        public I${entityName}Store${entityGenericParameters} ${entityName}Store => Store as I${entityName}Store${entityGenericParameters};
-
-        public I${entityName}Accessor${entityGenericParameters} ${entityName}Accessor => Accessor as I${entityName}Accessor${entityGenericParameters};`;
-
-        if (this.item.codeBasedEntityFeatureSetting !== null) {
-            properties += `
-
-        public ILookupNormalizer CodeNormalizer { get; }`;
-            if (this.item.codeBasedEntityFeatureSetting.hasCodeGenerator === true) {
-                properties += `
-
-        public IEntityCodeGenerator<T${entityName}> CodeGenerator { get; }`;
-            } else {
-                properties += `
-
-        public IEntityCodeGenerator<T${entityName}> CodeGenerator => null;`;
+        for (const feature of this.features.allFeatures) {
+            if (feature.itemHasFeature(this.item)) {
+                feature.core_EntityManagerClass_ConstructorParametersData(this.item, constructorParametersData);
+                feature.core_EntityManagerClass_PropertiesAssignmentsData(this.item, propertiesAssignmentsData);
+                feature.core_EntityManagerClass_PropertiesDeclarations1Data(this.item, propertiesDeclarations1Data);
+                feature.core_EntityManagerClass_PropertiesDeclarations2Data(this.item, propertiesDeclarations2Data);
             }
         }
 
-        if (this.item.nameBasedEntityFeatureSetting !== null ||
-            this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            properties += `
+        propertiesDeclarations1Data.push(`public I${entityName}Store${entityGenericTypeParameters} ${entityName}Store => Store as I${entityName}Store${entityGenericTypeParameters};`);
+        propertiesDeclarations1Data.push(`public I${entityName}Accessor${entityGenericTypeParameters} ${entityName}Accessor => Accessor as I${entityName}Accessor${entityGenericTypeParameters};`);
 
-        public ILookupNormalizer NameNormalizer { get; }`;
-        }
-
-        if (this.item.preprocessedEntityFeatureSetting !== null) {
-            properties += `
-
-        public IEntityPreprocessor<T${entityName}> EntityPreprocessor { get; }`;
-        }
-
-        // Content
+        const constructorParameters = StringHelper.joinLines(_.uniq(constructorParametersData), 3, ',', { start: 1 });
+        const baseConstructorParameters = baseConstructorParametersData.join(', ');
+        const propertiesAssignments = StringHelper.joinLines(_.uniq(propertiesAssignmentsData), 3, '', { start: 1, end: 1, endIndent: 2, spaceIfEmpty: true });
+        const propertiesDeclarations1 = StringHelper.joinLines(propertiesDeclarations1Data, 2, '\n', { start: 2 });
+        const propertiesDeclarations2 = StringHelper.joinLines(_.uniq(propertiesDeclarations2Data), 2, '\n', { start: 2 });
 
         const content = `using Microsoft.Extensions.Logging;
 using MotiNet.Entities;
@@ -428,11 +214,12 @@ using System.Collections.Generic;
 
 namespace ${namespace}
 {
-    public class ${entityName}Manager${entityGenericParameters} : ManagerBase${entityGenericParameters}, I${entityName}Manager${entityGenericParameters}${entityGenericParameterSpecifications}
+    public class ${entityName}Manager${entityGenericTypeParameters} : ManagerBase${entityGenericTypeParameters}, I${entityName}Manager${entityGenericTypeParameters}
+${entityGenericTypeConstraints}
     {
         public ${entityName}Manager(${constructorParameters})
             : base(${baseConstructorParameters})
-        {${propertiesAssignments}}${properties}
+        {${propertiesAssignments}}${propertiesDeclarations1}${propertiesDeclarations2}
     }
 }
 `;
@@ -443,56 +230,24 @@ namespace ${namespace}
 
 export class CoreProject_EntityValidatorClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
+        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.item.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.item.module);
         const entityName = this.item.name;
-        const lowerCaseEntityName = ContentHelper.getLowerCaseEntityName(entityName);
-        const entityGenericParameters = ContentHelper.getEntityGenericParameters(this.item);
+        const lowerFirstEntityName = _.lowerFirst(entityName);
+        const entityGenericTypeParameters = this.features.itemGenericTypeParameters(this.item);
+        const entityGenericTypeConstraints = this.features.itemGenericTypeConstraints(this.item, 2);
+        const validationsData = [];
+        const subEntityValidationsData = [];
 
-        // Generic parameter specifications
-
-        var entityGenericParameterSpecifications = `
-        where T${entityName} : class`;
-
-        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            entityGenericParameterSpecifications += `
-        where T${this.item.scopedNameBasedEntityFeatureSetting.scopeName} : class`;
+        for (const feature of this.features.allFeatures) {
+            if (feature.itemHasFeature(this.item)) {
+                feature.core_EntityValidatorClass_ValidationsData(this.item, validationsData);
+                feature.core_EntityValidatorClass_SubEntityValidationsData(this.item, subEntityValidationsData);
+            }
         }
 
-        // Validations
-
-        var validations = '';
-
-        if (this.item.codeBasedEntityFeatureSetting !== null) {
-            validations += `
-
-            await this.ValidateCodeAsync(theManager, Accessor, ${lowerCaseEntityName}, errors,
-                code => ErrorDescriber.Invalid${entityName}Code(code), code => ErrorDescriber.Duplicate${entityName}Code(code));`;
-        }
-
-        if (this.item.nameBasedEntityFeatureSetting !== null ||
-            this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            validations += `
-
-            await this.ValidateNameAsync(theManager, Accessor, ${lowerCaseEntityName}, errors,
-                name => ErrorDescriber.Invalid${entityName}Name(name), name => ErrorDescriber.Duplicate${entityName}Name(name));`;
-        }
-
-        // Sub-entity validations
-
-        var subEntityValidations = '';
-
-        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            const subEntityName = this.item.scopedNameBasedEntityFeatureSetting.scopeName;
-            const lowerCaseSubEntityName = ContentHelper.getLowerCaseEntityName(subEntityName);
-
-            subEntityValidations = `
-
-        public Task<GenericResult> ValidateAsync(object manager, T${subEntityName} ${lowerCaseSubEntityName})
-        {
-            throw new NeverValidateSubEntityException<T${subEntityName}, I${entityName}Manager${entityGenericParameters}>();
-        }`;
-        }
+        const validations = StringHelper.joinLines(_.uniq(validationsData), 3, '\n', { start: 2 });
+        const subEntityValidations = StringHelper.joinLines(subEntityValidationsData, 2, '\n', { start: 2 });
 
         const content = `using MotiNet;
 using MotiNet.Entities;
@@ -501,21 +256,22 @@ using System.Threading.Tasks;
 
 namespace ${namespace}
 {
-    public class ${entityName}Validator${entityGenericParameters} : IValidator${entityGenericParameters}${entityGenericParameterSpecifications}
+    public class ${entityName}Validator${entityGenericTypeParameters} : IValidator${entityGenericTypeParameters}
+${entityGenericTypeConstraints}
     {
-        public ${entityName}Validator(I${entityName}Accessor${entityGenericParameters} accessor, ${moduleCommonName}ErrorDescriber errorDescriber)
+        public ${entityName}Validator(I${entityName}Accessor${entityGenericTypeParameters} accessor, ${moduleCommonName}ErrorDescriber errorDescriber)
         {
-            Accessor = accessor;
-            ErrorDescriber = errorDescriber;
+            Accessor = accessor ?? throw new System.ArgumentNullException(nameof(accessor));
+            ErrorDescriber = errorDescriber ?? throw new System.ArgumentNullException(nameof(errorDescriber));
         }
 
-        protected I${entityName}Accessor${entityGenericParameters} Accessor { get; }
+        protected I${entityName}Accessor${entityGenericTypeParameters} Accessor { get; }
 
         private ${moduleCommonName}ErrorDescriber ErrorDescriber { get; }
 
-        public async Task<GenericResult> ValidateAsync(object manager, T${entityName} ${lowerCaseEntityName})
+        public async Task<GenericResult> ValidateAsync(object manager, T${entityName} ${lowerFirstEntityName})
         {
-            var theManager = this.GetManager<T${entityName}, I${entityName}Manager${entityGenericParameters}>(manager);
+            var theManager = this.GetManager<T${entityName}, I${entityName}Manager${entityGenericTypeParameters}>(manager);
             var errors = new List<GenericError>();${validations}
 
             return GenericResult.GetResult(errors);
@@ -530,64 +286,31 @@ namespace ${namespace}
 
 export class CoreProject_ErrorDescriberClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
+        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
-
-        var describers = '';
+        const describersData = [];
 
         for (const item of this.module.items) {
-            if (!ContentHelper.entityValidationRequired(item)) {
-                continue;
+            const itemDescribersData = [];
+
+            for (const feature of this.features.allFeatures) {
+                if (feature.itemHasFeature(item)) {
+                    feature.core_ErrorDescriberClass_DescribersData(item, itemDescribersData);
+                }
             }
 
-            const entityName = item.name;
-            const lowerCaseEntityName = ContentHelper.getLowerCaseEntityName(entityName);
+            if (itemDescribersData.length > 0) {
+                const entityName = item.name;
 
-            describers += `
-
-        #region ${entityName}`;
-
-            if (item.codeBasedEntityFeatureSetting !== null) {
-                describers += `
-
-        public virtual GenericError Invalid${entityName}Code(string ${lowerCaseEntityName}Code)
-            => new GenericError
-            {
-                Code = nameof(Invalid${entityName}Code),
-                Description = _localizer[nameof(Invalid${entityName}Code), ${lowerCaseEntityName}Code]
-            };
-
-        public virtual GenericError Duplicate${entityName}Code(string ${lowerCaseEntityName}Code)
-            => new GenericError
-            {
-                Code = nameof(Duplicate${entityName}Code),
-                Description = _localizer[nameof(Duplicate${entityName}Code), ${lowerCaseEntityName}Code]
-            };`;
+                describersData.push(
+                    `#region ${entityName}`,
+                    ...itemDescribersData,
+                    `#endregion ${entityName}`
+                )
             }
-
-            if (item.nameBasedEntityFeatureSetting !== null ||
-                item.scopedNameBasedEntityFeatureSetting !== null) {
-                describers += `
-
-        public virtual GenericError Invalid${entityName}Name(string ${lowerCaseEntityName}Name)
-            => new GenericError
-            {
-                Code = nameof(Invalid${entityName}Name),
-                Description = _localizer[nameof(Invalid${entityName}Name), ${lowerCaseEntityName}Name]
-            };
-
-        public virtual GenericError Duplicate${entityName}Name(string ${lowerCaseEntityName}Name)
-            => new GenericError
-            {
-                Code = nameof(Duplicate${entityName}Name),
-                Description = _localizer[nameof(Duplicate${entityName}Name), ${lowerCaseEntityName}Name]
-            };`;
-            }
-
-            describers += `
-
-        #endregion`;
         }
+
+        const describers = StringHelper.joinLines(_.uniq(describersData), 2, '\n', { start: 2 });
 
         const content = `using Microsoft.Extensions.Localization;
 using ${namespace}.Resources;
@@ -620,7 +343,7 @@ namespace ${namespace}
 
 export class CoreProject_ErrorDescriberResourcesClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
+        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
 
         const content = `namespace ${namespace}.Resources
@@ -637,33 +360,17 @@ export class CoreProject_ErrorDescriberResourcesResxGenerator extends ModuleSpec
     get language() { return 'markup'; }
 
     generate() {
-        var items = '';
+        const itemsData = [];
 
         for (const item of this.module.items) {
-            const entityName = item.name;
-            const displayName = item.displayName;
-
-            if (item.codeBasedEntityFeatureSetting !== null) {
-                items += `
-  <data name="Duplicate${entityName}Code" xml:space="preserve">
-    <value>${displayName} code '{0}' has already been used.</value>
-  </data>
-  <data name="Invalid${entityName}Code" xml:space="preserve">
-    <value>${displayName} code '{0}' is invalid.</value>
-  </data>`;
-            }
-
-            if (item.nameBasedEntityFeatureSetting !== null ||
-                item.scopedNameBasedEntityFeatureSetting !== null) {
-                items += `
-  <data name="Duplicate${entityName}Name" xml:space="preserve">
-    <value>${displayName} name '{0}' has already been used.</value>
-  </data>
-  <data name="Invalid${entityName}Name" xml:space="preserve">
-    <value>${displayName} name '{0}' is invalid.</value>
-  </data>`;
+            for (const feature of this.features.allFeatures) {
+                if (feature.itemHasFeature(item)) {
+                    feature.core_ErrorDescriberResourcesClass_ItemsData(item, itemsData);
+                }
             }
         }
+
+        const items = StringHelper.joinLines(_.uniq(itemsData), .5, '', { start: 1 });
 
         var content = ContentHelper.generateResourceFileContent(items);
 
@@ -673,44 +380,43 @@ export class CoreProject_ErrorDescriberResourcesResxGenerator extends ModuleSpec
 
 export class CoreProject_BuilderClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
+        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
+        const constructorParametersData = [];
+        const constructBuilderParametersData = [];
+        const propertiesDeclarationsData = [];
 
-        var constructorParameters = '';
-        var constructBuilderParameters = '';
-        var properties = '';
         for (const item of this.module.items) {
             const entityName = item.name;
-            const lowerCaseEntityName = ContentHelper.getLowerCaseEntityName(entityName);
-            const constructorParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, true) ? `
-            ` : ' ';
-            const constructBuilderParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, true) ? `
-                ` : ' ';
+            const lowerFirstEntityName = _.lowerFirst(entityName);
 
-            constructorParameters += `,${constructorParametersLineBreak}Type ${lowerCaseEntityName}Type`;
+            constructorParametersData.push({
+                text: `Type ${lowerFirstEntityName}Type`,
+                lineBreak: item.parameterListLineBreak
+            });
 
-            constructBuilderParameters += `,${constructBuilderParametersLineBreak}${lowerCaseEntityName}Type`;
+            constructBuilderParametersData.push({
+                text: `${lowerFirstEntityName}Type`,
+                lineBreak: item.parameterListLineBreak
+            });
 
-            properties += `
-        public Type ${entityName}Type { get; private set; }
-`;
+            propertiesDeclarationsData.push(`public Type ${entityName}Type { get; private set; }`);
 
-            if (item.scopedNameBasedEntityFeatureSetting !== null) {
-                const subEntityName = item.scopedNameBasedEntityFeatureSetting.scopeName;
-
-                if (!ContentHelper.subEntityManaged(item, subEntityName)) {
-                    const lowerCaseSubEntityName = ContentHelper.getLowerCaseEntityName(subEntityName);
-
-                    constructorParameters += `, Type ${lowerCaseSubEntityName}Type`;
-
-                    constructBuilderParameters += `, ${lowerCaseSubEntityName}Type`;
-
-                    properties += `
-        public Type ${subEntityName}Type { get; private set; }
-`;
+            for (const feature of this.features.allFeatures) {
+                if (feature.itemHasFeature(item)) {
+                    feature.core_BuilderClass_ConstructorParametersData(item, constructorParametersData);
+                    feature.core_BuilderClass_ConstructBuilderParametersData(item, constructBuilderParametersData);
+                    feature.core_BuilderClass_PropertiesDeclarationsData(item, propertiesDeclarationsData);
                 }
             }
         }
+
+        const constructorParameters = StringHelper.joinParameters(_.uniqBy(constructorParametersData, value => value.text),
+            3, { startComma: true, start: 1 });
+        const constructBuilderParameters = StringHelper.joinParameters(_.uniqBy(constructBuilderParametersData, value => value.text),
+            4, { startComma: true, start: 1 });
+        const propertiesDeclarations = StringHelper.joinLines(_.uniq(propertiesDeclarationsData),
+            2, '\n', { start: 2 });
 
         const content = `using Microsoft.Extensions.DependencyInjection;
 using MotiNet.Entities;
@@ -725,11 +431,7 @@ namespace ${namespace}
             : base(services)
             => BuilderHelper.ConstructBuilder(
                 this, typeof(${moduleCommonName}Builder).GetConstructors()[0],
-                services${constructBuilderParameters});
-
-        #region Properties
-${properties}
-        #endregion
+                services${constructBuilderParameters});${propertiesDeclarations}
     }
 }
 `;
@@ -740,75 +442,46 @@ ${properties}
 
 export class CoreProject_DependencyInjectionClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
+        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
-
-        var moduleGenericParameters = '';
-        var moduleGenericParameterSpecifications = '';
-        var registrations = '';
-        var builderConstructorParameters = '';
-        var features = '';
-
-        if (ContentHelper.moduleValidationRequired(this.module)) {
-            features += `
-            services.TryAddScoped<${moduleCommonName}ErrorDescriber, ${moduleCommonName}ErrorDescriber>();`;
-        }
+        const entityServiceRegistrationsData = [];
+        const moduleServiceRegistrationsData = [];
+        const builderConstructorParametersData = _.map(this.features.moduleEntityNames(this.module),
+            value => ({ text: `typeof(T${value.name})`, lineBreak: value.lineBreak }));
 
         for (const item of this.module.items) {
             const entityName = item.name;
-            const entityGenericParameters = ContentHelper.getEntityGenericParameters(item);
-            const moduleGenericParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, false) ? (`
-                                  ` + ContentHelper.generateWhiteSpace(moduleCommonName.length * 2)) : (item === this.module.items[0] ? '' : ' ');
-            const builderConstructorParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, true) ? `
-                ` : ' ';
+            const entityGenericTypeParameters = this.features.itemGenericTypeParameters(item);
 
-            moduleGenericParameters += `${moduleGenericParametersLineBreak}T${entityName},`;
+            entityServiceRegistrationsData.push(
+                `services.TryAddScoped<I${entityName}Manager${entityGenericTypeParameters}, ${entityName}Manager${entityGenericTypeParameters}>();`);
 
-            moduleGenericParameterSpecifications += `
-            where T${entityName} : class`;
+            if (this.features.itemValidationRequired(item)) {
+                entityServiceRegistrationsData.push(
+                    `services.TryAddScoped<IValidator<T${entityName}>, ${entityName}Validator${entityGenericTypeParameters}>();`);
+            }
 
-            builderConstructorParameters += `,${builderConstructorParametersLineBreak}typeof(T${entityName})`;
-
-            if (item.scopedNameBasedEntityFeatureSetting !== null) {
-                const subEntityName = item.scopedNameBasedEntityFeatureSetting.scopeName;
-
-                if (!ContentHelper.subEntityManaged(item, subEntityName)) {
-                    moduleGenericParameters += ` T${subEntityName},`;
-
-                    moduleGenericParameterSpecifications += `
-            where T${subEntityName} : class`;
-
-                    builderConstructorParameters += `, typeof(T${subEntityName})`;
+            for (const feature of this.features.allFeatures) {
+                if (feature.itemHasFeature(item)) {
+                    feature.core_DependencyInjectionClass_EntityServiceRegistrationsData(item, entityServiceRegistrationsData);
                 }
             }
 
-            registrations += `
-            services.TryAddScoped<I${entityName}Manager${entityGenericParameters}, ${entityName}Manager${entityGenericParameters}>();`;
-
-            if (ContentHelper.entityValidationRequired(item)) {
-                registrations += `
-            services.TryAddScoped<IValidator<T${entityName}>, ${entityName}Validator${entityGenericParameters}>();`;
-            }
-
-            if (item.codeBasedEntityFeatureSetting !== null ||
-                item.nameBasedEntityFeatureSetting !== null ||
-                item.scopedNameBasedEntityFeatureSetting !== null) {
-                registrations += `
-            services.TryAddScoped<ILookupNormalizer<T${entityName}>, LowerInvariantLookupNormalizer<T${entityName}>>();`;
-            }
-
-            registrations += '\n';
+            entityServiceRegistrationsData.push(`${StringHelper.emptyLinePlaceholder} ${item.name}`);
         }
 
-        if (this.module.items.length > 0) {
-            moduleGenericParameters = '<' + moduleGenericParameters.substr(0, moduleGenericParameters.length - 1) + '>';
+        if (this.features.moduleValidationRequired(this.module)) {
+            moduleServiceRegistrationsData.push(`services.TryAddScoped<${moduleCommonName}ErrorDescriber, ${moduleCommonName}ErrorDescriber>();`);
         }
 
-        if (features !== '') {
-            features = `
-            // Features
-` + features + '\n';
-        }
+        var indent;
+
+        indent = `public static ${moduleCommonName}Builder Add${moduleCommonName}`.length / 4 + 2;
+        const moduleGenericTypeParameters = this.features.moduleGenericTypeParameters(this.module, indent);
+        const moduleGenericTypeConstraints = this.features.moduleGenericTypeConstraints(this.module, 3, { start: 1 });
+        const entityServiceRegistrations = StringHelper.joinLines(_.uniq(entityServiceRegistrationsData), 3, '', { start: 1 });
+        const moduleServiceRegistrations = StringHelper.joinLines(_.uniq(moduleServiceRegistrationsData), 3, '', { start: 1, end: 1 });
+        const builderConstructorParameters = StringHelper.joinParameters(builderConstructorParametersData, 4, { startComma: true, start: 1 });
 
         const content = `using Microsoft.Extensions.DependencyInjection.Extensions;
 using MotiNet.Entities;
@@ -818,9 +491,9 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ${moduleCommonName}ServiceCollectionExtensions
     {
-        public static ${moduleCommonName}Builder Add${moduleCommonName}${moduleGenericParameters}(
-            this IServiceCollection services)${moduleGenericParameterSpecifications}
-        {${registrations}${features}
+        public static ${moduleCommonName}Builder Add${moduleCommonName}${moduleGenericTypeParameters}(
+            this IServiceCollection services)${moduleGenericTypeConstraints}
+        {${entityServiceRegistrations}${moduleServiceRegistrations}
             return new ${moduleCommonName}Builder(
                 services${builderConstructorParameters});
         }

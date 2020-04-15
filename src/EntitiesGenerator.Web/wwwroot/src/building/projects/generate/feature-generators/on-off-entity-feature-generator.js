@@ -3,7 +3,7 @@ import FeatureGenerator from './feature-generator';
 
 export default class OnOffEntityFeatureGenerator extends FeatureGenerator {
     get featureType() {
-        return 'OnOffEntityFeature';
+        return 'OnOffEntity';
     }
 
     // IntelliSense support
@@ -13,5 +13,39 @@ export default class OnOffEntityFeatureGenerator extends FeatureGenerator {
      */
     itemFeatureSetting(item) {
         return super.itemFeatureSetting(item);
+    }
+
+    // Project specific content
+
+    // Core
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityManagerInterface_ManagerInterfacesData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+
+        data.push(`IOnOffEntityManager${this.itemGenericTypeParameters(item)}`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityStoreInterface_StoreInterfacesData(item, data) {
+        this.throwIfItemNotHasFeature(item);
+
+        data.push(`IOnOffEntityStore${this.itemGenericTypeParameters(item)}`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityManagerClass_PropertiesDeclarations1Data(item, data) {
+        this.throwIfItemNotHasFeature(item);
+
+        data.push(`public IOnOffEntityStore${this.itemGenericTypeParameters(item)} OnOffEntityStore => Store as IOnOffEntityStore${this.itemGenericTypeParameters(item)};`);
     }
 }

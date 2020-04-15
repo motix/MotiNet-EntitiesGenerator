@@ -1,4 +1,6 @@
-﻿import './types';
+﻿import 'lodash';
+
+import './types';
 
 export class IdentifierHelper {
     /**
@@ -15,6 +17,179 @@ export class IdentifierHelper {
         const projectRootNamespace = module.project.namespace === null ? module.project.name : module.project.namespace;
         const moduleNamespace = module.hasOwnNamespace ? `.${module.name}` : '';
         return projectRootNamespace + moduleNamespace;
+    }
+}
+
+export class StringHelper {
+    static get emptyLinePlaceholder() {
+        return '// [empty line]';
+    }
+
+    /**
+     * @param {string} text
+     * @param {number} indent
+     */
+    static indent(text, indent) {
+        var lines = text.split('\n');
+        lines = _.map(lines, value => _.repeat(' ', 4 * indent) + value);
+
+        text = lines.join('\n');
+        text = StringHelper.clearEmptyLines(text);
+
+        return text;
+    }
+
+    /**
+     * @param {string} text
+     */
+    static clearEmptyLines(text) {
+        var lines = text.split('\n');
+        lines = _.map(lines, line => _.every(line, char => char === ' ') ? '' : line);
+
+        text = lines.join('\n');
+
+        return text;
+    }
+
+    /**
+     * @param {string} text
+     * @param {NewLineIfNotEmptyConfig} config
+     */
+    static newLineIfNotEmpty(text, config) {
+        if (!config) {
+            return text;
+        }
+
+        if (text === '') {
+            if (config.spaceIfEmpty === true) {
+                text = ' ';
+            }
+        } else {
+            if (_.isNumber(config.start)) {
+                text = _.repeat('\n', config.start) + text;
+            }
+            if (config.startComma === true) {
+                text = `,${config.start > 0 ? '' : ' '}${text}`;
+            }
+            if (config.endComma === true) {
+                text = `${text},${config.end > 0 ? '' : ' '}`;
+            }
+            if (_.isNumber(config.end)) {
+                text += _.repeat('\n', config.end);
+            }
+            if (_.isNumber(config.endIndent)) {
+                text += _.repeat(' ', config.endIndent * 4);
+            }
+        }
+
+        return text;
+    }
+
+    /**
+     * @param {string[]} codeLines
+     * @param {number} [indent]
+     * @param {string} [extraSeparator]
+     * @param {NewLineIfNotEmptyConfig} [newLineIfNotEmpty]
+     */
+    static joinLines(codeLines, indent, extraSeparator, newLineIfNotEmpty) {
+        if (codeLines.length === 0) {
+            if (!_.isUndefined(newLineIfNotEmpty)) {
+                return StringHelper.newLineIfNotEmpty('', newLineIfNotEmpty);
+            }
+
+            return '';
+        }
+
+        codeLines = _.map(codeLines, value => value.startsWith(StringHelper.emptyLinePlaceholder) ? '' : value);
+
+        var str = codeLines.join(!_.isUndefined(extraSeparator) ? extraSeparator + '\n' : '\n');
+
+        if (!_.isUndefined(indent)) {
+            str = StringHelper.indent(str, indent);
+        }
+
+        if (!_.isUndefined(newLineIfNotEmpty)) {
+            str = StringHelper.newLineIfNotEmpty(str, newLineIfNotEmpty);
+        }
+
+        return str;
+    }
+
+    /**
+     * @param {ParameterListItem[]} parameters
+     * @param {number} [indent]
+     * @param {NewLineIfNotEmptyConfig} [newLineIfNotEmpty]
+     */
+    static joinParameters(parameters, indent, newLineIfNotEmpty) {
+        var paramStrs = _.map(parameters, (value, index) => (index > 0 && value.lineBreak === true ? '\n' : '') + value.text);
+        var str = paramStrs.join(', ');
+
+        paramStrs = str.split('\n');
+        paramStrs = _.map(paramStrs, value => value.trim());
+        str = paramStrs.join('\n');
+
+        if (_.isNumber(indent)) {
+            str = StringHelper.indent(str, indent);
+        }
+
+        if (!_.isUndefined(newLineIfNotEmpty)) {
+            str = StringHelper.newLineIfNotEmpty(str, newLineIfNotEmpty);
+        }
+
+        return str;
+    }
+
+    /**
+     * @param {string} text
+     * @param {number} [indent]
+     */
+    static addBaseBlockColon(text, indent) {
+        if (!_.isUndefined(indent)) {
+            text = StringHelper.indent(text, indent);
+        }
+
+        const spaceLength = _.findIndex(text, value => {
+            return value !== ' ';
+        });
+
+        if (spaceLength === -1) {
+            throw 'No text found to add colon.';
+        }
+
+        var lines = text.split('\n');
+        lines = _.map(lines,
+            (value, index) => index === 0 ?
+                _.repeat(' ', spaceLength) + ': ' + value.substr(spaceLength) :
+                (index === 0 ? ': ' : '  ') + value);
+
+        text = lines.join('\n');
+        text = StringHelper.clearEmptyLines(text);
+
+        return text;
+    }
+
+    /**
+     * @param {string[]} baseTypes
+     * @param {number} [indent]
+     * @param {NewLineIfNotEmptyConfig} [newLineIfNotEmpty]
+     */
+    static generateBaseBlock(baseTypes, indent, newLineIfNotEmpty) {
+        if (baseTypes.length === 0) {
+            if (!_.isUndefined(newLineIfNotEmpty)) {
+                return StringHelper.newLineIfNotEmpty('', newLineIfNotEmpty);
+            }
+
+            return '';
+        }
+
+        var str = baseTypes.join(',\n');
+        str = StringHelper.addBaseBlockColon(str, indent);
+
+        if (!_.isUndefined(newLineIfNotEmpty)) {
+            str = StringHelper.newLineIfNotEmpty(str, newLineIfNotEmpty);
+        }
+
+        return str;
     }
 }
 

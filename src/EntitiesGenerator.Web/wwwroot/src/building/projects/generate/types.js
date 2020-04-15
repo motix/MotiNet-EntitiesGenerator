@@ -1,4 +1,29 @@
 ﻿/**
+ * @typedef {Object} NewLineIfNotEmptyConfig
+ * @property {boolean} startComma
+ * @property {boolean} start
+ * @property {boolean} endComma
+ * @property {boolean} end
+ * @property {number} endIndent
+ * @property {boolean} spaceIfEmpty
+ */
+
+/**
+ * @typedef {Object} ParameterListItem
+ * @property {string} text
+ * @property {boolean} lineBreak
+ */
+
+/**
+ * @typedef {Object} EntityNameListItem
+ * @property {Item} item
+ * @property {string} name
+ * @property {boolean} lineBreak
+ * @property {boolean} isSubEntity
+ * @property {boolean} isUnmanagedSubEntity
+ */
+
+/**
  * @typedef {Object} Project
  * @property {string} name
  * @property {string} namespace
