@@ -380,7 +380,7 @@
                     item[settingName].itemId = '_';
                     delete item[settingName].item;
                 } else {
-                    const emptySettingPropertyName = 'empty' + settingName.substr(0, 1).toUpperCase() + settingName.substr(1, settingName.length - 1);
+                    const emptySettingPropertyName = `empty${_.upperFirst(settingName)}`;
                     item[settingName] = this[emptySettingPropertyName];
                 }
             }
