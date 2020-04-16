@@ -25,6 +25,7 @@
                    id="@Model.Entity.Id"
                    :display-names='@displayNameCollector.ToJson()'
                    save-generated-project-url="@Url.Action("SaveGeneratedProject", "FullProjects")"
+                   clear-generate-location-url="@Url.Action("ClearGenerateLocation", "FullProjects")"
                    return-url="@Url.Page("ViewProject", new { id = Model.Entity.Id })"></generate-page>
 </section>
 

@@ -54,6 +54,33 @@ namespace EntitiesGenerator.Web.Controllers
             return true;
         }
 
+        [HttpPost("clear-generate-location")]
+        public async Task<ActionResult<bool>> ClearGenerateLocation([FromBody] ProjectOperationViewModel viewModel)
+        {
+            var project = await EntityManager.FindByIdAsync(viewModel.ProjectId);
+            if (project == null)
+            {
+                return false;
+            }
+
+            if (Directory.Exists(project.GenerateLocation))
+            {
+                var folders = Directory.GetDirectories(project.GenerateLocation);
+                foreach (var folder in folders)
+                {
+                    Directory.Delete(folder, true);
+                }
+
+                var files = Directory.GetFiles(project.GenerateLocation);
+                foreach (var file in files)
+                {
+                    System.IO.File.Delete(file);
+                }
+            }
+
+            return true;
+        }
+
         protected override Expression<Func<Project, object>> EntityIdExpression => x => x.Id;
 
         protected override void EntitySpecificationAction(IFindSpecification<Project> specification)

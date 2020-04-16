@@ -9,12 +9,22 @@
         <extension point="toolbar">
             <div class="btn-toolbar justify-content-md-end mb-3 mb-md-0">
                 <div class="btn-group">
-                    <button class="btn btn-sm btn-outline-primary"
+                    <button class="btn btn-sm btn-outline-primary mr-2"
                             href="javascript:void(0)"
-                            title="Save to Disk"
-                            v-bind:disabled="freezed"
+                            :title="saveToDiskLabel"
+                            v-bind:disabled="freezed || !entity.generateLocation"
                             @click="saveToDisk">
                         <font-awesome-icon :icon="['fal', 'download']" fixed-width></font-awesome-icon>
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-outline-danger"
+                            href="javascript:void(0)"
+                            title="Clear Generate Location"
+                            v-bind:disabled="freezed"
+                            @click="clearGenerateLocation"
+                            v-if="entity.generateLocation">
+                        <font-awesome-icon :icon="['fal', 'broom']" fixed-width></font-awesome-icon>
                     </button>
                 </div>
             </div>
@@ -90,6 +100,10 @@
                 saveGeneratedProjectUrl: {
                     type: String,
                     required: true
+                },
+                clearGenerateLocationUrl: {
+                    type: String,
+                    required: true
                 }
             };
         }
@@ -122,6 +136,10 @@
         }
 
         // Computed
+
+        get $saveToDiskLabel() {
+            return this.vm.entity && this.vm.entity.generateLocation ? 'Save to Disk' : 'Specify Generate Location to enable Save to Disk';
+        }
 
         get $selectedNodeContentAvailable() {
             const node = this.vm.selectedNode;
@@ -205,6 +223,33 @@
 
                 return result;
             }
+        }
+
+        $clearGenerateLocation() {
+            const data = {
+                projectId: this.vm.entity.id
+            };
+
+            this.vm.freezed = true;
+            axios
+                .post(this.vm.clearGenerateLocationUrl, data)
+                .then(response => {
+                    if (response.data === true) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Generate Location cleared.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    } else {
+                        this.showError('There is error clearing Generate Location.');
+                    }
+                    this.vm.freezed = false;
+                })
+                .catch(error => {
+                    this.showError('There is error clearing Generate Location.', error);
+                    this.vm.freezed = false;
+                });
         }
 
         // Internal
