@@ -99,56 +99,7 @@
                 ...super.data,
                 solutionView: true,
                 selectedNode: null,
-                solutionStructure: {
-                    type: 'solution',
-                    name: 'MotiNet-EntitiesGenerator.sln',
-                    children: [
-                        {
-                            type: 'folder',
-                            name: 'Solution Items',
-                            children: [
-                                {
-                                    type: 'file',
-                                    name: 'NuGet.config'
-                                },
-                                {
-                                    type: 'file',
-                                    name: 'README.md'
-                                }
-                            ]
-                        },
-                        {
-                            type: 'folder',
-                            name: 'src',
-                            children: [
-                                {
-                                    type: 'project',
-                                    name: 'EntitiesGenerator.Core'
-                                },
-                                {
-                                    type: 'project',
-                                    name: 'EntitiesGenerator.SealedModels'
-                                },
-                                {
-                                    type: 'project',
-                                    name: 'EntitiesGenerator.AspNetCore'
-                                },
-                                {
-                                    type: 'project',
-                                    name: 'EntitiesGenerator.AspNetCore.Mvc.DefaultViewModels'
-                                },
-                                {
-                                    type: 'project',
-                                    name: 'EntitiesGenerator.EntityFrameworkCore'
-                                },
-                                {
-                                    type: 'project',
-                                    name: 'EntitiesGenerator.EntityFrameworkCore.SealedModels'
-                                }
-                            ]
-                        }
-                    ]
-                }
+                solutionStructure: {}
             };
         }
 
