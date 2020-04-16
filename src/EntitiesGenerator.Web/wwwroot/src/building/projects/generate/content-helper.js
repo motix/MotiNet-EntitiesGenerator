@@ -97,7 +97,9 @@ export class IdentifierHelper {
      * @param {Module} module
      */
     static getModuleCommonName(module) {
-        return module.hasOwnNamespace ? module.name : module.project.namespace.substr(module.project.namespace.lastIndexOf('.') + 1);
+        return module.hasOwnNamespace ? module.name :
+            (module.project.namespace === null ? module.project.name :
+                module.project.namespace.substr(module.project.namespace.lastIndexOf('.') + 1));
     }
 
     /**
