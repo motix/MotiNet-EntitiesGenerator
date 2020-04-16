@@ -212,7 +212,6 @@
 </template>
 
 <script>
-    import _ from 'lodash';
     import ContentHelper from '../projects/generate/content-helper';
 
     import EditPageController from '../../shared/components/pages/EditPageController';

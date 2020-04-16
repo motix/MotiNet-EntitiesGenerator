@@ -140,8 +140,6 @@
 </template>
 
 <script>
-    import _ from 'lodash';
-
     import EditPageController from '../../shared/components/pages/EditPageController';
 
     export class NewViewPageController extends EditPageController {
