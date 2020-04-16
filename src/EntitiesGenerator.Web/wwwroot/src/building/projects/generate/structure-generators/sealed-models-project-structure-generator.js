@@ -26,8 +26,6 @@ export class SmProjectSG {
     generateProjectStructure(features, module) {
         const projectName = SmProjectSG.getProjectName(module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(module);
-        const entitiesFolder = this.generateEntitiesFolderStructure(features, module);
-        const accessorsFolder = this.generateAccessorsFolderStructure(features, module);
 
         const projectFolder = {
             type: 'folder',
@@ -39,22 +37,28 @@ export class SmProjectSG {
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
                     generator: new CG.SmProject_ProjectFileGenerator(features, module)
-                },
-                entitiesFolder,
-                accessorsFolder,
-                {
-                    type: 'folder',
-                    name: 'DependencyInjection',
-                    children: [
-                        {
-                            type: 'file',
-                            name: 'SealedModels' + moduleCommonName + 'BuilderExtensions.cs',
-                            generator: new CG.SmProject_DependencyInjectionClassGenerator(features, module)
-                        }
-                    ]
                 }
             ]
         }
+
+        if (module.items.length > 0) {
+            const entitiesFolder = this.generateEntitiesFolderStructure(features, module);
+            const accessorsFolder = this.generateAccessorsFolderStructure(features, module);
+
+            projectFolder.children.push(entitiesFolder, accessorsFolder);
+        }
+
+        projectFolder.children.push({
+            type: 'folder',
+            name: 'DependencyInjection',
+            children: [
+                {
+                    type: 'file',
+                    name: 'SealedModels' + moduleCommonName + 'BuilderExtensions.cs',
+                    generator: new CG.SmProject_DependencyInjectionClassGenerator(features, module)
+                }
+            ]
+        });
 
         return projectFolder;
     }

@@ -27,7 +27,6 @@ export class CoreProjectSG {
         const projectName = CoreProjectSG.getProjectName(module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(module);
         const validationRequired = features.moduleValidationRequired(module);
-        const entitiesFolder = this.generateEntitiesFolderStructure(features, module);
 
         const projectFolder = {
             type: 'folder',
@@ -39,10 +38,14 @@ export class CoreProjectSG {
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
                     generator: new CG.CoreProject_ProjectFileGenerator(features, module)
-                },
-                entitiesFolder
+                }
             ]
         };
+
+        if (module.items.length > 0) {
+            const entitiesFolder = this.generateEntitiesFolderStructure(features, module);
+            projectFolder.children.push(entitiesFolder);
+        }
 
         if (validationRequired) {
             projectFolder.children.push(
@@ -66,8 +69,7 @@ export class CoreProjectSG {
                             generator: new CG.CoreProject_ErrorDescriberResourcesResxGenerator(features, module)
                         }
                     ]
-                }
-            );
+                });
         }
 
         projectFolder.children.push(
@@ -86,8 +88,7 @@ export class CoreProjectSG {
                         generator: new CG.CoreProject_DependencyInjectionClassGenerator(features, module)
                     }
                 ]
-            }
-        );
+            });
 
         return projectFolder;
     }

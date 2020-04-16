@@ -26,7 +26,6 @@ export class EfSmProjectSG {
     generateProjectStructure(features, module) {
         const projectName = EfSmProjectSG.getProjectName(module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(module);
-        const storesFolder = this.generateStoresFolderStructure(features, module);
 
         const projectFolder = {
             type: 'folder',
@@ -43,21 +42,26 @@ export class EfSmProjectSG {
                     type: 'file',
                     name: moduleCommonName + 'DbContextBase.cs',
                     generator: new CG.EfSmProject_DbContextClassGenerator(features, module)
-                },
-                storesFolder,
-                {
-                    type: 'folder',
-                    name: 'DependencyInjection',
-                    children: [
-                        {
-                            type: 'file',
-                            name: 'EntityFrameworkCore' + moduleCommonName + 'BuilderExtensions.cs',
-                            generator: new CG.EfSmProject_DependencyInjectionClassGenerator(features, module)
-                        }
-                    ]
                 }
             ]
         }
+
+        if (module.items.length > 0) {
+            const storesFolder = this.generateStoresFolderStructure(features, module);
+            projectFolder.children.push(storesFolder);
+        }
+
+        projectFolder.children.push({
+            type: 'folder',
+            name: 'DependencyInjection',
+            children: [
+                {
+                    type: 'file',
+                    name: 'EntityFrameworkCore' + moduleCommonName + 'BuilderExtensions.cs',
+                    generator: new CG.EfSmProject_DependencyInjectionClassGenerator(features, module)
+                }
+            ]
+        });
 
         return projectFolder;
     }

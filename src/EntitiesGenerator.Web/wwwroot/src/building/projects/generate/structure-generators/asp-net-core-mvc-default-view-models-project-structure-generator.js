@@ -26,7 +26,6 @@ export class AspDvProjectSG {
     generateProjectStructure(features, module) {
         const projectName = AspDvProjectSG.getProjectName(module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(module);
-        const viewModelsFolder = this.generateViewModelsFolderStructure(features, module);
 
         const projectFolder = {
             type: 'folder',
@@ -38,31 +37,37 @@ export class AspDvProjectSG {
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
                     generator: new CG.AspDvProject_ProjectFileGenerator(features, module)
-                },
-                viewModelsFolder,
-                {
-                    type: 'file',
-                    name: 'DisplayNames.resx',
-                    generator: new CG.AspDvProject_DisplayNamesResxGenerator(features, module)
-                },
-                {
-                    type: 'file',
-                    name: moduleCommonName + 'Profile.cs',
-                    generator: new CG.AspDvProject_ProfileClassGenerator(features, module)
-                },
-                {
-                    type: 'folder',
-                    name: 'DependencyInjection',
-                    children: [
-                        {
-                            type: 'file',
-                            name: 'DefaultViewModels' + moduleCommonName + 'BuilderExtensions.cs',
-                            generator: new CG.AspDvProject_DependencyInjectionClassGenerator(features, module)
-                        }
-                    ]
                 }
             ]
         }
+
+        if (module.items.length > 0) {
+            const viewModelsFolder = this.generateViewModelsFolderStructure(features, module);
+            projectFolder.children.push(viewModelsFolder);
+        }
+
+        projectFolder.children.push(
+            {
+                type: 'file',
+                name: 'DisplayNames.resx',
+                generator: new CG.AspDvProject_DisplayNamesResxGenerator(features, module)
+            },
+            {
+                type: 'file',
+                name: moduleCommonName + 'Profile.cs',
+                generator: new CG.AspDvProject_ProfileClassGenerator(features, module)
+            },
+            {
+                type: 'folder',
+                name: 'DependencyInjection',
+                children: [
+                    {
+                        type: 'file',
+                        name: 'DefaultViewModels' + moduleCommonName + 'BuilderExtensions.cs',
+                        generator: new CG.AspDvProject_DependencyInjectionClassGenerator(features, module)
+                    }
+                ]
+            });
 
         return projectFolder;
     }

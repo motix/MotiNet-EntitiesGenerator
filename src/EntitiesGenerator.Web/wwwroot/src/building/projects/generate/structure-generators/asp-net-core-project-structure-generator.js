@@ -26,7 +26,6 @@ export class AspProjectSG {
     generateProjectStructure(features, module) {
         const projectName = AspProjectSG.getProjectName(module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(module);
-        const managersFolder = this.generateManagersFolderStructure(features, module);
 
         const projectFolder = {
             type: 'folder',
@@ -38,21 +37,26 @@ export class AspProjectSG {
                     fileType: 'projectFile',
                     name: projectName + '.csproj',
                     generator: new CG.AspProject_ProjectFileGenerator(features, module)
-                },
-                managersFolder,
-                {
-                    type: 'folder',
-                    name: 'DependencyInjection',
-                    children: [
-                        {
-                            type: 'file',
-                            name: 'AspNet' + moduleCommonName + 'BuilderExtensions.cs',
-                            generator: new CG.AspProject_DependencyInjectionClassGenerator(features, module)
-                        }
-                    ]
                 }
             ]
         }
+
+        if (module.items.length > 0) {
+            const managersFolder = this.generateManagersFolderStructure(features, module);
+            projectFolder.children.push(managersFolder);
+        }
+
+        projectFolder.children.push({
+            type: 'folder',
+            name: 'DependencyInjection',
+            children: [
+                {
+                    type: 'file',
+                    name: 'AspNet' + moduleCommonName + 'BuilderExtensions.cs',
+                    generator: new CG.AspProject_DependencyInjectionClassGenerator(features, module)
+                }
+            ]
+        });
 
         return projectFolder;
     }
