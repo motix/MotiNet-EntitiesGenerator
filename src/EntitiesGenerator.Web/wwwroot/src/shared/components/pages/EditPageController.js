@@ -1,5 +1,4 @@
 ﻿import Swal from 'sweetalert2';
-import _ from 'lodash';
 import VueConfigHelper from '../../utilities/VueConfigHelper';
 import DataLoader from '../../utilities/DataLoader';
 import DataSaver from '../../utilities/DataSaver';
