@@ -1,17 +1,20 @@
 ﻿// EntityFrameworkCore.SealedModels
 
 import 'prismjs/components/prism-csharp';
-import { IdentifierHelper } from '../content-helper';
-import ContentHelper from '../content-helper';
+import ContentHelper, { IdentifierHelper, StringHelper } from '../content-helper';
 
-import * as SG from '../structure-generators/structure-generators';
-import { CSharpModuleSpecificContentGenerator, CSharpEntitySpecificContentGenerator, ProjectFileGenerator } from './content-generator';
+import { SmProjectSG, EfProjectSG, EfSmProjectSG } from '../structure-generators/structure-generators';
+import {
+    CSharpModuleSpecificContentGenerator,
+    CSharpEntitySpecificContentGenerator,
+    ProjectFileGenerator
+} from './content-generator';
 
 export class EfSmProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
-        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(SG.EfSmProjectSG);
-        const entityFrameworkCoreProjectName = SG.EfProjectSG.getProjectName(this.module);
-        const sealedModelsProjectName = SG.SmProjectSG.getProjectName(this.module);
+        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(EfSmProjectSG);
+        const entityFrameworkCoreProjectName = EfProjectSG.getProjectName(this.module);
+        const sealedModelsProjectName = SmProjectSG.getProjectName(this.module);
 
         const content = `<Project Sdk="Microsoft.NET.Sdk">
 
@@ -37,48 +40,45 @@ export class EfSmProject_ProjectFileGenerator extends ProjectFileGenerator {
 
 export class EfSmProject_DbContextClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
+        const namespace = EfSmProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
-        const moduleGenericParametersWhiteSpace = '                        ' + ContentHelper.generateWhiteSpace(moduleCommonName.length);
-        const moduleGenericParametersLastLineBreak = this.module.items.length === 0 ? '' : '\n' + moduleGenericParametersWhiteSpace;
-
-        var moduleGenericParameters = '';
-        var methods = '';
+        const moduleSpecificTypeParameters = this.features.moduleSpecificTypeParameters(this.module,
+            `: ${moduleCommonName}DbContextBase`.length / 4 + 2, true);
+        const configureEntityMethodsData = [];
 
         for (const item of this.module.items) {
-            const entityName = item.name;
-            const moduleGenericParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, false) ?
-                '\n' + moduleGenericParametersWhiteSpace : (item === this.module.items[0] ? '' : ' ');
+            const entityConfigurationsData = [];
 
-            moduleGenericParameters += `${moduleGenericParametersLineBreak}${entityName},`;
-
-            methods += `
-
-        protected override void Configure${entityName}(EntityTypeBuilder<${entityName}> builder)
-        {
-        }`;
-
-            if (item.scopedNameBasedEntityFeatureSetting !== null) {
-                const scopeName = item.scopedNameBasedEntityFeatureSetting.scopeName;
-
-                if (!ContentHelper.subEntityManaged(item, scopeName)) {
-                    moduleGenericParameters += ` ${scopeName},`;
+            for (const feature of this.features.allFeatures) {
+                if (feature.itemHasFeature(item)) {
+                    feature.efSm_DbContextClass_EntityConfigurationsData(item, entityConfigurationsData);
                 }
             }
+
+            if (entityConfigurationsData.length > 0) {
+                const entityName = item.name;
+                const entityConfigurations = StringHelper.joinLines(_.uniq(entityConfigurationsData), 1, '\n');
+
+                configureEntityMethodsData.push(`protected override void Configure${entityName}(EntityTypeBuilder<${entityName}> builder)
+{
+${entityConfigurations}
+}`);
+            }
         }
+
+        const configureEntityMethods = StringHelper.joinLines(_.uniq(configureEntityMethodsData), 2, '\n', { start: 2 });
 
         const content = `using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ${namespace}.EntityFrameworkCore
+namespace ${namespace}
 {
     public abstract class ${moduleCommonName}DbContextBase
-        : ${moduleCommonName}DbContextBase<${moduleGenericParameters}${moduleGenericParametersLastLineBreak}// Key
-${moduleGenericParametersWhiteSpace}string>
+        : ${moduleCommonName}DbContextBase${moduleSpecificTypeParameters}
     {
         protected ${moduleCommonName}DbContextBase(DbContextOptions options) : base(options) { }
 
-        protected ${moduleCommonName}DbContextBase() { }${methods}
+        protected ${moduleCommonName}DbContextBase() { }${configureEntityMethods}
     }
 }
 `;
@@ -89,99 +89,42 @@ ${moduleGenericParametersWhiteSpace}string>
 
 export class EfSmProject_EntityStoreClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
+        const namespace = EfSmProjectSG.getDefaultNamespace(this.item.module);
         const entityName = this.item.name;
-        const entityGenericParameters = ContentHelper.getEntitySpecificGenericParameters(this.item);
+        const entitySpecificTypeParameters = this.features.itemSpecificTypeParameters(this.item);
+        /**
+         * @type {{baseClass: string, constructorCall: string}}
+         */
+        const storeBaseData = { baseClass: null, constructorCall: null };
+        const storeInterfacesData = [];
+        const storeBaseAndInterfacesData = [];
+        const storePropertyDeclarationsData = [];
+        const storeMethodDeclarationsData = [];
+        const storeMemberDeclarationsData = [];
 
-        var bases = '';
-        var baseConstructorCall = '';
-        var properties = '';
-        var methods = '';
-
-        if (this.item.entityFeatureSetting !== null) {
-            bases += `EntityStore<${entityName}, TDbContext>,
-          `;
-
-            baseConstructorCall = ' : base(dbContext)';
+        for (const feature of this.features.allFeatures) {
+            if (feature.itemHasFeature(this.item)) {
+                feature.efSm_EntityStoreClass_StoreBaseData(this.item, storeBaseData);
+                feature.efSm_EntityStoreClass_StoreInterfacesData(this.item, storeInterfacesData);
+                feature.efSm_EntityStoreClass_StorePropertyDeclarationsData(this.item, storePropertyDeclarationsData);
+                feature.efSm_EntityStoreClass_StoreMethodDeclarationsData(this.item, storeMethodDeclarationsData);
+            } else {
+                feature.efSm_EntityStoreClass_StoreMemberDeclarationsData_FeatureAbsent(this.item, storeMemberDeclarationsData);
+            }
         }
 
-        bases += `I${entityName}Store${entityGenericParameters}`;
-
-        if (this.item.timeTrackedEntityFeatureSetting !== null) {
-            bases += `,
-          ITimeTrackedEntityStoreMarker<${entityName}, TDbContext>`;
-
-            methods += `
-
-        public ${entityName} FindLatest()
-            => TimeTrackedEntityStoreHelper.FindLatestEntity(this);
-
-        public Task<${entityName}> FindLatestAsync(CancellationToken cancellationToken)
-            => TimeTrackedEntityStoreHelper.FindLatestEntityAsync(this, cancellationToken);`;
+        if (storeBaseData.baseClass !== null) {
+            storeBaseAndInterfacesData.push(storeBaseData.baseClass);
         }
 
-        if (this.item.codeBasedEntityFeatureSetting !== null) {
-            bases += `,
-          ICodeBasedEntityStoreMarker<${entityName}, TDbContext>`;
+        storeBaseAndInterfacesData.push(`I${entityName}Store${entitySpecificTypeParameters}`);
+        storeBaseAndInterfacesData.push(...storeInterfacesData);
 
-            methods += `
-
-        public ${entityName} FindByCode(string normalizedCode)
-            => CodeBasedEntityStoreHelper.FindEntityByCode(this, normalizedCode);
-
-        public Task<${entityName}> FindByCodeAsync(string normalizedCode, CancellationToken cancellationToken)
-            => CodeBasedEntityStoreHelper.FindEntityByCodeAsync(this, normalizedCode, cancellationToken);`;
-        }
-
-        if (this.item.nameBasedEntityFeatureSetting !== null) {
-            bases += `,
-          INameBasedEntityStoreMarker<${entityName}, TDbContext>`;
-
-            methods += `
-
-        public ${entityName} FindByName(string normalizedName)
-            => NameBasedEntityStoreHelper.FindEntityByName(this, normalizedName);
-
-        public Task<${entityName}> FindByNameAsync(string normalizedName, CancellationToken cancellationToken)
-            => NameBasedEntityStoreHelper.FindEntityByNameAsync(this, normalizedName, cancellationToken);`;
-        }
-
-        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            const scopeName = this.item.scopedNameBasedEntityFeatureSetting.scopeName;
-            const lowerFirstScopeName = _.lowerFirst(scopeName);
-
-            bases += `,
-          IScopedNameBasedEntityStoreMarker<${entityName}, ${scopeName}, TDbContext>`;
-
-            methods += `
-
-        public ${entityName} FindByName(string normalizedName, ${scopeName} ${lowerFirstScopeName})
-            => ScopedNameBasedEntityStoreHelper.FindEntityByName(this, normalizedName, ${lowerFirstScopeName}, x => x.${scopeName}Id);
-
-        public Task<${entityName}> FindByNameAsync(string normalizedName, ${scopeName} ${lowerFirstScopeName}, CancellationToken cancellationToken)
-            => ScopedNameBasedEntityStoreHelper.FindEntityByNameAsync(this, normalizedName, ${lowerFirstScopeName}, x => x.${scopeName}Id, cancellationToken);
-
-        public ${scopeName} FindScopeById(object id)
-            => ScopedNameBasedEntityStoreHelper.FindScopeById(this, id);
-
-        public Task<${scopeName}> FindScopeByIdAsync(object id, CancellationToken cancellationToken)
-            => ScopedNameBasedEntityStoreHelper.FindScopeByIdAsync(this, id, cancellationToken);`;
-        }
-
-        if (this.item.onOffEntityFeatureSetting !== null) {
-            properties += `
-
-        public ISearchSpecification<${entityName}> SearchActiveEntitiesSpecification => new SearchActiveSpecification<${entityName}>();`;
-        }
-
-        if (bases !== '') {
-            bases = `
-        : ` + bases;
-        }
-
-        if (this.item.entityFeatureSetting === null) {
-            properties += '\n' + ContentHelper.generateDisposePattern();
-        }
+        const storeBaseAndInterfaces = StringHelper.generateBaseBlock(_.uniq(storeBaseAndInterfacesData), 2, { start: 1 });
+        const storeBaseConstructorCall = storeBaseData.constructorCall === null ? '' : ` : ${storeBaseData.constructorCall}`;
+        const storePropertyDeclarations = StringHelper.joinLines(_.uniq(storePropertyDeclarationsData), 2, '\n', { start: 2 });
+        const storeMethodDeclarations = StringHelper.joinLines(_.uniq(storeMethodDeclarationsData), 2, '\n', { start: 2 });
+        const storeMemberDeclarations = StringHelper.joinLines(_.uniq(storeMemberDeclarationsData), 2, '\n', { start: 2 });
 
         const content = `using Microsoft.EntityFrameworkCore;
 using MotiNet.Entities;
@@ -189,12 +132,12 @@ using MotiNet.Entities.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ${namespace}.EntityFrameworkCore
+namespace ${namespace}
 {
-    public class ${entityName}Store<TDbContext>${bases}
+    public class ${entityName}Store<TDbContext>${storeBaseAndInterfaces}
         where TDbContext : DbContext
     {
-        public ${entityName}Store(TDbContext dbContext)${baseConstructorCall} { }${properties}${methods}
+        public ${entityName}Store(TDbContext dbContext)${storeBaseConstructorCall} { }${storePropertyDeclarations}${storeMethodDeclarations}${storeMemberDeclarations}
     }
 }
 `;
@@ -205,27 +148,28 @@ namespace ${namespace}.EntityFrameworkCore
 
 export class EfSmProject_DependencyInjectionClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
+        const smNamespace = SmProjectSG.getDefaultNamespace(this.module);
+        const namespace = EfSmProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
-
-        var registrations = '';
+        const serviceRegistrationsData = [];
 
         for (const item of this.module.items) {
             const entityName = item.name;
-            const emptyGenericParameters = ContentHelper.getEmptyEntityGenericParameters(item);
-            const makeGenericTypeParameterList = ContentHelper.getMakeGenericTypeParameterList(item);
+            const entityEmptyGenericTypeParameters = this.features.itemEmptyGenericTypeParameters(item);
+            const entityMakeGenericTypeParameters = this.features.itemMakeGenericTypeParameters(item);
 
-            registrations += `
-            services.TryAddScoped(
-                typeof(I${entityName}Store${emptyGenericParameters}).MakeGenericType(${makeGenericTypeParameterList}),
-                typeof(${entityName}Store<>).MakeGenericType(contextType));
-`;
+            serviceRegistrationsData.push(
+                `services.TryAddScoped(
+    typeof(I${entityName}Store${entityEmptyGenericTypeParameters}).MakeGenericType(${entityMakeGenericTypeParameters}),
+    typeof(${entityName}Store<>).MakeGenericType(contextType));`);
         }
+
+        const serviceRegistrations = StringHelper.joinLines(_.uniq(serviceRegistrationsData), 3, '\n', { start: 1, end: 1 });
 
         const content = `using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ${smNamespace};
 using ${namespace};
-using ${namespace}.EntityFrameworkCore;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -236,7 +180,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var services = builder.Services;
             var contextType = typeof(TContext);
-${registrations}
+${serviceRegistrations}
             return builder;
         }
     }

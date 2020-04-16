@@ -1,5 +1,4 @@
-﻿import ContentHelper from '../content-helper';
-import FeatureGenerator from './feature-generator';
+﻿import FeatureGenerator from './feature-generator';
 
 export default class NameBasedEntityFeatureGenerator extends FeatureGenerator {
     get featureType() {
@@ -19,7 +18,7 @@ export default class NameBasedEntityFeatureGenerator extends FeatureGenerator {
      * @param {Item} item
      */
     itemValidationRequired(item) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         return true;
     }
@@ -33,7 +32,7 @@ export default class NameBasedEntityFeatureGenerator extends FeatureGenerator {
      * @param {string[]} data
      */
     core_EntityManagerInterface_ManagerInterfacesData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`INameBasedEntityManager${this.itemGenericTypeParameters(item)}`);
     }
@@ -43,7 +42,7 @@ export default class NameBasedEntityFeatureGenerator extends FeatureGenerator {
      * @param {string[]} data
      */
     core_EntityStoreInterface_StoreInterfacesData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`INameBasedEntityStore${this.itemGenericTypeParameters(item)}`);
     }
@@ -53,7 +52,7 @@ export default class NameBasedEntityFeatureGenerator extends FeatureGenerator {
      * @param {string[]} data
      */
     core_EntityAccessorInterface_AccessorInterfacesData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`INameBasedEntityAccessor${this.itemGenericTypeParameters(item)}`);
     }
@@ -63,7 +62,7 @@ export default class NameBasedEntityFeatureGenerator extends FeatureGenerator {
      * @param {string[]} data
      */
     core_EntityManagerClass_ConstructorParametersData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`ILookupNormalizer<T${item.name}> nameNormalizer`);
     }
@@ -73,7 +72,7 @@ export default class NameBasedEntityFeatureGenerator extends FeatureGenerator {
      * @param {string[]} data
      */
     core_EntityManagerClass_PropertiesAssignmentsData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push('NameNormalizer = nameNormalizer ?? throw new ArgumentNullException(nameof(nameNormalizer));');
     }
@@ -83,7 +82,7 @@ export default class NameBasedEntityFeatureGenerator extends FeatureGenerator {
      * @param {string[]} data
      */
     core_EntityManagerClass_PropertiesDeclarations1Data(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`public INameBasedEntityStore${this.itemGenericTypeParameters(item)} NameBasedEntityStore => Store as INameBasedEntityStore${this.itemGenericTypeParameters(item)};`);
         data.push(`public INameBasedEntityAccessor${this.itemGenericTypeParameters(item)} NameBasedEntityAccessor => Accessor as INameBasedEntityAccessor${this.itemGenericTypeParameters(item)};`);
@@ -94,7 +93,7 @@ export default class NameBasedEntityFeatureGenerator extends FeatureGenerator {
      * @param {string[]} data
      */
     core_EntityManagerClass_PropertiesDeclarations2Data(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push('public ILookupNormalizer NameNormalizer { get; }');
     }
@@ -104,7 +103,7 @@ export default class NameBasedEntityFeatureGenerator extends FeatureGenerator {
      * @param {string[]} data
      */
     core_EntityValidatorClass_ValidationsData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`await this.ValidateNameAsync(theManager, Accessor, ${_.lowerFirst(item.name)}, errors,
     name => ErrorDescriber.Invalid${item.name}Name(name), name => ErrorDescriber.Duplicate${item.name}Name(name));`);
@@ -114,8 +113,8 @@ export default class NameBasedEntityFeatureGenerator extends FeatureGenerator {
      * @param {Item} item
      * @param {string[]} data
      */
-    core_ErrorDescriberClass_DescribersData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+    core_ErrorDescriberClass_DescriberMethodsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
 
         const entityName = item.name;
         const lowerFirstEntityName = _.lowerFirst(entityName);
@@ -139,8 +138,8 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
      * @param {Item} item
      * @param {string[]} data
      */
-    core_ErrorDescriberResourcesClass_ItemsData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+    core_ErrorDescriberResourcesResx_ItemsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`<data name="Duplicate${item.name}Name" xml:space="preserve">
   <value>${item.displayName} name '{0}' has already been used.</value>
@@ -155,8 +154,135 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
      * @param {string[]} data
      */
     core_DependencyInjectionClass_EntityServiceRegistrationsData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`services.TryAddScoped<ILookupNormalizer<T${item.name}>, LowerInvariantLookupNormalizer<T${item.name}>>();`);
+    }
+
+    // SealedModels
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_EntityClass_EntityInterfacesData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push('INameWiseEntity');
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_EntityClass_EntityPropertyDeclarationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`[StringLength(StringLengths.Guid)]
+public string Id { get; set; }`);
+        data.push(`[Required]
+[StringLength(StringLengths.TitleContent)]
+public string Name { get; set; }`);
+        data.push(`[Required]
+[StringLength(StringLengths.TitleContent)]
+public string NormalizedName { get; set; }`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_EntityAccessorClass_AccessorMethodsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`public object GetId(${item.name} ${_.lowerFirst(item.name)}) => ${_.lowerFirst(item.name)}.Id;`);
+        data.push(`public string GetName(${item.name} ${_.lowerFirst(item.name)}) => ${_.lowerFirst(item.name)}.Name;`);
+        data.push(`public void SetNormalizedName(${item.name} ${_.lowerFirst(item.name)}, string normalizedName) => ${_.lowerFirst(item.name)}.NormalizedName = normalizedName;`);
+    }
+
+    // EntityFrameworkCore.SealedModels
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    efSm_DbContextClass_EntityConfigurationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`// Unique name
+builder.HasIndex(x => x.Name).IsUnique();
+builder.HasIndex(x => x.NormalizedName).IsUnique();`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    efSm_EntityStoreClass_StoreInterfacesData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`INameBasedEntityStoreMarker<${item.name}, TDbContext>`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    efSm_EntityStoreClass_StoreMethodDeclarationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`public ${item.name} FindByName(string normalizedName)
+    => NameBasedEntityStoreHelper.FindEntityByName(this, normalizedName);`);
+        data.push(`public Task<${item.name}> FindByNameAsync(string normalizedName, CancellationToken cancellationToken)
+    => NameBasedEntityStoreHelper.FindEntityByNameAsync(this, normalizedName, cancellationToken);`);
+    }
+
+    // AspNetCore
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    asp_EntityManagerClass_ConstructorParametersData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`ILookupNormalizer<T${item.name}> nameNormalizer`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    asp_EntityManagerClass_BaseConstructorParametersData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push('nameNormalizer');
+    }
+
+    // AspNetCore.Mvc.DefaultViewModels
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_EntityViewModelsClass_BasePropertyDeclarationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push('public string Id { get; set; }');
+        data.push(`[LocalizedRequired]
+[Display(Name = nameof(Name), ResourceType = typeof(DisplayNames))]
+public string Name { get; set; }`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_DisplayNamesResx_ItemsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`<data name="Name" xml:space="preserve">
+  <value>Name</value>
+</data>`);
     }
 }

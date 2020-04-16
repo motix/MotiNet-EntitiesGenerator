@@ -1,18 +1,20 @@
 ﻿// SealedModels
 
-import pluralize from 'pluralize';
 import 'prismjs/components/prism-csharp';
-import { IdentifierHelper } from '../content-helper';
-import ContentHelper from '../content-helper';
+import ContentHelper, { IdentifierHelper, StringHelper } from '../content-helper';
 
-import * as SG from '../structure-generators/structure-generators';
-import { CSharpModuleSpecificContentGenerator, CSharpEntitySpecificContentGenerator, ProjectFileGenerator } from './content-generator';
+import { CoreProjectSG, SmProjectSG } from '../structure-generators/structure-generators';
+import {
+    CSharpModuleSpecificContentGenerator,
+    CSharpEntitySpecificContentGenerator,
+    ProjectFileGenerator
+} from './content-generator';
 import AllFeaturesGenerator from '../feature-generators/all-features-generator';
 
 export class SmProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
-        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(SG.SmProjectSG);
-        const coreProjectName = SG.CoreProjectSG.getProjectName(this.module);
+        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(SmProjectSG);
+        const coreProjectName = CoreProjectSG.getProjectName(this.module);
 
         const content = `<Project Sdk="Microsoft.NET.Sdk">
 
@@ -37,103 +39,33 @@ export class SmProject_ProjectFileGenerator extends ProjectFileGenerator {
 
 export class SmProject_EntityClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
+        const namespace = SmProjectSG.getDefaultNamespace(this.item.module);
         const entityName = this.item.name;
+        const entityInterfacesData = [];
+        const entityPropertyDeclarationsData = [];
+        const relationshipsPropertyDeclarationsData = [];
 
-        var interfaces = '';
-        var entityProperties = '';
-        var relationshipsProperties = '';
+        for (const feature of this.features.allFeatures) {
+            if (feature.itemHasFeature(this.item)) {
+                feature.sm_EntityClass_EntityInterfacesData(this.item, entityInterfacesData);
+                feature.sm_EntityClass_EntityPropertyDeclarationsData(this.item, entityPropertyDeclarationsData);
+                feature.sm_EntityClass_RelationshipsPropertyDeclarationsData(this.item, relationshipsPropertyDeclarationsData);
+            }
 
-        if (ContentHelper.entityIdWiseRequired) {
-            interfaces += `
-          IIdWiseEntity<string>,`;
+            feature.sm_EntityClass_EntityInterfacesData_FromOthers(this.item, entityInterfacesData);
+            feature.sm_EntityClass_EntityPropertyDeclarationsData_FromOthers(this.item, entityPropertyDeclarationsData);
+            feature.sm_EntityClass_RelationshipsPropertyDeclarationsData_FromOthers(this.item, relationshipsPropertyDeclarationsData);
         }
 
-        if (ContentHelper.entityIdWiseRequired ||
-            this.item.entityFeatureSetting !== null ||
-            this.item.codeBasedEntityFeatureSetting !== null ||
-            this.item.nameBasedEntityFeatureSetting !== null ||
-            this.item.scopedNameBasedEntityFeatureSetting !== null ||
-            this.item.readableIdEntityFeatureSetting !== null) {
-            entityProperties += `
+        const entityInterfaces = StringHelper.generateBaseBlock(_.uniq(entityInterfacesData), 2, { start: 1 });
+        const entityPropertyDeclarations = StringHelper.joinLines(_.uniq(entityPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
+        const relationshipsPropertyDeclarations = StringHelper.joinLines(_.uniq(relationshipsPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
 
-        [StringLength(StringLengths.Guid)]
-        public string Id { get; set; }`;
-        }
+        const relationshipsPartial = relationshipsPropertyDeclarationsData.length === 0 ? '' : `
 
-        if (this.item.timeTrackedEntityFeatureSetting !== null) {
-            interfaces += `
-          ITimeWiseEntity,`;
-
-            entityProperties += `
-
-        public DateTime DataCreateDate { get; set; }
-
-        public DateTime DataLastModifyDate { get; set; }`;
-        }
-
-        if (this.item.codeBasedEntityFeatureSetting !== null) {
-            interfaces += `
-          ICodeWiseEntity,`;
-
-            entityProperties += `
-
-        [Required]
-        [StringLength(StringLengths.TitleContent)]
-        public string Code { get; set; }`;
-        }
-
-        if (this.item.nameBasedEntityFeatureSetting !== null ||
-            this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            interfaces += `
-          INameWiseEntity,`;
-
-            entityProperties += `
-
-        [Required]
-        [StringLength(StringLengths.TitleContent)]
-        public string Name { get; set; }
-
-        [Required]
-        [StringLength(StringLengths.TitleContent)]
-        public string NormalizedName { get; set; }`;
-        }
-
-        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            const scopeName = this.item.scopedNameBasedEntityFeatureSetting.scopeName;
-
-            entityProperties += `
-
-        [Required]
-        [StringLength(StringLengths.Guid)]
-        public string ${scopeName}Id { get; set; }`;
-
-            relationshipsProperties += `
-
-        public ${scopeName} ${scopeName} { get; set; }`;
-        }
-
-        if (this.item.onOffEntityFeatureSetting !== null) {
-            interfaces += `
-          IIsActiveWiseEntity,`;
-
-            entityProperties += `
-
-        public bool IsActive { get; set; }`;
-        }
-
-        if (entityProperties !== '') {
-            entityProperties = entityProperties.substr(1);
-        }
-
-        if (relationshipsProperties !== '') {
-            relationshipsProperties = relationshipsProperties.substr(1);
-        }
-
-        if (interfaces !== '') {
-            interfaces = interfaces.substr(0, '        '.length + 1) + ':' + interfaces.substr('        '.length + 2);
-            interfaces = interfaces.substr(0, interfaces.length - 1);
-        }
+    // Relationships
+    partial class ${entityName}
+    {${relationshipsPropertyDeclarations}}`;
 
         const content = `using MotiNet.Entities;
 using System;
@@ -143,14 +75,8 @@ using System.ComponentModel.DataAnnotations;
 namespace ${namespace}
 {
     // Entity
-    public sealed partial class ${entityName}${interfaces}
-    {${entityProperties}
-    }
-
-    // Relationships
-    partial class ${entityName}
-    {${relationshipsProperties}
-    }
+    public sealed partial class ${entityName}${entityInterfaces}
+    {${entityPropertyDeclarations}}${relationshipsPartial}
 }
 `;
 
@@ -171,44 +97,27 @@ export class SmProject_SubEntityClassGenerator extends CSharpEntitySpecificConte
     }
 
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
-        const entityName = this.item.name;
+        const namespace = SmProjectSG.getDefaultNamespace(this.item.module);
+        const subEntityName = this.subEntityName;
+        const entityInterfacesData = [];
+        const entityPropertyDeclarationsData = [];
+        const relationshipsPropertyDeclarationsData = [];
 
-        var subEntityName;
-        var interfaces = '';
-        var entityProperties = '';
-        var relationshipsProperties = '';
-
-        if (this.item.codeBasedEntityFeatureSetting !== null) {
-            subEntityName = this.item.scopedNameBasedEntityFeatureSetting.scopeName;
-            const pluralEntityName = pluralize(entityName);
-            interfaces += `
-          IIdWiseEntity<string>,`;
-
-            entityProperties += `
-
-        [StringLength(StringLengths.Guid)]
-        public string Id { get; set; }`;
-
-            relationshipsProperties += `
-
-        public ICollection<${entityName}> ${pluralEntityName} { get; set; }`;
-        } else {
-            throw 'Unsupported feature when generating sub-entity class.'
+        for (const feature of this.features.allFeatures) {
+            feature.sm_SubEntityClass_EntityInterfacesData_FromOthers(this.item, this.subEntityName, entityInterfacesData);
+            feature.sm_SubEntityClass_EntityPropertyDeclarationsData_FromOthers(this.item, this.subEntityName, entityPropertyDeclarationsData);
+            feature.sm_SubEntityClass_RelationshipsPropertyDeclarationsData_FromOthers(this.item, this.subEntityName, relationshipsPropertyDeclarationsData);
         }
 
-        if (entityProperties !== '') {
-            entityProperties = entityProperties.substr(1);
-        }
+        const entityInterfaces = StringHelper.generateBaseBlock(_.uniq(entityInterfacesData), 2, { start: 1 });
+        const entityPropertyDeclarations = StringHelper.joinLines(_.uniq(entityPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
+        const relationshipsPropertyDeclarations = StringHelper.joinLines(_.uniq(relationshipsPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
 
-        if (relationshipsProperties !== '') {
-            relationshipsProperties = relationshipsProperties.substr(1);
-        }
+        const relationshipsPartial = relationshipsPropertyDeclarationsData.length === 0 ? '' : `
 
-        if (interfaces !== '') {
-            interfaces = interfaces.substr(0, '        '.length + 1) + ':' + interfaces.substr('        '.length + 2);
-            interfaces = interfaces.substr(0, interfaces.length - 1);
-        }
+    // Relationships
+    partial class ${subEntityName}
+    {${relationshipsPropertyDeclarations}}`;
 
         const content = `using MotiNet.Entities;
 using System;
@@ -218,14 +127,8 @@ using System.ComponentModel.DataAnnotations;
 namespace ${namespace}
 {
     // Entity
-    public sealed partial class ${subEntityName}${interfaces}
-    {${entityProperties}
-    }
-
-    // Relationships
-    partial class ${entityName}
-    {${relationshipsProperties}
-    }
+    public sealed partial class ${subEntityName}${entityInterfaces}
+    {${entityPropertyDeclarations}}${relationshipsPartial}
 }
 `;
 
@@ -235,98 +138,27 @@ namespace ${namespace}
 
 export class SmProject_EntityAccessorClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
+        const namespace = SmProjectSG.getDefaultNamespace(this.item.module);
         const entityName = this.item.name;
-        const entityGenericParameters = ContentHelper.getEntitySpecificGenericParameters(this.item);
-        const lowerFirstEntityName = _.lowerFirst(entityName);
+        const entitySpecificTypeParameters = this.features.itemSpecificTypeParameters(this.item);
+        const accessorMethodsData = [];
 
-        var methods = '';
-
-        if (this.item.entityFeatureSetting !== null ||
-            this.item.codeBasedEntityFeatureSetting !== null ||
-            this.item.nameBasedEntityFeatureSetting !== null ||
-            this.item.scopedNameBasedEntityFeatureSetting !== null ||
-            this.item.readableIdEntityFeatureSetting !== null) {
-            methods += `
-
-        public object GetId(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Id;`;
-        }
-
-        if (this.item.timeTrackedEntityFeatureSetting !== null) {
-            methods += `
-
-        public DateTime GetDataCreateDate(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.DataCreateDate;
-
-        public void SetDataCreateDate(${entityName} ${lowerFirstEntityName}, DateTime dataCreateDate) => ${lowerFirstEntityName}.DataCreateDate = dataCreateDate;
-
-        public void SetDataLastModifyDate(${entityName} ${lowerFirstEntityName}, DateTime dataLastModifyDate) => ${lowerFirstEntityName}.DataLastModifyDate = dataLastModifyDate;`;
-        }
-
-        if (this.item.codeBasedEntityFeatureSetting !== null) {
-            methods += `
-
-        public string GetCode(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Code;
-
-        public void SetCode(${entityName} ${lowerFirstEntityName}, string code) => ${lowerFirstEntityName}.Code = code;`;
-        }
-
-        if (this.item.nameBasedEntityFeatureSetting !== null ||
-            this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            methods += `
-
-        public string GetName(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Name;
-
-        public void SetNormalizedName(${entityName} ${lowerFirstEntityName}, string normalizedName) => ${lowerFirstEntityName}.NormalizedName = normalizedName;`;
-        }
-
-        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            const scopeName = this.item.scopedNameBasedEntityFeatureSetting.scopeName;
-            const lowerFirstScopeName = _.lowerFirst(scopeName);
-
-            methods += `
-
-        public object GetScopeId(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.${scopeName}Id;
-
-        public void SetScopeId(${entityName} ${lowerFirstEntityName}, object ${lowerFirstScopeName}Id) => ${lowerFirstEntityName}.${scopeName}Id = (string)${lowerFirstScopeName}Id;
-
-        public ${scopeName} GetScope(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.${scopeName};
-
-        public void SetScope(${entityName} ${lowerFirstEntityName}, ${scopeName} ${lowerFirstScopeName}) => ${lowerFirstEntityName}.${scopeName} = ${lowerFirstScopeName};`;
-        }
-
-        if (this.item.readableIdEntityFeatureSetting !== null) {
-            if (this.item.codeBasedEntityFeatureSetting !== null) {
-                methods += `
-
-        public object GetIdSource(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Code;`;
-            } else if (this.item.nameBasedEntityFeatureSetting !== null ||
-                this.item.scopedNameBasedEntityFeatureSetting !== null) {
-                methods += `
-
-        public object GetIdSource(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Name;`;
-            } else {
-                methods += `
-
-        // TODO:: Implement
-        public object GetIdSource(${entityName} ${lowerFirstEntityName}) => throw new NotImplementedException();`;
+        for (const feature of this.features.allFeatures) {
+            if (feature.itemHasFeature(this.item)) {
+                feature.sm_EntityAccessorClass_AccessorMethodsData(this.item, accessorMethodsData);
             }
 
-            methods += `
-
-        public void SetId(${entityName} ${lowerFirstEntityName}, string id) => ${lowerFirstEntityName}.Id = id;`;
+            feature.sm_EntityAccessorClass_AccessorMethodsData_FromOthers(this.item, accessorMethodsData);
         }
 
-        if (methods !== '') {
-            methods = methods.substr(1);
-        }
+        const accessorMethods = StringHelper.joinLines(_.uniq(accessorMethodsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
 
         const content = `using System;
 
 namespace ${namespace}
 {
-    public class ${entityName}Accessor : I${entityName}Accessor${entityGenericParameters}
-    {${methods}
-    }
+    public class ${entityName}Accessor : I${entityName}Accessor${entitySpecificTypeParameters}
+    {${accessorMethods}}
 }
 `;
 
@@ -336,39 +168,24 @@ namespace ${namespace}
 
 export class SmProject_DependencyInjectionClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
+        const namespace = SmProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
-
-        var moduleGenericParameters = '';
-        var registrations = '';
+        const moduleSpecificTypeParameters = this.features.moduleSpecificTypeParameters(this.module,
+            `=> services.Add${moduleCommonName}`.length / 4 + 3);
+        const serviceRegistrationsData = [];
 
         for (const item of this.module.items) {
             const entityName = item.name;
-            const emptyGenericParameters = ContentHelper.getEmptyEntityGenericParameters(item);
-            const moduleGenericParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, false) ? (`
-                            ` + ContentHelper.generateWhiteSpace(moduleCommonName.length)) : (item === this.module.items[0] ? '' : ' ');
-            const makeGenericTypeParameterList = ContentHelper.getMakeGenericTypeParameterList(item);
+            const entityEmptyGenericTypeParameters = this.features.itemEmptyGenericTypeParameters(item);
+            const entityMakeGenericTypeParameters = this.features.itemMakeGenericTypeParameters(item);
 
-            moduleGenericParameters += `${moduleGenericParametersLineBreak}${entityName},`;
-
-            if (item.scopedNameBasedEntityFeatureSetting !== null) {
-                const scopeName = item.scopedNameBasedEntityFeatureSetting.scopeName;
-
-                if (!ContentHelper.subEntityManaged(item, scopeName)) {
-                    moduleGenericParameters += ` ${scopeName},`;
-                }
-            }
-
-            registrations += `
-            services.TryAddScoped(
-                typeof(I${entityName}Accessor${emptyGenericParameters}).MakeGenericType(${makeGenericTypeParameterList}),
-                typeof(${entityName}Accessor));
-`;
+            serviceRegistrationsData.push(
+                `services.TryAddScoped(
+    typeof(I${entityName}Accessor${entityEmptyGenericTypeParameters}).MakeGenericType(${entityMakeGenericTypeParameters}),
+    typeof(${entityName}Accessor));`);
         }
 
-        if (this.module.items.length > 0) {
-            moduleGenericParameters = '<' + ContentHelper.trimParameterList(moduleGenericParameters) + '>';
-        }
+        const serviceRegistrations = StringHelper.joinLines(_.uniq(serviceRegistrationsData), 3, '\n', { start: 1, end: 1 });
 
         const content = `using ${namespace};
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -378,13 +195,13 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class SealedModels${moduleCommonName}BuilderExtensions
     {
         public static ${moduleCommonName}Builder Add${moduleCommonName}WithSealedModels(this IServiceCollection services)
-            => services.Add${moduleCommonName}${moduleGenericParameters}()
+            => services.Add${moduleCommonName}${moduleSpecificTypeParameters}()
                        .AddSealedModels();
 
         public static ${moduleCommonName}Builder AddSealedModels(this ${moduleCommonName}Builder builder)
         {
             var services = builder.Services;
-${registrations}
+${serviceRegistrations}
             return builder;
         }
     }

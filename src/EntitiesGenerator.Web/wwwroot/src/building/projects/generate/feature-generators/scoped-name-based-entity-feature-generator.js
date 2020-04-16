@@ -1,4 +1,6 @@
-﻿import FeatureGenerator, { ItemNotHasFeature } from './feature-generator';
+﻿import pluralize from 'pluralize';
+
+import FeatureGenerator from './feature-generator';
 
 export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenerator {
     get featureType() {
@@ -18,7 +20,7 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
      * @param {Item} item
      */
     itemValidationRequired(item) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         return true;
     }
@@ -28,7 +30,7 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
      * @return {EntityNameListItem[]}
      */
     itemEntityNames(item) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         return [
             {
@@ -61,7 +63,7 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
      * @param {string[]} data
      */
     core_EntityManagerInterface_ManagerInterfacesData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`IScopedNameBasedEntityManager${this.itemGenericTypeParameters(item)}`);
     }
@@ -71,7 +73,7 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
      * @param {string[]} data
      */
     core_EntityStoreInterface_StoreInterfacesData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`IScopedNameBasedEntityStore${this.itemGenericTypeParameters(item)}`);
     }
@@ -81,7 +83,7 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
      * @param {string[]} data
      */
     core_EntityAccessorInterface_AccessorInterfacesData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`IScopedNameBasedEntityAccessor${this.itemGenericTypeParameters(item)}`);
     }
@@ -91,7 +93,7 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
      * @param {string[]} data
      */
     core_EntityManagerClass_ConstructorParametersData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`ILookupNormalizer<T${item.name}> nameNormalizer`);
     }
@@ -101,7 +103,7 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
      * @param {string[]} data
      */
     core_EntityManagerClass_PropertiesAssignmentsData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push('NameNormalizer = nameNormalizer ?? throw new ArgumentNullException(nameof(nameNormalizer));');
     }
@@ -111,7 +113,7 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
      * @param {string[]} data
      */
     core_EntityManagerClass_PropertiesDeclarations1Data(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`public IScopedNameBasedEntityStore${this.itemGenericTypeParameters(item)} ScopedNameBasedEntityStore => Store as IScopedNameBasedEntityStore${this.itemGenericTypeParameters(item)};`);
         data.push(`public IScopedNameBasedEntityAccessor${this.itemGenericTypeParameters(item)} ScopedNameBasedEntityAccessor => Accessor as IScopedNameBasedEntityAccessor${this.itemGenericTypeParameters(item)};`);
@@ -122,7 +124,7 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
      * @param {string[]} data
      */
     core_EntityManagerClass_PropertiesDeclarations2Data(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push('public ILookupNormalizer NameNormalizer { get; }');
     }
@@ -132,7 +134,7 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
      * @param {string[]} data
      */
     core_EntityValidatorClass_ValidationsData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`await this.ValidateNameAsync(theManager, Accessor, ${_.lowerFirst(item.name)}, errors,
     name => ErrorDescriber.Invalid${item.name}Name(name), name => ErrorDescriber.Duplicate${item.name}Name(name));`);
@@ -142,8 +144,8 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
      * @param {Item} item
      * @param {string[]} data
      */
-    core_EntityValidatorClass_SubEntityValidationsData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+    core_EntityValidatorClass_SubEntityValidateMethodsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
 
         const scopeName = this.scopeName(item);
         const lowerFirstScopeName = _.lowerFirst(scopeName);
@@ -156,8 +158,8 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
      * @param {Item} item
      * @param {string[]} data
      */
-    core_ErrorDescriberClass_DescribersData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+    core_ErrorDescriberClass_DescriberMethodsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
 
         const entityName = item.name;
         const lowerFirstEntityName = _.lowerFirst(entityName);
@@ -181,8 +183,8 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
      * @param {Item} item
      * @param {string[]} data
      */
-    core_ErrorDescriberResourcesClass_ItemsData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+    core_ErrorDescriberResourcesResx_ItemsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`<data name="Duplicate${item.name}Name" xml:space="preserve">
   <value>${item.displayName} name '{0}' has already been used.</value>
@@ -197,7 +199,7 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
      * @param {ParameterListItem[]} data
      */
     core_BuilderClass_ConstructorParametersData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push({
             text: `Type ${_.lowerFirst(this.scopeName(item))}Type`,
@@ -210,7 +212,7 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
      * @param {ParameterListItem[]} data
      */
     core_BuilderClass_ConstructBuilderParametersData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push({
             text: `${_.lowerFirst(this.scopeName(item))}Type`,
@@ -223,7 +225,7 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
      * @param {string[]} data
      */
     core_BuilderClass_PropertiesDeclarationsData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`public Type ${this.scopeName(item)}Type { get; private set; }`);
     }
@@ -233,8 +235,341 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
      * @param {string[]} data
      */
     core_DependencyInjectionClass_EntityServiceRegistrationsData(item, data) {
-        this.throwIfItemNotHasFeature(item);
+        this.throwIfItemNotHaveFeature(item);
 
         data.push(`services.TryAddScoped<ILookupNormalizer<T${item.name}>, LowerInvariantLookupNormalizer<T${item.name}>>();`);
+    }
+
+    // SealedModels
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_EntityClass_EntityInterfacesData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push('INameWiseEntity');
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_EntityClass_EntityInterfacesData_FromOthers(item, data) {
+        for (const otherItem of item.module.items) {
+            if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name) {
+                data.push('IIdWiseEntity<string>');
+            }
+        }
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_EntityClass_EntityPropertyDeclarationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`[StringLength(StringLengths.Guid)]
+public string Id { get; set; }`);
+        data.push(`[Required]
+[StringLength(StringLengths.Guid)]
+public string ${this.scopeName(item)}Id { get; set; }`);
+        data.push(`[Required]
+[StringLength(StringLengths.TitleContent)]
+public string Name { get; set; }`);
+        data.push(`[Required]
+[StringLength(StringLengths.TitleContent)]
+public string NormalizedName { get; set; }`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_EntityClass_EntityPropertyDeclarationsData_FromOthers(item, data) {
+        for (const otherItem of item.module.items) {
+            if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name) {
+                data.push(`[StringLength(StringLengths.Guid)]
+public string Id { get; set; }`);
+            }
+        }
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_EntityClass_RelationshipsPropertyDeclarationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`public ${this.scopeName(item)} ${this.scopeName(item)} { get; set; }`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_EntityClass_RelationshipsPropertyDeclarationsData_FromOthers(item, data) {
+        for (const otherItem of item.module.items) {
+            if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name) {
+                data.push(`public ICollection<${otherItem.name}> ${pluralize(otherItem.name)} { get; set; }`);
+            }
+        }
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string} subEntityName
+     * @param {string[]} data
+     */
+    sm_SubEntityClass_EntityInterfacesData_FromOthers(item, subEntityName, data) {
+        data.push('IIdWiseEntity<string>');
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string} subEntityName
+     * @param {string[]} data
+     */
+    sm_SubEntityClass_EntityPropertyDeclarationsData_FromOthers(item, subEntityName, data) {
+        data.push(`[StringLength(StringLengths.Guid)]
+public string Id { get; set; }`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string} subEntityName
+     * @param {string[]} data
+     */
+    sm_SubEntityClass_RelationshipsPropertyDeclarationsData_FromOthers(item, subEntityName, data) {
+        data.push(`public ICollection<${item.name}> ${pluralize(item.name)} { get; set; }`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_EntityAccessorClass_AccessorMethodsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        const entityName = item.name;
+        const lowerFirstEntityName = _.lowerFirst(entityName);
+        const scopeName = this.scopeName(item);
+        const lowerFirstScopeName = _.lowerFirst(scopeName);
+
+        data.push(`public object GetId(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Id;`);
+        data.push(`public string GetName(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Name;`);
+        data.push(`public void SetNormalizedName(${entityName} ${lowerFirstEntityName}, string normalizedName) => ${lowerFirstEntityName}.NormalizedName = normalizedName;`);
+        data.push(`public object GetScopeId(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.${scopeName}Id;`);
+        data.push(`public void SetScopeId(${entityName} ${lowerFirstEntityName}, object ${lowerFirstScopeName}Id) => ${lowerFirstEntityName}.${scopeName}Id = (string)${lowerFirstScopeName}Id;`);
+        data.push(`public ${scopeName} GetScope(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.${scopeName};`);
+        data.push(`public void SetScope(${entityName} ${lowerFirstEntityName}, ${scopeName} ${lowerFirstScopeName}) => ${lowerFirstEntityName}.${scopeName} = ${lowerFirstScopeName};`);
+    }
+
+    // EntityFrameworkCore
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    ef_DbContextClass_PropertyDeclarationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        const scopeName = this.scopeName(item);
+        const pluralScopeName = pluralize(scopeName);
+
+        data.push(`public DbSet<T${scopeName}> ${pluralScopeName} { get; set; }`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    ef_DbContextClass_ConfigureEntityRegistrationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        const scopeName = this.scopeName(item);
+
+        data.push(`modelBuilder.Entity<T${scopeName}>(Configure${scopeName});`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    ef_DbContextClass_ConfigureEntityMethodsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        const scopeName = this.scopeName(item);
+
+        data.push(`protected virtual void Configure${scopeName}(EntityTypeBuilder<T${scopeName}> builder) { }`);
+    }
+
+    // EntityFrameworkCore.SealedModels
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    efSm_DbContextClass_EntityConfigurationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        const entityName = item.name;
+        const scopeName = this.scopeName(item);
+
+        data.push(`// Unique name in scope
+builder.HasIndex(nameof(${entityName}.Name), nameof(${entityName}.${scopeName}Id)).IsUnique();
+builder.HasIndex(nameof(${entityName}.NormalizedName), nameof(${entityName}.${scopeName}Id)).IsUnique();`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    efSm_EntityStoreClass_StoreInterfacesData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`IScopedNameBasedEntityStoreMarker<${item.name}, ${this.scopeName(item)}, TDbContext>`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    efSm_EntityStoreClass_StoreMethodDeclarationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        const entityName = item.name;
+        const scopeName = this.scopeName(item);
+        const lowerFirstScopeName = _.lowerFirst(scopeName);
+
+        data.push(`public ${entityName} FindByName(string normalizedName, ${scopeName} ${lowerFirstScopeName})
+    => ScopedNameBasedEntityStoreHelper.FindEntityByName(this, normalizedName, ${lowerFirstScopeName}, x => x.${scopeName}Id);`);
+        data.push(`public Task<${entityName}> FindByNameAsync(string normalizedName, ${scopeName} ${lowerFirstScopeName}, CancellationToken cancellationToken)
+    => ScopedNameBasedEntityStoreHelper.FindEntityByNameAsync(this, normalizedName, ${lowerFirstScopeName}, x => x.${scopeName}Id, cancellationToken);`);
+        data.push(`public ${scopeName} FindScopeById(object id)
+    => ScopedNameBasedEntityStoreHelper.FindScopeById(this, id);`);
+        data.push(`public Task<${scopeName}> FindScopeByIdAsync(object id, CancellationToken cancellationToken)
+    => ScopedNameBasedEntityStoreHelper.FindScopeByIdAsync(this, id, cancellationToken);`);
+    }
+
+    // AspNetCore
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    asp_EntityManagerClass_ConstructorParametersData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`ILookupNormalizer<T${item.name}> nameNormalizer`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    asp_EntityManagerClass_BaseConstructorParametersData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push('nameNormalizer');
+    }
+
+    // AspNetCore.Mvc.DefaultViewModels
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_EntityViewModelsClass_BasePropertyDeclarationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        const scopeName = this.scopeName(item);
+
+        data.push('public string Id { get; set; }');
+        data.push(`[LocalizedRequired]
+[Display(Name = "${scopeName}", ResourceType = typeof(DisplayNames))]
+public string ${scopeName}Id { get; set; }`);
+        data.push(`[LocalizedRequired]
+[Display(Name = nameof(Name), ResourceType = typeof(DisplayNames))]
+public string Name { get; set; }`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_EntityViewModelsClass_BasePropertyDeclarationsData_FromOthers(item, data) {
+        for (const otherItem of item.module.items) {
+            if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name) {
+                data.push('public string Id { get; set; }');
+            }
+        }
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_EntityViewModelsClass_FullPropertyDeclarationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        const scopeName = this.scopeName(item);
+
+        data.push(`[Display(Name = nameof(${scopeName}), ResourceType = typeof(DisplayNames))]
+public ${scopeName}LiteViewModel ${scopeName} { get; set; }`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_EntityViewModelsClass_FullPropertyDeclarationsData_FromOthers(item, data) {
+        for (const otherItem of item.module.items) {
+            if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name) {
+                data.push(`[Display(Name = nameof(${pluralize(otherItem.name)}), ResourceType = typeof(DisplayNames))]
+public ICollection<${otherItem.name}LiteViewModel> ${pluralize(otherItem.name)} { get; set; }`);
+            }
+        }
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_SubEntityViewModelsClass_BasePropertyDeclarationsData_FromOthers(item, data) {
+        data.push('public string Id { get; set; }');
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_SubEntityViewModelsClass_FullPropertyDeclarationsData_FromOthers(item, data) {
+        data.push(`[Display(Name = nameof(${pluralize(item.name)}), ResourceType = typeof(DisplayNames))]
+public ICollection<${item.name}LiteViewModel> ${pluralize(item.name)} { get; set; }`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_DisplayNamesResx_ItemsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        const scopeName = this.scopeName(item);
+
+        data.push(
+            `<data name="${scopeName}" xml:space="preserve">
+  <value>${scopeName}</value>
+</data>`,
+            `<data name="Name" xml:space="preserve">
+  <value>Name</value>
+</data>`,
+            `<data name="${pluralize(item.name)}" xml:space="preserve">
+  <value>${_.startCase(pluralize(item.name))}</value>
+</data>`);
     }
 }

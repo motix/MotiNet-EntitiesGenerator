@@ -2,15 +2,17 @@
 
 import pluralize from 'pluralize';
 import 'prismjs/components/prism-csharp';
-import { IdentifierHelper } from '../content-helper';
-import ContentHelper from '../content-helper';
+import { IdentifierHelper, StringHelper } from '../content-helper';
 
-import * as SG from '../structure-generators/structure-generators';
-import { CSharpModuleSpecificContentGenerator, ProjectFileGenerator} from './content-generator';
+import { EfProjectSG } from '../structure-generators/structure-generators';
+import {
+    CSharpModuleSpecificContentGenerator,
+    ProjectFileGenerator
+} from './content-generator';
 
 export class EfProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
-        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(SG.EfProjectSG);
+        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(EfProjectSG);
 
         const content = `<Project Sdk="Microsoft.NET.Sdk">
 
@@ -31,83 +33,51 @@ export class EfProject_ProjectFileGenerator extends ProjectFileGenerator {
 
 export class EfProject_DbContextClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
+        const namespace = EfProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
-        const moduleGenericParametersWhiteSpace = '                                        ' + ContentHelper.generateWhiteSpace(moduleCommonName.length);
-        const moduleGenericParametersLastLineBreak = this.module.items.length === 0 ? '' : '\n' + moduleGenericParametersWhiteSpace;
-
-        var moduleGenericParameters = '';
-        var moduleGenericParameterSpecifications = '';
-        var properties = '';
-        var registrations = '';
-        var methods = '';
+        const moduleGenericTypeParameters = this.features.moduleGenericTypeParameters(this.module,
+            `public abstract class ${moduleCommonName}DbContextBase`.length / 4 + 1, true);
+        const moduleGenericTypeConstraints = this.features.moduleGenericTypeConstraints(this.module, 2, true, { start: 1 });
+        const propertyDeclarationsData = [];
+        const configureEntityRegistrationsData = [];
+        const configureEntityMethodsData = [];
 
         for (const item of this.module.items) {
             const entityName = item.name;
             const pluralEntityName = pluralize(entityName);
-            const moduleGenericParametersLineBreak = ContentHelper.entityParametersLineBreakApplied(item, false) ?
-                '\n' + moduleGenericParametersWhiteSpace : (item === this.module.items[0] ? '' : ' ');
 
-            moduleGenericParameters += `${moduleGenericParametersLineBreak}T${entityName},`;
+            propertyDeclarationsData.push(`public DbSet<T${entityName}> ${pluralEntityName} { get; set; }`);
+            configureEntityRegistrationsData.push(`modelBuilder.Entity<T${entityName}>(Configure${entityName});`);
+            configureEntityMethodsData.push(`protected virtual void Configure${entityName}(EntityTypeBuilder<T${entityName}> builder) { }`);
 
-            moduleGenericParameterSpecifications += `
-        where T${entityName} : class`;
-
-            properties += `
-        public DbSet<T${entityName}> ${pluralEntityName} { get; set; }
-`;
-
-            registrations += `
-            modelBuilder.Entity<T${entityName}>(Configure${entityName});`;
-
-            methods += `
-
-        protected virtual void Configure${entityName}(EntityTypeBuilder<T${entityName}> builder) { }`;
-
-            if (item.scopedNameBasedEntityFeatureSetting !== null) {
-                const scopeName = item.scopedNameBasedEntityFeatureSetting.scopeName;
-
-                if (!ContentHelper.subEntityManaged(item, scopeName)) {
-                    const pluralScopeName = pluralize(scopeName);
-
-                    moduleGenericParameters += ` T${scopeName},`;
-
-                    moduleGenericParameterSpecifications += `
-        where T${scopeName} : class`;
-
-                    properties += `
-        public DbSet<T${scopeName}> ${pluralScopeName} { get; set; }
-`;
-
-                    registrations += `
-            modelBuilder.Entity<T${scopeName}>(Configure${scopeName});`;
-
-                    methods += `
-
-        protected virtual void Configure${scopeName}(EntityTypeBuilder<T${scopeName}> builder) { }`;
+            for (const feature of this.features.allFeatures) {
+                if (feature.itemHasFeature(item)) {
+                    feature.ef_DbContextClass_PropertyDeclarationsData(item, propertyDeclarationsData);
+                    feature.ef_DbContextClass_ConfigureEntityRegistrationsData(item, configureEntityRegistrationsData);
+                    feature.ef_DbContextClass_ConfigureEntityMethodsData(item, configureEntityMethodsData);
                 }
             }
         }
+
+        const propertyDeclarations = StringHelper.joinLines(_.uniq(propertyDeclarationsData), 2, '\n', { start: 1, end: 1 });
+        const configureEntityRegistrations = StringHelper.joinLines(_.uniq(configureEntityRegistrationsData), 3, '', { start: 1, end: 1, endIndent: 2, spaceIfEmpty: true });
+        const configureEntityMethods = StringHelper.joinLines(_.uniq(configureEntityMethodsData), 2, '\n', { start: 2 });
 
         const content = `using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 
-namespace ${namespace}.EntityFrameworkCore
+namespace ${namespace}
 {
-    public abstract class ${moduleCommonName}DbContextBase<${moduleGenericParameters}${moduleGenericParametersLastLineBreak}// Key
-${moduleGenericParametersWhiteSpace}TKey>
-        : DbContext${moduleGenericParameterSpecifications}
-        // Key
-        where TKey : IEquatable<TKey>
+    public abstract class ${moduleCommonName}DbContextBase${moduleGenericTypeParameters}
+        : DbContext${moduleGenericTypeConstraints}
     {
         protected ${moduleCommonName}DbContextBase(DbContextOptions options) : base(options) { }
 
         protected ${moduleCommonName}DbContextBase() { }
-${properties}
+${propertyDeclarations}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {${registrations}
-        }${methods}
+        {${configureEntityRegistrations}}${configureEntityMethods}
     }
 }
 `;

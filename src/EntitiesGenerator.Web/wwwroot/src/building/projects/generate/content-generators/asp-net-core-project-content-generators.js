@@ -1,16 +1,19 @@
 ﻿// AspNetCore
 
 import 'prismjs/components/prism-csharp';
-import { IdentifierHelper } from '../content-helper';
-import ContentHelper from '../content-helper';
+import { IdentifierHelper, StringHelper } from '../content-helper';
 
-import * as SG from '../structure-generators/structure-generators';
-import { CSharpModuleSpecificContentGenerator, CSharpEntitySpecificContentGenerator, ProjectFileGenerator } from './content-generator';
+import { CoreProjectSG, AspProjectSG } from '../structure-generators/structure-generators';
+import {
+    CSharpModuleSpecificContentGenerator,
+    CSharpEntitySpecificContentGenerator,
+    ProjectFileGenerator
+} from './content-generator';
 
 export class AspProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
-        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(SG.AspProjectSG);
-        const coreProjectName = SG.CoreProjectSG.getProjectName(this.module);
+        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(AspProjectSG);
+        const coreProjectName = CoreProjectSG.getProjectName(this.module);
 
         const content = `<Project Sdk="Microsoft.NET.Sdk">
 
@@ -35,71 +38,38 @@ export class AspProject_ProjectFileGenerator extends ProjectFileGenerator {
 
 export class AspProject_EntityManagerClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
+        const namespace = AspProjectSG.getDefaultNamespace(this.item.module);
         const entityName = this.item.name;
-        const entityGenericParameters = ContentHelper.getEntityGenericParameters(this.item);
+        const entityGenericTypeParameters = this.features.itemGenericTypeParameters(this.item);
+        const entityGenericTypeConstraints = this.features.itemGenericTypeConstraints(this.item, 2);
+        const constructorParametersData = [];
+        const baseConstructorParametersData = [];
 
-        // Generic parameter specifications
+        constructorParametersData.push(
+            `I${entityName}Store${entityGenericTypeParameters} store`,
+            `I${entityName}Accessor${entityGenericTypeParameters} accessor`
+        );
+        baseConstructorParametersData.push('store', 'accessor');
 
-        var entityGenericParameterSpecifications = `
-        where T${entityName} : class`;
-
-        if (this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            entityGenericParameterSpecifications += `
-        where T${this.item.scopedNameBasedEntityFeatureSetting.scopeName} : class`;
+        if (this.features.itemValidationRequired(this.item)) {
+            constructorParametersData.push(`IEnumerable<IValidator${entityGenericTypeParameters}> validators`);
+            baseConstructorParametersData.push('validators');
         }
 
-        // Constructor parameters, base constructor parameters
+        constructorParametersData.push(`ILogger<${entityName}Manager${entityGenericTypeParameters}> logger`);
+        baseConstructorParametersData.push('logger');
 
-        var constructorParameters = `
-            I${entityName}Store${entityGenericParameters} store,
-            I${entityName}Accessor${entityGenericParameters} accessor`;
-
-        var baseConstructorParameters = 'store, accessor';
-
-        if (ContentHelper.entityValidationRequired(this.item)) {
-            constructorParameters += `,
-            IEnumerable<IValidator${entityGenericParameters}> validators`;
-
-            baseConstructorParameters += ', validators'
-        }
-
-        constructorParameters += `,
-            ILogger<${entityName}Manager${entityGenericParameters}> logger`;
-
-        baseConstructorParameters += ', logger'
-
-        if (this.item.codeBasedEntityFeatureSetting !== null) {
-            constructorParameters += `,
-            ILookupNormalizer<T${entityName}> codeNormalizer`;
-
-            baseConstructorParameters += ', codeNormalizer'
-
-            if (this.item.codeBasedEntityFeatureSetting.hasCodeGenerator === true) {
-                constructorParameters += `,
-            IEntityCodeGenerator<T${entityName}> codeGenerator`;
-
-                baseConstructorParameters += ', codeGenerator'
+        for (const feature of this.features.allFeatures) {
+            if (feature.itemHasFeature(this.item)) {
+                feature.asp_EntityManagerClass_ConstructorParametersData(this.item, constructorParametersData);
+                feature.asp_EntityManagerClass_BaseConstructorParametersData(this.item, baseConstructorParametersData);
             }
         }
 
-        if (this.item.nameBasedEntityFeatureSetting !== null ||
-            this.item.scopedNameBasedEntityFeatureSetting !== null) {
-            constructorParameters += `,
-            ILookupNormalizer<T${entityName}> nameNormalizer`;
+        constructorParametersData.push('IHttpContextAccessor contextAccessor');
 
-            baseConstructorParameters += ', nameNormalizer'
-        }
-
-        if (this.item.preprocessedEntityFeatureSetting !== null) {
-            constructorParameters += `,
-            IEntityPreprocessor<T${entityName}> preprocessor`;
-
-            baseConstructorParameters += ', preprocessor'
-        }
-
-        constructorParameters += `,
-            IHttpContextAccessor contextAccessor`;
+        const constructorParameters = StringHelper.joinLines(_.uniq(constructorParametersData), 3, ',', { start: 1 });
+        const baseConstructorParameters = _.uniq(baseConstructorParametersData).join(', ');
 
         const content = `using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -109,7 +79,8 @@ using System.Threading;
 
 namespace ${namespace}
 {
-    public class AspNet${entityName}Manager${entityGenericParameters} : ${entityName}Manager${entityGenericParameters}${entityGenericParameterSpecifications}
+    public class AspNet${entityName}Manager${entityGenericTypeParameters} : ${entityName}Manager${entityGenericTypeParameters}
+${entityGenericTypeConstraints}
     {
         private readonly CancellationToken _cancel;
         
@@ -128,23 +99,22 @@ namespace ${namespace}
 
 export class AspProject_DependencyInjectionClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
+        const namespace = AspProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
-
-        var registrations = '';
+        const serviceRegistrationsData = [];
 
         for (const item of this.module.items) {
             const entityName = item.name;
-            const emptyGenericParameters = ContentHelper.getEmptyEntityGenericParameters(item);
-            const makeGenericTypeParameterList = ContentHelper.getMakeGenericTypeParameterList(item);
+            const entityEmptyGenericTypeParameters = this.features.itemEmptyGenericTypeParameters(item);
+            const entityMakeGenericTypeParameters = this.features.itemMakeGenericTypeParameters(item);
 
-            registrations += `
-            builder.Services.AddScoped(typeof(I${entityName}Manager${emptyGenericParameters}).MakeGenericType(${makeGenericTypeParameterList}), typeof(AspNet${entityName}Manager${emptyGenericParameters}).MakeGenericType(${makeGenericTypeParameterList}));`;
+            serviceRegistrationsData.push(
+                `builder.Services.AddScoped(
+    typeof(I${entityName}Manager${entityEmptyGenericTypeParameters}).MakeGenericType(${entityMakeGenericTypeParameters}),
+    typeof(AspNet${entityName}Manager${entityEmptyGenericTypeParameters}).MakeGenericType(${entityMakeGenericTypeParameters}));`);
         }
 
-        if (this.module.items.length > 0) {
-            registrations += '\n';
-        }
+        const serviceRegistrations = StringHelper.joinLines(_.uniq(serviceRegistrationsData), 3, '\n', { start: 1, end: 1 });
 
         const content = `using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -158,7 +128,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             // Hosting doesn't add IHttpContextAccessor by default
             builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-${registrations}
+${serviceRegistrations}
             return builder;
         }
     }

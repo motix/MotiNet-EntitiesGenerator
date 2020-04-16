@@ -1,15 +1,19 @@
 ﻿// Core
 
 import 'prismjs/components/prism-csharp';
-import { IdentifierHelper, StringHelper } from '../content-helper';
-import ContentHelper from '../content-helper';
+import ContentHelper, { IdentifierHelper, StringHelper } from '../content-helper';
 
-import * as SG from '../structure-generators/structure-generators';
-import { ModuleSpecificContentGenerator, CSharpModuleSpecificContentGenerator, CSharpEntitySpecificContentGenerator, ProjectFileGenerator } from './content-generator';
+import { CoreProjectSG } from '../structure-generators/structure-generators';
+import {
+    ModuleSpecificContentGenerator,
+    CSharpModuleSpecificContentGenerator,
+    CSharpEntitySpecificContentGenerator,
+    ProjectFileGenerator
+} from './content-generator';
 
 export class CoreProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
-        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(SG.CoreProjectSG);
+        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(CoreProjectSG);
 
         const content = `<Project Sdk="Microsoft.NET.Sdk">
 
@@ -31,7 +35,7 @@ export class CoreProject_ProjectFileGenerator extends ProjectFileGenerator {
 
 export class CoreProject_EntityManagerInterfaceGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.item.module);
+        const namespace = CoreProjectSG.getDefaultNamespace(this.item.module);
         const entityName = this.item.name;
         const featuresCommentData = [];
         const entityGenericTypeParameters = this.features.itemGenericTypeParameters(this.item);
@@ -45,8 +49,8 @@ export class CoreProject_EntityManagerInterfaceGenerator extends CSharpEntitySpe
             }
         }
 
-        const featuresComment = this.generateFeatureComments(featuresCommentData);
-        const managerInterfaces = StringHelper.generateBaseBlock(managerInterfacesData, 2, { start: 1 });
+        const featuresComment = this.generateFeatureComments(_.uniq(featuresCommentData));
+        const managerInterfaces = StringHelper.generateBaseBlock(_.uniq(managerInterfacesData), 2, { start: 1 });
 
         const content = `using MotiNet.Entities;
 
@@ -101,7 +105,7 @@ ${entityGenericTypeConstraints}
 
 export class CoreProject_EntityStoreInterfaceGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.item.module);
+        const namespace = CoreProjectSG.getDefaultNamespace(this.item.module);
         const entityName = this.item.name;
         const entityGenericTypeParameters = this.features.itemGenericTypeParameters(this.item);
         const entityGenericTypeConstraints = this.features.itemGenericTypeConstraints(this.item, 2);
@@ -114,7 +118,7 @@ export class CoreProject_EntityStoreInterfaceGenerator extends CSharpEntitySpeci
         }
 
         const storeInterfaces = storeInterfacesData.length === 0 ? ' : IDisposable' :
-            StringHelper.generateBaseBlock(storeInterfacesData, 2, { start: 1 });
+            StringHelper.generateBaseBlock(_.uniq(storeInterfacesData), 2, { start: 1 });
 
         const content = `using MotiNet.Entities;
 using System;
@@ -133,7 +137,7 @@ ${entityGenericTypeConstraints}
 
 export class CoreProject_EntityAccessorInterfaceGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.item.module);
+        const namespace = CoreProjectSG.getDefaultNamespace(this.item.module);
         const entityName = this.item.name;
         const entityGenericTypeParameters = this.features.itemGenericTypeParameters(this.item);
         const entityGenericTypeConstraints = this.features.itemGenericTypeConstraints(this.item, 2);
@@ -145,7 +149,7 @@ export class CoreProject_EntityAccessorInterfaceGenerator extends CSharpEntitySp
             }
         }
 
-        const accessorInterfaces = StringHelper.generateBaseBlock(accessorInterfacesData, 2, { start: 1 });
+        const accessorInterfaces = StringHelper.generateBaseBlock(_.uniq(accessorInterfacesData), 2, { start: 1 });
 
         const content = `using MotiNet.Entities;
 
@@ -163,15 +167,15 @@ ${entityGenericTypeConstraints}
 
 export class CoreProject_EntityManagerClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.item.module);
+        const namespace = CoreProjectSG.getDefaultNamespace(this.item.module);
         const entityName = this.item.name;
         const entityGenericTypeParameters = this.features.itemGenericTypeParameters(this.item);
         const entityGenericTypeConstraints = this.features.itemGenericTypeConstraints(this.item, 2);
         const constructorParametersData = [];
         const baseConstructorParametersData = [];
-        const propertiesAssignmentsData = [];
-        const propertiesDeclarations1Data = [];
-        const propertiesDeclarations2Data = [];
+        const propertyAssignmentsData = [];
+        const propertyDeclarations1Data = [];
+        const propertyDeclarations2Data = [];
 
         constructorParametersData.push(
             `I${entityName}Store${entityGenericTypeParameters} store`,
@@ -192,20 +196,20 @@ export class CoreProject_EntityManagerClassGenerator extends CSharpEntitySpecifi
         for (const feature of this.features.allFeatures) {
             if (feature.itemHasFeature(this.item)) {
                 feature.core_EntityManagerClass_ConstructorParametersData(this.item, constructorParametersData);
-                feature.core_EntityManagerClass_PropertiesAssignmentsData(this.item, propertiesAssignmentsData);
-                feature.core_EntityManagerClass_PropertiesDeclarations1Data(this.item, propertiesDeclarations1Data);
-                feature.core_EntityManagerClass_PropertiesDeclarations2Data(this.item, propertiesDeclarations2Data);
+                feature.core_EntityManagerClass_PropertiesAssignmentsData(this.item, propertyAssignmentsData);
+                feature.core_EntityManagerClass_PropertiesDeclarations1Data(this.item, propertyDeclarations1Data);
+                feature.core_EntityManagerClass_PropertiesDeclarations2Data(this.item, propertyDeclarations2Data);
             }
         }
 
-        propertiesDeclarations1Data.push(`public I${entityName}Store${entityGenericTypeParameters} ${entityName}Store => Store as I${entityName}Store${entityGenericTypeParameters};`);
-        propertiesDeclarations1Data.push(`public I${entityName}Accessor${entityGenericTypeParameters} ${entityName}Accessor => Accessor as I${entityName}Accessor${entityGenericTypeParameters};`);
+        propertyDeclarations1Data.push(`public I${entityName}Store${entityGenericTypeParameters} ${entityName}Store => Store as I${entityName}Store${entityGenericTypeParameters};`);
+        propertyDeclarations1Data.push(`public I${entityName}Accessor${entityGenericTypeParameters} ${entityName}Accessor => Accessor as I${entityName}Accessor${entityGenericTypeParameters};`);
 
         const constructorParameters = StringHelper.joinLines(_.uniq(constructorParametersData), 3, ',', { start: 1 });
-        const baseConstructorParameters = baseConstructorParametersData.join(', ');
-        const propertiesAssignments = StringHelper.joinLines(_.uniq(propertiesAssignmentsData), 3, '', { start: 1, end: 1, endIndent: 2, spaceIfEmpty: true });
-        const propertiesDeclarations1 = StringHelper.joinLines(propertiesDeclarations1Data, 2, '\n', { start: 2 });
-        const propertiesDeclarations2 = StringHelper.joinLines(_.uniq(propertiesDeclarations2Data), 2, '\n', { start: 2 });
+        const baseConstructorParameters = _.uniq(baseConstructorParametersData).join(', ');
+        const propertyAssignments = StringHelper.joinLines(_.uniq(propertyAssignmentsData), 3, '', { start: 1, end: 1, endIndent: 2, spaceIfEmpty: true });
+        const propertyDeclarations1 = StringHelper.joinLines(_.uniq(propertyDeclarations1Data), 2, '\n', { start: 2 });
+        const propertyDeclarations2 = StringHelper.joinLines(_.uniq(propertyDeclarations2Data), 2, '\n', { start: 2 });
 
         const content = `using Microsoft.Extensions.Logging;
 using MotiNet.Entities;
@@ -219,7 +223,7 @@ ${entityGenericTypeConstraints}
     {
         public ${entityName}Manager(${constructorParameters})
             : base(${baseConstructorParameters})
-        {${propertiesAssignments}}${propertiesDeclarations1}${propertiesDeclarations2}
+        {${propertyAssignments}}${propertyDeclarations1}${propertyDeclarations2}
     }
 }
 `;
@@ -230,24 +234,24 @@ ${entityGenericTypeConstraints}
 
 export class CoreProject_EntityValidatorClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.item.module);
+        const namespace = CoreProjectSG.getDefaultNamespace(this.item.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.item.module);
         const entityName = this.item.name;
         const lowerFirstEntityName = _.lowerFirst(entityName);
         const entityGenericTypeParameters = this.features.itemGenericTypeParameters(this.item);
         const entityGenericTypeConstraints = this.features.itemGenericTypeConstraints(this.item, 2);
         const validationsData = [];
-        const subEntityValidationsData = [];
+        const subEntityValidateMethodsData = [];
 
         for (const feature of this.features.allFeatures) {
             if (feature.itemHasFeature(this.item)) {
                 feature.core_EntityValidatorClass_ValidationsData(this.item, validationsData);
-                feature.core_EntityValidatorClass_SubEntityValidationsData(this.item, subEntityValidationsData);
+                feature.core_EntityValidatorClass_SubEntityValidateMethodsData(this.item, subEntityValidateMethodsData);
             }
         }
 
         const validations = StringHelper.joinLines(_.uniq(validationsData), 3, '\n', { start: 2 });
-        const subEntityValidations = StringHelper.joinLines(subEntityValidationsData, 2, '\n', { start: 2 });
+        const subEntityValidateMethods = StringHelper.joinLines(_.uniq(subEntityValidateMethodsData), 2, '\n', { start: 2 });
 
         const content = `using MotiNet;
 using MotiNet.Entities;
@@ -275,7 +279,7 @@ ${entityGenericTypeConstraints}
             var errors = new List<GenericError>();${validations}
 
             return GenericResult.GetResult(errors);
-        }${subEntityValidations}
+        }${subEntityValidateMethods}
     }
 }
 `;
@@ -286,31 +290,31 @@ ${entityGenericTypeConstraints}
 
 export class CoreProject_ErrorDescriberClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.module);
+        const namespace = CoreProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
-        const describersData = [];
+        const describerMethodsData = [];
 
         for (const item of this.module.items) {
-            const itemDescribersData = [];
+            const itemDescriberMethodsData = [];
 
             for (const feature of this.features.allFeatures) {
                 if (feature.itemHasFeature(item)) {
-                    feature.core_ErrorDescriberClass_DescribersData(item, itemDescribersData);
+                    feature.core_ErrorDescriberClass_DescriberMethodsData(item, itemDescriberMethodsData);
                 }
             }
 
-            if (itemDescribersData.length > 0) {
+            if (itemDescriberMethodsData.length > 0) {
                 const entityName = item.name;
 
-                describersData.push(
+                describerMethodsData.push(
                     `#region ${entityName}`,
-                    ...itemDescribersData,
+                    ..._.uniq(itemDescriberMethodsData),
                     `#endregion ${entityName}`
                 )
             }
         }
 
-        const describers = StringHelper.joinLines(_.uniq(describersData), 2, '\n', { start: 2 });
+        const describerMethods = StringHelper.joinLines(_.uniq(describerMethodsData), 2, '\n', { start: 2 });
 
         const content = `using Microsoft.Extensions.Localization;
 using ${namespace}.Resources;
@@ -332,7 +336,7 @@ namespace ${namespace}
 
         protected ${moduleCommonName}ErrorDescriber(IStringLocalizer localizer) => _localizer = localizer;
 
-        #endregion${describers}
+        #endregion${describerMethods}
     }
 }
 `;
@@ -343,7 +347,7 @@ namespace ${namespace}
 
 export class CoreProject_ErrorDescriberResourcesClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.module);
+        const namespace = CoreProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
 
         const content = `namespace ${namespace}.Resources
@@ -365,7 +369,7 @@ export class CoreProject_ErrorDescriberResourcesResxGenerator extends ModuleSpec
         for (const item of this.module.items) {
             for (const feature of this.features.allFeatures) {
                 if (feature.itemHasFeature(item)) {
-                    feature.core_ErrorDescriberResourcesClass_ItemsData(item, itemsData);
+                    feature.core_ErrorDescriberResourcesResx_ItemsData(item, itemsData);
                 }
             }
         }
@@ -380,11 +384,11 @@ export class CoreProject_ErrorDescriberResourcesResxGenerator extends ModuleSpec
 
 export class CoreProject_BuilderClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.module);
+        const namespace = CoreProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
         const constructorParametersData = [];
         const constructBuilderParametersData = [];
-        const propertiesDeclarationsData = [];
+        const propertyDeclarationsData = [];
 
         for (const item of this.module.items) {
             const entityName = item.name;
@@ -400,13 +404,13 @@ export class CoreProject_BuilderClassGenerator extends CSharpModuleSpecificConte
                 lineBreak: item.parameterListLineBreak
             });
 
-            propertiesDeclarationsData.push(`public Type ${entityName}Type { get; private set; }`);
+            propertyDeclarationsData.push(`public Type ${entityName}Type { get; private set; }`);
 
             for (const feature of this.features.allFeatures) {
                 if (feature.itemHasFeature(item)) {
                     feature.core_BuilderClass_ConstructorParametersData(item, constructorParametersData);
                     feature.core_BuilderClass_ConstructBuilderParametersData(item, constructBuilderParametersData);
-                    feature.core_BuilderClass_PropertiesDeclarationsData(item, propertiesDeclarationsData);
+                    feature.core_BuilderClass_PropertiesDeclarationsData(item, propertyDeclarationsData);
                 }
             }
         }
@@ -415,7 +419,7 @@ export class CoreProject_BuilderClassGenerator extends CSharpModuleSpecificConte
             3, { startComma: true, start: 1 });
         const constructBuilderParameters = StringHelper.joinParameters(_.uniqBy(constructBuilderParametersData, value => value.text),
             4, { startComma: true, start: 1 });
-        const propertiesDeclarations = StringHelper.joinLines(_.uniq(propertiesDeclarationsData),
+        const propertyDeclarations = StringHelper.joinLines(_.uniq(propertyDeclarationsData),
             2, '\n', { start: 2 });
 
         const content = `using Microsoft.Extensions.DependencyInjection;
@@ -431,7 +435,7 @@ namespace ${namespace}
             : base(services)
             => BuilderHelper.ConstructBuilder(
                 this, typeof(${moduleCommonName}Builder).GetConstructors()[0],
-                services${constructBuilderParameters});${propertiesDeclarations}
+                services${constructBuilderParameters});${propertyDeclarations}
     }
 }
 `;
@@ -442,8 +446,11 @@ namespace ${namespace}
 
 export class CoreProject_DependencyInjectionClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = SG.CoreProjectSG.getDefaultNamespace(this.module);
+        const namespace = CoreProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
+        const moduleGenericTypeParameters = this.features.moduleGenericTypeParameters(this.module,
+            `public static ${moduleCommonName}Builder Add${moduleCommonName}`.length / 4 + 2);
+        const moduleGenericTypeConstraints = this.features.moduleGenericTypeConstraints(this.module, 3, false, { start: 1 });
         const entityServiceRegistrationsData = [];
         const moduleServiceRegistrationsData = [];
         const builderConstructorParametersData = _.map(this.features.moduleEntityNames(this.module),
@@ -474,14 +481,9 @@ export class CoreProject_DependencyInjectionClassGenerator extends CSharpModuleS
             moduleServiceRegistrationsData.push(`services.TryAddScoped<${moduleCommonName}ErrorDescriber, ${moduleCommonName}ErrorDescriber>();`);
         }
 
-        var indent;
-
-        indent = `public static ${moduleCommonName}Builder Add${moduleCommonName}`.length / 4 + 2;
-        const moduleGenericTypeParameters = this.features.moduleGenericTypeParameters(this.module, indent);
-        const moduleGenericTypeConstraints = this.features.moduleGenericTypeConstraints(this.module, 3, { start: 1 });
         const entityServiceRegistrations = StringHelper.joinLines(_.uniq(entityServiceRegistrationsData), 3, '', { start: 1 });
         const moduleServiceRegistrations = StringHelper.joinLines(_.uniq(moduleServiceRegistrationsData), 3, '', { start: 1, end: 1 });
-        const builderConstructorParameters = StringHelper.joinParameters(builderConstructorParametersData, 4, { startComma: true, start: 1 });
+        const builderConstructorParameters = StringHelper.joinParameters(_.uniq(builderConstructorParametersData), 4, { startComma: true, start: 1 });
 
         const content = `using Microsoft.Extensions.DependencyInjection.Extensions;
 using MotiNet.Entities;

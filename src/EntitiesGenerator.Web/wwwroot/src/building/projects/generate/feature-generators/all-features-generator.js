@@ -95,10 +95,19 @@ export default class AllFeaturesGenerator {
     /**
      * @param {Module} module
      * @param {number} indent
+     * @param {boolean} [includeKeyType]
      * @param {NewLineIfNotEmptyConfig} [newLineIfNotEmpty]
      */
-    moduleGenericTypeParameters(module, indent, newLineIfNotEmpty) {
+    moduleGenericTypeParameters(module, indent, includeKeyType, newLineIfNotEmpty) {
         const entities = this.moduleEntityNames(module);
+
+        if (includeKeyType === true) {
+            entities.push({
+                name: 'Key',
+                lineBreak: true
+            })
+        }
+
         const parameters = _.map(entities, value => ({ text: `T${value.name}`, lineBreak: value.lineBreak }));
 
         var str = StringHelper.joinParameters(parameters, 0, {});
@@ -123,14 +132,61 @@ export default class AllFeaturesGenerator {
     /**
      * @param {Module} module
      * @param {number} indent
+     * @param {boolean} [includeKeyType]
      * @param {NewLineIfNotEmptyConfig} [newLineIfNotEmpty]
      */
-    moduleGenericTypeConstraints(module, indent, newLineIfNotEmpty) {
+    moduleGenericTypeConstraints(module, indent, includeKeyType, newLineIfNotEmpty) {
         const entities = this.moduleEntityNames(module);
-        var parameters = _.map(entities, value => `where T${value.name} : class`);
+
+        if (includeKeyType === true) {
+            entities.push({
+                name: 'Key',
+                lineBreak: true
+            })
+        }
+
+        var parameters = _.map(entities,
+            (value, index) => includeKeyType === true && index === entities.length - 1 ? 'where TKey : IEquatable<TKey>' : `where T${value.name} : class`);
 
         var str = parameters.join('\n');
         str = StringHelper.indent(str, indent);
+
+        if (!_.isUndefined(newLineIfNotEmpty)) {
+            str = StringHelper.newLineIfNotEmpty(str, newLineIfNotEmpty);
+        }
+
+        return str;
+    }
+
+    /**
+     * @param {Module} module
+     * @param {number} indent
+     * @param {boolean} [includeKeyType]
+     * @param {NewLineIfNotEmptyConfig} [newLineIfNotEmpty]
+     */
+    moduleSpecificTypeParameters(module, indent, includeKeyType, newLineIfNotEmpty) {
+        const entities = this.moduleEntityNames(module);
+
+        if (includeKeyType === true) {
+            entities.push({
+                name: 'string',
+                lineBreak: true
+            })
+        }
+
+        const parameters = _.map(entities, value => ({ text: value.name, lineBreak: value.lineBreak }));
+
+        var str = StringHelper.joinParameters(parameters, 0, {});
+
+        if (str !== '') {
+            str = `<${str}>`;
+
+            var lines = str.split('\n');
+            lines = _.map(lines, (value, index) => index === 0 ? value : ` ${value}`);
+
+            str = lines.join('\n');
+            str = StringHelper.indent(str, indent).trim();
+        }
 
         if (!_.isUndefined(newLineIfNotEmpty)) {
             str = StringHelper.newLineIfNotEmpty(str, newLineIfNotEmpty);
@@ -186,6 +242,27 @@ export default class AllFeaturesGenerator {
 
         var str = parameters.join('\n');
         str = StringHelper.indent(str, indent);
+
+        return str;
+    }
+
+    /**
+     * @param {Item} item
+     */
+    itemEmptyGenericTypeParameters(item) {
+        const entities = this.itemEntityNames(item);
+        const str = `<${_.repeat(',', entities.length - 1)}>`;
+
+        return str;
+    }
+
+    /**
+     * @param {Item} item
+     */
+    itemMakeGenericTypeParameters(item) {
+        const entities = this.itemEntityNames(item);
+        const parameters = _.map(entities, value => `builder.${value.name}Type`);
+        const str = parameters.join(', ');
 
         return str;
     }

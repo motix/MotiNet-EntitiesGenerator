@@ -1,16 +1,20 @@
 ﻿// AspNetCore.Mvc.DefaultViewModels
 
 import 'prismjs/components/prism-csharp';
-import { IdentifierHelper } from '../content-helper';
-import ContentHelper from '../content-helper';
+import ContentHelper, { IdentifierHelper, StringHelper } from '../content-helper';
 
-import * as SG from '../structure-generators/structure-generators';
-import { ModuleSpecificContentGenerator, CSharpModuleSpecificContentGenerator, CSharpEntitySpecificContentGenerator, ProjectFileGenerator } from './content-generator';
+import { CoreProjectSG, AspDvProjectSG } from '../structure-generators/structure-generators';
+import {
+    ModuleSpecificContentGenerator,
+    CSharpModuleSpecificContentGenerator,
+    CSharpEntitySpecificContentGenerator,
+    ProjectFileGenerator
+} from './content-generator';
 
 export class AspDvProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
-        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(SG.AspDvProjectSG);
-        const coreProjectName = SG.CoreProjectSG.getProjectName(this.module);
+        const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(AspDvProjectSG);
+        const coreProjectName = CoreProjectSG.getProjectName(this.module);
 
         const content = `<Project Sdk="Microsoft.NET.Sdk">
 
@@ -52,28 +56,41 @@ export class AspDvProject_ProjectFileGenerator extends ProjectFileGenerator {
 
 export class AspDvProject_EntityViewModelsClassGenerator extends CSharpEntitySpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.item.module);
+        const namespace = AspDvProjectSG.getDefaultNamespace(this.item.module);
         const entityName = this.item.name;
+        const basePropertyDeclarationsData = [];
+        const fullPropertyDeclarationsData = [];
+
+        for (const feature of this.features.allFeatures) {
+            if (feature.itemHasFeature(this.item)) {
+                feature.aspDv_EntityViewModelsClass_BasePropertyDeclarationsData(this.item, basePropertyDeclarationsData);
+                feature.aspDv_EntityViewModelsClass_FullPropertyDeclarationsData(this.item, fullPropertyDeclarationsData);
+            }
+
+            feature.aspDv_EntityViewModelsClass_BasePropertyDeclarationsData_FromOthers(this.item, basePropertyDeclarationsData);
+            feature.aspDv_EntityViewModelsClass_FullPropertyDeclarationsData_FromOthers(this.item, fullPropertyDeclarationsData);
+        }
+
+        const basePropertyDeclarations = StringHelper.joinLines(_.uniq(basePropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
+        const fullPropertyDeclarations = StringHelper.joinLines(_.uniq(fullPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
 
         const content = `using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ${namespace}.Mvc
+namespace ${namespace}
 {
     // Base
     public abstract class ${entityName}ViewModelBase
-    {
-        public ${entityName}ViewModelBase() => Id = Guid.NewGuid().ToString();
-
-        public string Id { get; set; }
-    }
+    {${basePropertyDeclarations}}
 
     // Full
-    public class ${entityName}ViewModel : ${entityName}ViewModelBase { }
+    public class ${entityName}ViewModel : ${entityName}ViewModelBase
+    {${fullPropertyDeclarations}}
 
     // Lite
-    public class ${entityName}LiteViewModel : ${entityName}ViewModelBase { }
+    public class ${entityName}LiteViewModel : ${entityName}ViewModelBase
+    { }
 }
 `;
 
@@ -94,7 +111,38 @@ export class AspDvProject_SubEntityViewModelsClassGenerator extends CSharpEntity
     }
 
     generate() {
-        const content = '//';
+        const namespace = AspDvProjectSG.getDefaultNamespace(this.item.module);
+        const subEntityName = this.subEntityName;
+        const basePropertyDeclarationsData = [];
+        const fullPropertyDeclarationsData = [];
+
+        for (const feature of this.features.allFeatures) {
+            feature.aspDv_SubEntityViewModelsClass_BasePropertyDeclarationsData_FromOthers(this.item, basePropertyDeclarationsData);
+            feature.aspDv_SubEntityViewModelsClass_FullPropertyDeclarationsData_FromOthers(this.item, fullPropertyDeclarationsData);
+        }
+
+        const basePropertyDeclarations = StringHelper.joinLines(_.uniq(basePropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
+        const fullPropertyDeclarations = StringHelper.joinLines(_.uniq(fullPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
+
+        const content = `using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace ${namespace}
+{
+    // Base
+    public abstract class ${subEntityName}ViewModelBase
+    {${basePropertyDeclarations}}
+
+    // Full
+    public class ${subEntityName}ViewModel : ${subEntityName}ViewModelBase
+    {${fullPropertyDeclarations}}
+
+    // Lite
+    public class ${subEntityName}LiteViewModel : ${subEntityName}ViewModelBase
+    { }
+}
+`;
 
         return content;
     }
@@ -104,7 +152,17 @@ export class AspDvProject_DisplayNamesResxGenerator extends ModuleSpecificConten
     get language() { return 'markup'; }
 
     generate() {
-        const items = '';
+        const itemsData = [];
+
+        for (const item of this.module.items) {
+            for (const feature of this.features.allFeatures) {
+                if (feature.itemHasFeature(item)) {
+                    feature.aspDv_DisplayNamesResx_ItemsData(item, itemsData);
+                }
+            }
+        }
+
+        const items = StringHelper.joinLines(_.uniq(itemsData), .5, '', { start: 1 });
 
         var content = ContentHelper.generateResourceFileContent(items);
 
@@ -114,34 +172,28 @@ export class AspDvProject_DisplayNamesResxGenerator extends ModuleSpecificConten
 
 export class AspDvProject_ProfileClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
+        const namespace = AspDvProjectSG.getDefaultNamespace(this.module);
+        const entities = this.features.moduleEntityNames(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
+        const createEntityMapsData = [];
 
-        var registrations = '';
-        for (const item of this.module.items) {
-            const entityName = item.name;
-
-            registrations += `
-            CreateMap(builder.${entityName}Type, typeof(${entityName}ViewModel))
-                .ReverseMap();
-            CreateMap(builder.${entityName}Type, typeof(${entityName}LiteViewModel));
-`;
+        for (const entity of entities) {
+            createEntityMapsData.push(`CreateMap(builder.${entity.name}Type, typeof(${entity.name}ViewModel))
+    .ReverseMap();
+CreateMap(builder.${entity.name}Type, typeof(${entity.name}LiteViewModel));`);
         }
 
-        if (this.module.items.length > 0) {
-            registrations = registrations.substr(0, registrations.length - 1);
-        }
+        const createEntityMaps = StringHelper.joinLines(createEntityMapsData, 3, '\n', { start: 1, end: 1, endIndent: 2, spaceIfEmpty: true });
 
         const content = `using AutoMapper;
 using MotiNet.AutoMapper;
 
-namespace ${namespace}.Mvc
+namespace ${namespace}
 {
     public class ${moduleCommonName}Profile : Profile
     {
         public ${moduleCommonName}Profile(${moduleCommonName}Builder builder)
-        {${registrations}
-        }
+        {${createEntityMaps}}
     }
 }
 `;
@@ -152,12 +204,13 @@ namespace ${namespace}.Mvc
 
 export class AspDvProject_DependencyInjectionClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
-        const namespace = ContentHelper.get_CoreProject_Namespace(this.module);
+        const coreNamespace = CoreProjectSG.getDefaultNamespace(this.module);
+        const namespace = AspDvProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
 
         const content = `using AutoMapper;
+using ${coreNamespace};
 using ${namespace};
-using ${namespace}.Mvc;
 using System;
 using System.Reflection;
 
