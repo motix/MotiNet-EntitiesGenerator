@@ -286,8 +286,10 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
     sm_EntityClass_EntityPropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
+        const constructorModifier = item.abstractModel ? 'protected' : 'public';
+
         data.push(
-            `public ${item.name}() => Id = Guid.NewGuid().ToString();`,
+            `${constructorModifier} ${item.name}() => Id = Guid.NewGuid().ToString();`,
             `[StringLength(StringLengths.Guid)]
 public string Id { get; set; }`,
             `[Required]
@@ -308,8 +310,11 @@ public string NormalizedName { get; set; }`);
     sm_EntityClass_EntityPropertyDeclarationsData_FromOthers(item, data) {
         for (const otherItem of item.module.items) {
             if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name) {
+
+                const constructorModifier = item.abstractModel ? 'protected' : 'public';
+
                 data.push(
-                    `public ${item.name}() => Id = Guid.NewGuid().ToString();`,
+                    `${constructorModifier} ${item.name}() => Id = Guid.NewGuid().ToString();`,
                     `[StringLength(StringLengths.Guid)]
 public string Id { get; set; }`);
             }
@@ -366,8 +371,11 @@ public string Id { get; set; }`);
      * @param {string[]} data
      */
     sm_SubEntityClass_EntityPropertyDeclarationsData_FromOthers(item, subEntityName, data) {
+
+        const constructorModifier = item.abstractModel ? 'protected' : 'public';
+
         data.push(
-            `public ${item.name}() => Id = Guid.NewGuid().ToString();`,
+            `${constructorModifier} ${item.name}() => Id = Guid.NewGuid().ToString();`,
             `[StringLength(StringLengths.Guid)]
 public string Id { get; set; }`);
     }
