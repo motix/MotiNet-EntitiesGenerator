@@ -11,12 +11,14 @@ namespace EntitiesGenerator
     {
         public ModuleManager(
             IModuleStore<TModule, TProject> store,
-            IModuleAccessor<TModule, TProject> moduleAccessor,
-            IEnumerable<IValidator<TModule, TProject>> moduleValidators,
+            IModuleAccessor<TModule, TProject> accessor,
+            IEnumerable<IValidator<TModule, TProject>> validators,
             ILogger<ModuleManager<TModule, TProject>> logger,
-            ILookupNormalizer nameNormalizer)
-            : base(store, moduleAccessor, moduleValidators, logger)
-            => NameNormalizer = nameNormalizer ?? throw new ArgumentNullException(nameof(nameNormalizer));
+            ILookupNormalizer<TModule> nameNormalizer)
+            : base(store, accessor, validators, logger)
+        {
+            NameNormalizer = nameNormalizer ?? throw new ArgumentNullException(nameof(nameNormalizer));
+        }
 
         public IEntityStore<TModule> EntityStore => Store as IEntityStore<TModule>;
 

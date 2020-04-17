@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Localization;
-using EntitiesGenerator.Resources;
+﻿using EntitiesGenerator.Resources;
+using Microsoft.Extensions.Localization;
 using MotiNet;
 
 namespace EntitiesGenerator

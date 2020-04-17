@@ -57,8 +57,9 @@ export default class EntityFeatureGenerator extends FeatureGenerator {
     core_EntityManagerClass_PropertiesDeclarations1Data(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`public IEntityStore${this.itemGenericTypeParameters(item)} EntityStore => Store as IEntityStore${this.itemGenericTypeParameters(item)};`);
-        data.push(`public IEntityAccessor${this.itemGenericTypeParameters(item)} EntityAccessor => Accessor as IEntityAccessor${this.itemGenericTypeParameters(item)};`);
+        data.push(
+            `public IEntityStore${this.itemGenericTypeParameters(item)} EntityStore => Store as IEntityStore${this.itemGenericTypeParameters(item)};`,
+            `public IEntityAccessor${this.itemGenericTypeParameters(item)} EntityAccessor => Accessor as IEntityAccessor${this.itemGenericTypeParameters(item)};`);
     }
 
     // SealedModels
@@ -70,7 +71,9 @@ export default class EntityFeatureGenerator extends FeatureGenerator {
     sm_EntityClass_EntityPropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`[StringLength(StringLengths.Guid)]
+        data.push(
+            `public ${item.name}() => Id = Guid.NewGuid().ToString();`,
+            `[StringLength(StringLengths.Guid)]
 public string Id { get; set; }`);
     }
 
@@ -116,6 +119,8 @@ public string Id { get; set; }`);
     aspDv_EntityViewModelsClass_BasePropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push('public string Id { get; set; }');
+        data.push(
+            `protected ${item.name}ViewModelBase() => Id = Guid.NewGuid().ToString();`,
+            'public string Id { get; set; }');
     }
 }

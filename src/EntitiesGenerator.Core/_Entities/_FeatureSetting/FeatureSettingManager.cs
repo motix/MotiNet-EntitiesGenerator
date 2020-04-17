@@ -9,10 +9,10 @@ namespace EntitiesGenerator
     {
         public FeatureSettingManager(
             IFeatureSettingStore<TFeatureSetting> store,
-            IFeatureSettingAccessor<TFeatureSetting> featureSettingAccessor,
-            IEnumerable<IValidator<TFeatureSetting>> featureSettingValidators,
+            IFeatureSettingAccessor<TFeatureSetting> accessor,
+            IEnumerable<IValidator<TFeatureSetting>> validators,
             ILogger<FeatureSettingManager<TFeatureSetting>> logger)
-            : base(store, featureSettingAccessor, featureSettingValidators, logger)
+            : base(store, accessor, validators, logger)
         { }
 
         public IEntityStore<TFeatureSetting> EntityStore => Store as IEntityStore<TFeatureSetting>;

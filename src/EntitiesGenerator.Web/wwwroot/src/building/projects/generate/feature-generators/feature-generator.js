@@ -286,6 +286,21 @@
 
     /**
      * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_EntityClass_CustomizationsPropertyDeclarationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_EntityClass_CustomizationsPropertyDeclarationsData_FromOthers(item, data) {
+    }
+
+    /**
+     * @param {Item} item
      * @param {string} subEntityName
      * @param {string[]} data
      */
@@ -357,6 +372,13 @@
      */
     efSm_DbContextClass_EntityConfigurationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    efSm_DbContextClass_EntityConfigurationsData_FromOthers(item, data) {
     }
 
     /**
@@ -477,6 +499,21 @@
      */
     aspDv_DisplayNamesResxDesignerClass_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_ProfileClass_CreateEntityMapChainedMethodsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_ProfileClass_CreateEntityMapChainedMethodsData_FromOthers(item, data) {
     }
 }
 

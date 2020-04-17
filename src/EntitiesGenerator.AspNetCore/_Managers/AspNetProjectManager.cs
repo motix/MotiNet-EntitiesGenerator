@@ -15,7 +15,7 @@ namespace EntitiesGenerator
             IProjectAccessor<TProject> projectAccessor,
             IEnumerable<IValidator<TProject>> projectValidators,
             ILogger<ProjectManager<TProject>> logger,
-            ILookupNormalizer nameNormalizer,
+            ILookupNormalizer<TProject> nameNormalizer,
             IHttpContextAccessor contextAccessor)
             : base(store, projectAccessor, projectValidators, logger, nameNormalizer)
             => _cancel = contextAccessor?.HttpContext?.RequestAborted ?? CancellationToken.None;

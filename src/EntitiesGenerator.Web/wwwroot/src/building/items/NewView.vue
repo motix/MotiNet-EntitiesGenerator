@@ -71,6 +71,17 @@
                     <label class="custom-control-label" for="parameterListLineBreakSwitch">{{displayNames['ParameterListLineBreak']}}</label>
                 </div>
             </div>
+            <div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox"
+                           class="custom-control-input"
+                           id="abstractModelSwitch"
+                           v-bind:disabled="!newMode && !editMode"
+                           v-model="entity.abstractModel"
+                           @change="dirty()">
+                    <label class="custom-control-label" for="abstractModelSwitch">{{displayNames['AbstractModel']}}</label>
+                </div>
+            </div>
             <section class="mt-4" v-if="!newMode">
                 <h3>{{displayNames['FeatureSettings']}}</h3>
                 <div>
@@ -113,14 +124,16 @@
                             </span>
                         </h4>
                         <div class="ml-4 pl-3 border-left" v-if="entity.codeBasedEntityFeatureSetting.enabled">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox"
-                                       class="custom-control-input"
-                                       id="codeBasedEntityFeatureSettingHasCodeGeneratorSwitch"
-                                       v-bind:disabled="!newMode && !editMode"
-                                       v-model="entity.codeBasedEntityFeatureSetting.hasCodeGenerator"
-                                       @change="dirty()">
-                                <label class="custom-control-label" for="codeBasedEntityFeatureSettingHasCodeGeneratorSwitch">{{displayNames['HasCodeGenerator']}}</label>
+                            <div>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox"
+                                           class="custom-control-input"
+                                           id="codeBasedEntityFeatureSettingHasCodeGeneratorSwitch"
+                                           v-bind:disabled="!newMode && !editMode"
+                                           v-model="entity.codeBasedEntityFeatureSetting.hasCodeGenerator"
+                                           @change="dirty()">
+                                    <label class="custom-control-label" for="codeBasedEntityFeatureSettingHasCodeGeneratorSwitch">{{displayNames['HasCodeGenerator']}}</label>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -150,20 +163,44 @@
                             </span>
                         </h4>
                         <div class="ml-4 pl-3 border-left" v-if="entity.scopedNameBasedEntityFeatureSetting.enabled">
-                            <strong>{{displayNames['ScopeName']}}:</strong>
-                            <template v-if="editMode || newMode">
-                                <single-line-input :placeholder="displayNames['ScopeName']"
-                                                   placeholder-css-class="text-muted"
-                                                   v-model="entity.scopedNameBasedEntityFeatureSetting.scopeName"
-                                                   @input="dirty()"
-                                                   class="d-inline-block"></single-line-input>
-                                <div class="small text-danger">
-                                    <div v-for="error in entity.errors.scopedNameBasedEntityFeatureSetting.scopeName">{{error}}</div>
+                            <div>
+                                <strong>{{displayNames['ScopeName']}}:</strong>
+                                <template v-if="editMode || newMode">
+                                    <single-line-input :placeholder="displayNames['ScopeName']"
+                                                       placeholder-css-class="text-muted"
+                                                       v-model="entity.scopedNameBasedEntityFeatureSetting.scopeName"
+                                                       @input="dirty()"
+                                                       class="d-inline-block"></single-line-input>
+                                    <div class="small text-danger">
+                                        <div v-for="error in entity.errors.scopedNameBasedEntityFeatureSetting.scopeName">{{error}}</div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    {{entity.scopedNameBasedEntityFeatureSetting.scopeName}}
+                                </template>
+                            </div>
+                            <div>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox"
+                                           class="custom-control-input"
+                                           id="scopedNameBasedEntityFeatureSettingDeleteRestrictSwitch"
+                                           v-bind:disabled="!newMode && !editMode"
+                                           v-model="entity.scopedNameBasedEntityFeatureSetting.deleteRestrict"
+                                           @change="dirty()">
+                                    <label class="custom-control-label" for="scopedNameBasedEntityFeatureSettingDeleteRestrictSwitch">{{displayNames['DeleteRestrict']}}</label>
                                 </div>
-                            </template>
-                            <template v-else>
-                                {{entity.scopedNameBasedEntityFeatureSetting.scopeName}}
-                            </template>
+                            </div>
+                            <div>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox"
+                                           class="custom-control-input"
+                                           id="scopedNameBasedEntityFeatureSettingHasSortedChildrenInScopeSwitch"
+                                           v-bind:disabled="!newMode && !editMode"
+                                           v-model="entity.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope"
+                                           @change="dirty()">
+                                    <label class="custom-control-label" for="scopedNameBasedEntityFeatureSettingHasSortedChildrenInScopeSwitch">{{displayNames['HasSortedChildrenInScope']}}</label>
+                                </div>
+                            </div>
                         </div>
                     </section>
                     <section class="mt-3">

@@ -14,9 +14,12 @@
                         .Collect(x => emptyItem.Name, Html)
                         .Collect(x => emptyItem.DisplayName, Html)
                         .Collect(x => emptyItem.ParameterListLineBreak, Html)
+                        .Collect(x => emptyItem.AbstractModel, Html)
                         .Collect(x => emptyItem.Module, Html)
                         .Collect(x => emptyCodeBasedEntityFeatureSetting.HasCodeGenerator, Html)
-                        .Collect(x => emptyScopedNameBasedEntityFeatureSetting.ScopeName, Html);
+                        .Collect(x => emptyScopedNameBasedEntityFeatureSetting.ScopeName, Html)
+                        .Collect(x => emptyScopedNameBasedEntityFeatureSetting.DeleteRestrict, Html)
+                        .Collect(x => emptyScopedNameBasedEntityFeatureSetting.HasSortedChildrenInScope, Html);
 }
 
 @section Head {

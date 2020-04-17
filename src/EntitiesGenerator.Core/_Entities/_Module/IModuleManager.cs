@@ -3,6 +3,7 @@
 namespace EntitiesGenerator
 {
     // Entity Features:
+    // - Entity
     // - ScopedNameBasedEntity
 
     public interface IModuleManager<TModule, TProject>

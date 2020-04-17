@@ -19,8 +19,6 @@ namespace EntitiesGenerator
                 featureSettingType,
                 itemsRelationshipType);
 
-        #region Properties
-
         public Type ProjectType { get; private set; }
 
         public Type ModuleType { get; private set; }
@@ -30,7 +28,5 @@ namespace EntitiesGenerator
         public Type FeatureSettingType { get; private set; }
 
         public Type ItemsRelationshipType { get; private set; }
-
-        #endregion
     }
 }

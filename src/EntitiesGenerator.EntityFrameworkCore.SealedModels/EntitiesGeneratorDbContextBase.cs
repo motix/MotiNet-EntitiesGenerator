@@ -4,12 +4,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace EntitiesGenerator.EntityFrameworkCore
 {
     public abstract class EntitiesGeneratorDbContextBase
-        : EntitiesGeneratorDbContextBase<
-            Project, Module, Item,
-            FeatureSettingBase,
-            ItemsRelationship,
-            // Key
-            string>
+        : EntitiesGeneratorDbContextBase<Project, Module, Item,
+                                         FeatureSettingBase,
+                                         ItemsRelationship,
+                                         string>
     {
         public DbSet<EntityFeatureSetting> EntityFeatureSettings { get; set; }
         public DbSet<TimeTrackedEntityFeatureSetting> TimeTrackedEntityFeatureSettings { get; set; }

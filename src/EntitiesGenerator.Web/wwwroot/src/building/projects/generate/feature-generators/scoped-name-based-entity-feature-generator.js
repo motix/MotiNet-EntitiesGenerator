@@ -54,6 +54,20 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
         return this.itemFeatureSetting(item).scopeName;
     }
 
+    /**
+     * @param {Item} item
+     */
+    deleteRestrict(item) {
+        return this.itemFeatureSetting(item).deleteRestrict;
+    }
+
+    /**
+     * @param {Item} item
+     */
+    hasSortedChildrenInScope(item) {
+        return this.itemFeatureSetting(item).hasSortedChildrenInScope;
+    }
+
     // Project specific content
 
     // Core
@@ -115,8 +129,9 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
     core_EntityManagerClass_PropertiesDeclarations1Data(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`public IScopedNameBasedEntityStore${this.itemGenericTypeParameters(item)} ScopedNameBasedEntityStore => Store as IScopedNameBasedEntityStore${this.itemGenericTypeParameters(item)};`);
-        data.push(`public IScopedNameBasedEntityAccessor${this.itemGenericTypeParameters(item)} ScopedNameBasedEntityAccessor => Accessor as IScopedNameBasedEntityAccessor${this.itemGenericTypeParameters(item)};`);
+        data.push(
+            `public IScopedNameBasedEntityStore${this.itemGenericTypeParameters(item)} ScopedNameBasedEntityStore => Store as IScopedNameBasedEntityStore${this.itemGenericTypeParameters(item)};`,
+            `public IScopedNameBasedEntityAccessor${this.itemGenericTypeParameters(item)} ScopedNameBasedEntityAccessor => Accessor as IScopedNameBasedEntityAccessor${this.itemGenericTypeParameters(item)};`);
     }
 
     /**
@@ -271,15 +286,17 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
     sm_EntityClass_EntityPropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`[StringLength(StringLengths.Guid)]
-public string Id { get; set; }`);
-        data.push(`[Required]
+        data.push(
+            `public ${item.name}() => Id = Guid.NewGuid().ToString();`,
+            `[StringLength(StringLengths.Guid)]
+public string Id { get; set; }`,
+            `[Required]
 [StringLength(StringLengths.Guid)]
-public string ${this.scopeName(item)}Id { get; set; }`);
-        data.push(`[Required]
+public string ${this.scopeName(item)}Id { get; set; }`,
+            `[Required]
 [StringLength(StringLengths.TitleContent)]
-public string Name { get; set; }`);
-        data.push(`[Required]
+public string Name { get; set; }`,
+            `[Required]
 [StringLength(StringLengths.TitleContent)]
 public string NormalizedName { get; set; }`);
     }
@@ -291,7 +308,9 @@ public string NormalizedName { get; set; }`);
     sm_EntityClass_EntityPropertyDeclarationsData_FromOthers(item, data) {
         for (const otherItem of item.module.items) {
             if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name) {
-                data.push(`[StringLength(StringLengths.Guid)]
+                data.push(
+                    `public ${item.name}() => Id = Guid.NewGuid().ToString();`,
+                    `[StringLength(StringLengths.Guid)]
 public string Id { get; set; }`);
             }
         }
@@ -321,6 +340,19 @@ public string Id { get; set; }`);
 
     /**
      * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_EntityClass_CustomizationsPropertyDeclarationsData_FromOthers(item, data) {
+        for (const otherItem of item.module.items) {
+            if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name &&
+                this.hasSortedChildrenInScope(otherItem)) {
+                data.push(`public IEnumerable<${otherItem.name}> Ordered${pluralize(otherItem.name)} => ${pluralize(otherItem.name)}?.OrderBy(x => x.Position);`);
+            }
+        }
+    }
+
+    /**
+     * @param {Item} item
      * @param {string} subEntityName
      * @param {string[]} data
      */
@@ -334,7 +366,9 @@ public string Id { get; set; }`);
      * @param {string[]} data
      */
     sm_SubEntityClass_EntityPropertyDeclarationsData_FromOthers(item, subEntityName, data) {
-        data.push(`[StringLength(StringLengths.Guid)]
+        data.push(
+            `public ${item.name}() => Id = Guid.NewGuid().ToString();`,
+            `[StringLength(StringLengths.Guid)]
 public string Id { get; set; }`);
     }
 
@@ -359,13 +393,14 @@ public string Id { get; set; }`);
         const scopeName = this.scopeName(item);
         const lowerFirstScopeName = _.lowerFirst(scopeName);
 
-        data.push(`public object GetId(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Id;`);
-        data.push(`public string GetName(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Name;`);
-        data.push(`public void SetNormalizedName(${entityName} ${lowerFirstEntityName}, string normalizedName) => ${lowerFirstEntityName}.NormalizedName = normalizedName;`);
-        data.push(`public object GetScopeId(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.${scopeName}Id;`);
-        data.push(`public void SetScopeId(${entityName} ${lowerFirstEntityName}, object ${lowerFirstScopeName}Id) => ${lowerFirstEntityName}.${scopeName}Id = (string)${lowerFirstScopeName}Id;`);
-        data.push(`public ${scopeName} GetScope(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.${scopeName};`);
-        data.push(`public void SetScope(${entityName} ${lowerFirstEntityName}, ${scopeName} ${lowerFirstScopeName}) => ${lowerFirstEntityName}.${scopeName} = ${lowerFirstScopeName};`);
+        data.push(
+            `public object GetId(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Id;`,
+            `public string GetName(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Name;`,
+            `public void SetNormalizedName(${entityName} ${lowerFirstEntityName}, string normalizedName) => ${lowerFirstEntityName}.NormalizedName = normalizedName;`,
+            `public object GetScopeId(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.${scopeName}Id;`,
+            `public void SetScopeId(${entityName} ${lowerFirstEntityName}, object ${lowerFirstScopeName}Id) => ${lowerFirstEntityName}.${scopeName}Id = (string)${lowerFirstScopeName}Id;`,
+            `public ${scopeName} GetScope(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.${scopeName};`,
+            `public void SetScope(${entityName} ${lowerFirstEntityName}, ${scopeName} ${lowerFirstScopeName}) => ${lowerFirstEntityName}.${scopeName} = ${lowerFirstScopeName};`);
     }
 
     // EntityFrameworkCore
@@ -417,11 +452,33 @@ public string Id { get; set; }`);
         this.throwIfItemNotHaveFeature(item);
 
         const entityName = item.name;
+        const pluralEntityName = pluralize(entityName);
         const scopeName = this.scopeName(item);
 
         data.push(`// Unique name in scope
 builder.HasIndex(nameof(${entityName}.Name), nameof(${entityName}.${scopeName}Id)).IsUnique();
 builder.HasIndex(nameof(${entityName}.NormalizedName), nameof(${entityName}.${scopeName}Id)).IsUnique();`);
+
+        if (this.deleteRestrict(item)) {
+            data.push(`// Restrict delete
+builder.HasOne(x => x.${scopeName})
+       .WithMany(x => x.${pluralEntityName})
+       .OnDelete(DeleteBehavior.Restrict);`);
+        }
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    efSm_DbContextClass_EntityConfigurationsData_FromOthers(item, data) {
+        for (const otherItem of item.module.items) {
+            if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name &&
+                this.hasSortedChildrenInScope(otherItem)) {
+                data.push(`// Ignore ordered children
+builder.Ignore(x => x.Ordered${pluralize(otherItem.name)});`);
+            }
+        }
     }
 
     /**
@@ -445,14 +502,28 @@ builder.HasIndex(nameof(${entityName}.NormalizedName), nameof(${entityName}.${sc
         const scopeName = this.scopeName(item);
         const lowerFirstScopeName = _.lowerFirst(scopeName);
 
-        data.push(`public ${entityName} FindByName(string normalizedName, ${scopeName} ${lowerFirstScopeName})
-    => ScopedNameBasedEntityStoreHelper.FindEntityByName(this, normalizedName, ${lowerFirstScopeName}, x => x.${scopeName}Id);`);
-        data.push(`public Task<${entityName}> FindByNameAsync(string normalizedName, ${scopeName} ${lowerFirstScopeName}, CancellationToken cancellationToken)
-    => ScopedNameBasedEntityStoreHelper.FindEntityByNameAsync(this, normalizedName, ${lowerFirstScopeName}, x => x.${scopeName}Id, cancellationToken);`);
-        data.push(`public ${scopeName} FindScopeById(object id)
-    => ScopedNameBasedEntityStoreHelper.FindScopeById(this, id);`);
-        data.push(`public Task<${scopeName}> FindScopeByIdAsync(object id, CancellationToken cancellationToken)
+        data.push(
+            `public ${entityName} FindByName(string normalizedName, ${scopeName} ${lowerFirstScopeName})
+    => ScopedNameBasedEntityStoreHelper.FindEntityByName(this, normalizedName, ${lowerFirstScopeName}, x => x.${scopeName}Id);`,
+            `public Task<${entityName}> FindByNameAsync(string normalizedName, ${scopeName} ${lowerFirstScopeName}, CancellationToken cancellationToken)
+    => ScopedNameBasedEntityStoreHelper.FindEntityByNameAsync(this, normalizedName, ${lowerFirstScopeName}, x => x.${scopeName}Id, cancellationToken);`,
+            `public ${scopeName} FindScopeById(object id)
+    => ScopedNameBasedEntityStoreHelper.FindScopeById(this, id);`,
+            `public Task<${scopeName}> FindScopeByIdAsync(object id, CancellationToken cancellationToken)
     => ScopedNameBasedEntityStoreHelper.FindScopeByIdAsync(this, id, cancellationToken);`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_ProfileClass_CreateEntityMapChainedMethodsData_FromOthers(item, data) {
+        for (const otherItem of item.module.items) {
+            if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name &&
+                this.hasSortedChildrenInScope(otherItem)) {
+                data.push(`.SwapMemberWithOrderedMember(nameof(${item.name}ViewModel.${pluralize(otherItem.name)}))`);
+            }
+        }
     }
 
     // AspNetCore
@@ -488,11 +559,13 @@ builder.HasIndex(nameof(${entityName}.NormalizedName), nameof(${entityName}.${sc
 
         const scopeName = this.scopeName(item);
 
-        data.push('public string Id { get; set; }');
-        data.push(`[LocalizedRequired]
+        data.push(
+            `protected ${item.name}ViewModelBase() => Id = Guid.NewGuid().ToString();`,
+            'public string Id { get; set; }',
+            `[LocalizedRequired]
 [Display(Name = "${scopeName}", ResourceType = typeof(DisplayNames))]
-public string ${scopeName}Id { get; set; }`);
-        data.push(`[LocalizedRequired]
+public string ${scopeName}Id { get; set; }`,
+            `[LocalizedRequired]
 [Display(Name = nameof(Name), ResourceType = typeof(DisplayNames))]
 public string Name { get; set; }`);
     }
@@ -504,7 +577,9 @@ public string Name { get; set; }`);
     aspDv_EntityViewModelsClass_BasePropertyDeclarationsData_FromOthers(item, data) {
         for (const otherItem of item.module.items) {
             if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name) {
-                data.push('public string Id { get; set; }');
+                data.push(
+                    `protected ${item.name}ViewModelBase() => Id = Guid.NewGuid().ToString();`,
+                    'public string Id { get; set; }');
             }
         }
     }
@@ -540,7 +615,9 @@ public ICollection<${otherItem.name}LiteViewModel> ${pluralize(otherItem.name)} 
      * @param {string[]} data
      */
     aspDv_SubEntityViewModelsClass_BasePropertyDeclarationsData_FromOthers(item, data) {
-        data.push('public string Id { get; set; }');
+        data.push(
+            `protected ${item.name}ViewModelBase() => Id = Guid.NewGuid().ToString();`,
+            'public string Id { get; set; }');
     }
 
     /**

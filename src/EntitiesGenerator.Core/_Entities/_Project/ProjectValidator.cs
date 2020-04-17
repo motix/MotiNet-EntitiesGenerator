@@ -10,8 +10,8 @@ namespace EntitiesGenerator
     {
         public ProjectValidator(IProjectAccessor<TProject> accessor, EntitiesGeneratorErrorDescriber errorDescriber)
         {
-            Accessor = accessor;
-            ErrorDescriber = errorDescriber;
+            Accessor = accessor ?? throw new System.ArgumentNullException(nameof(accessor));
+            ErrorDescriber = errorDescriber ?? throw new System.ArgumentNullException(nameof(errorDescriber));
         }
 
         protected IProjectAccessor<TProject> Accessor { get; }

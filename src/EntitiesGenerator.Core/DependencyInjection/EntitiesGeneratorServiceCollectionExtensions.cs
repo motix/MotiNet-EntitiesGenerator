@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using EntitiesGenerator;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using MotiNet.Entities;
-using EntitiesGenerator;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -18,21 +18,20 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.TryAddScoped<IProjectManager<TProject>, ProjectManager<TProject>>();
             services.TryAddScoped<IValidator<TProject>, ProjectValidator<TProject>>();
+            services.TryAddScoped<ILookupNormalizer<TProject>, LowerInvariantLookupNormalizer<TProject>>();
 
             services.TryAddScoped<IModuleManager<TModule, TProject>, ModuleManager<TModule, TProject>>();
             services.TryAddScoped<IValidator<TModule, TProject>, ModuleValidator<TModule, TProject>>();
+            services.TryAddScoped<ILookupNormalizer<TModule>, LowerInvariantLookupNormalizer<TModule>>();
 
             services.TryAddScoped<IItemManager<TItem, TModule>, ItemManager<TItem, TModule>>();
             services.TryAddScoped<IValidator<TItem, TModule>, ItemValidator<TItem, TModule>>();
+            services.TryAddScoped<ILookupNormalizer<TItem>, LowerInvariantLookupNormalizer<TItem>>();
 
             services.TryAddScoped<IFeatureSettingManager<TFeatureSetting>, FeatureSettingManager<TFeatureSetting>>();
 
             services.TryAddScoped<IItemsRelationshipManager<TItemsRelationship>, ItemsRelationshipManager<TItemsRelationship>>();
-            services.TryAddScoped<IValidator<TItemsRelationship>, DefaultValidator<TItemsRelationship, ItemsRelationshipManager<TItemsRelationship>>>();
 
-            // Features
-
-            services.TryAddScoped<ILookupNormalizer, LowerInvariantLookupNormalizer>();
             services.TryAddScoped<EntitiesGeneratorErrorDescriber, EntitiesGeneratorErrorDescriber>();
 
             return new EntitiesGeneratorBuilder(

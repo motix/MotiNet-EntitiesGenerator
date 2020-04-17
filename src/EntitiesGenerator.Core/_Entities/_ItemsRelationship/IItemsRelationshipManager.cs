@@ -2,7 +2,8 @@
 
 namespace EntitiesGenerator
 {
-    // Entity Features: None
+    // Entity Features:
+    // - Entity
 
     public interface IItemsRelationshipManager<TItemsRelationship>
         : IEntityManager<TItemsRelationship>

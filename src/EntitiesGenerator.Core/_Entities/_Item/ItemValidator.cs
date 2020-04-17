@@ -11,8 +11,8 @@ namespace EntitiesGenerator
     {
         public ItemValidator(IItemAccessor<TItem, TModule> accessor, EntitiesGeneratorErrorDescriber errorDescriber)
         {
-            Accessor = accessor;
-            ErrorDescriber = errorDescriber;
+            Accessor = accessor ?? throw new System.ArgumentNullException(nameof(accessor));
+            ErrorDescriber = errorDescriber ?? throw new System.ArgumentNullException(nameof(errorDescriber));
         }
 
         protected IItemAccessor<TItem, TModule> Accessor { get; }
@@ -31,8 +31,6 @@ namespace EntitiesGenerator
         }
 
         public Task<GenericResult> ValidateAsync(object manager, TModule module)
-        {
-            throw new NeverValidateSubEntityException<TModule, IItemManager<TItem, TModule>>();
-        }
+            => throw new NeverValidateSubEntityException<TModule, IItemManager<TItem, TModule>>();
     }
 }

@@ -34,6 +34,8 @@ namespace EntitiesGenerator
         public string DisplayName { get; set; }
 
         public bool ParameterListLineBreak { get; set; }
+
+        public bool AbstractModel { get; set; }
     }
 
     // Relationships

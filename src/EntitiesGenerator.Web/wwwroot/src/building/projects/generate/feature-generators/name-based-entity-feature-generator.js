@@ -84,8 +84,9 @@ export default class NameBasedEntityFeatureGenerator extends FeatureGenerator {
     core_EntityManagerClass_PropertiesDeclarations1Data(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`public INameBasedEntityStore${this.itemGenericTypeParameters(item)} NameBasedEntityStore => Store as INameBasedEntityStore${this.itemGenericTypeParameters(item)};`);
-        data.push(`public INameBasedEntityAccessor${this.itemGenericTypeParameters(item)} NameBasedEntityAccessor => Accessor as INameBasedEntityAccessor${this.itemGenericTypeParameters(item)};`);
+        data.push(
+            `public INameBasedEntityStore${this.itemGenericTypeParameters(item)} NameBasedEntityStore => Store as INameBasedEntityStore${this.itemGenericTypeParameters(item)};`,
+            `public INameBasedEntityAccessor${this.itemGenericTypeParameters(item)} NameBasedEntityAccessor => Accessor as INameBasedEntityAccessor${this.itemGenericTypeParameters(item)};`);
     }
 
     /**
@@ -178,12 +179,14 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
     sm_EntityClass_EntityPropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`[StringLength(StringLengths.Guid)]
-public string Id { get; set; }`);
-        data.push(`[Required]
+        data.push(
+            `public ${item.name}() => Id = Guid.NewGuid().ToString();`,
+            `[StringLength(StringLengths.Guid)]
+public string Id { get; set; }`,
+            `[Required]
 [StringLength(StringLengths.TitleContent)]
-public string Name { get; set; }`);
-        data.push(`[Required]
+public string Name { get; set; }`,
+            `[Required]
 [StringLength(StringLengths.TitleContent)]
 public string NormalizedName { get; set; }`);
     }
@@ -195,9 +198,10 @@ public string NormalizedName { get; set; }`);
     sm_EntityAccessorClass_AccessorMethodsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`public object GetId(${item.name} ${_.lowerFirst(item.name)}) => ${_.lowerFirst(item.name)}.Id;`);
-        data.push(`public string GetName(${item.name} ${_.lowerFirst(item.name)}) => ${_.lowerFirst(item.name)}.Name;`);
-        data.push(`public void SetNormalizedName(${item.name} ${_.lowerFirst(item.name)}, string normalizedName) => ${_.lowerFirst(item.name)}.NormalizedName = normalizedName;`);
+        data.push(
+            `public object GetId(${item.name} ${_.lowerFirst(item.name)}) => ${_.lowerFirst(item.name)}.Id;`,
+            `public string GetName(${item.name} ${_.lowerFirst(item.name)}) => ${_.lowerFirst(item.name)}.Name;`,
+            `public void SetNormalizedName(${item.name} ${_.lowerFirst(item.name)}, string normalizedName) => ${_.lowerFirst(item.name)}.NormalizedName = normalizedName;`);
     }
 
     // EntityFrameworkCore.SealedModels
@@ -231,9 +235,10 @@ builder.HasIndex(x => x.NormalizedName).IsUnique();`);
     efSm_EntityStoreClass_StoreMethodDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`public ${item.name} FindByName(string normalizedName)
-    => NameBasedEntityStoreHelper.FindEntityByName(this, normalizedName);`);
-        data.push(`public Task<${item.name}> FindByNameAsync(string normalizedName, CancellationToken cancellationToken)
+        data.push(
+            `public ${item.name} FindByName(string normalizedName)
+    => NameBasedEntityStoreHelper.FindEntityByName(this, normalizedName);`,
+            `public Task<${item.name}> FindByNameAsync(string normalizedName, CancellationToken cancellationToken)
     => NameBasedEntityStoreHelper.FindEntityByNameAsync(this, normalizedName, cancellationToken);`);
     }
 
@@ -268,8 +273,10 @@ builder.HasIndex(x => x.NormalizedName).IsUnique();`);
     aspDv_EntityViewModelsClass_BasePropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push('public string Id { get; set; }');
-        data.push(`[LocalizedRequired]
+        data.push(
+            `protected ${item.name}ViewModelBase() => Id = Guid.NewGuid().ToString();`,
+            'public string Id { get; set; }',
+            `[LocalizedRequired]
 [Display(Name = nameof(Name), ResourceType = typeof(DisplayNames))]
 public string Name { get; set; }`);
     }

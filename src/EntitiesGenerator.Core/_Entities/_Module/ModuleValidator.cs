@@ -11,8 +11,8 @@ namespace EntitiesGenerator
     {
         public ModuleValidator(IModuleAccessor<TModule, TProject> accessor, EntitiesGeneratorErrorDescriber errorDescriber)
         {
-            Accessor = accessor;
-            ErrorDescriber = errorDescriber;
+            Accessor = accessor ?? throw new System.ArgumentNullException(nameof(accessor));
+            ErrorDescriber = errorDescriber ?? throw new System.ArgumentNullException(nameof(errorDescriber));
         }
 
         protected IModuleAccessor<TModule, TProject> Accessor { get; }
@@ -31,8 +31,6 @@ namespace EntitiesGenerator
         }
 
         public Task<GenericResult> ValidateAsync(object manager, TProject project)
-        {
-            throw new NeverValidateSubEntityException<TProject, IModuleManager<TModule, TProject>>();
-        }
+            => throw new NeverValidateSubEntityException<TProject, IModuleManager<TModule, TProject>>();
     }
 }

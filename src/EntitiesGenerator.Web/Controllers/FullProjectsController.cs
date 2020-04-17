@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace EntitiesGenerator.Web.Controllers
@@ -117,7 +118,7 @@ namespace EntitiesGenerator.Web.Controllers
 
             if (node.Children == null)
             {
-                System.IO.File.WriteAllText(path, node.Content ?? string.Empty);
+                System.IO.File.WriteAllText(path, node.Content ?? string.Empty, Encoding.UTF8);
             }
             else
             {

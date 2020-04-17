@@ -204,6 +204,7 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
         this.throwIfItemNotHaveFeature(item);
 
         data.push(
+            `public ${item.name}() => Id = Guid.NewGuid().ToString();`,
             `[StringLength(StringLengths.Guid)]
 public string Id { get; set; }`,
             `[Required]
@@ -301,6 +302,7 @@ builder.HasIndex(x => x.Code).IsUnique();`);
         this.throwIfItemNotHaveFeature(item);
 
         data.push(
+            `protected ${item.name}ViewModelBase() => Id = Guid.NewGuid().ToString();`,
             'public string Id { get; set; }',
             `[LocalizedRequired]
 [Display(Name = nameof(Code), ResourceType = typeof(DisplayNames))]

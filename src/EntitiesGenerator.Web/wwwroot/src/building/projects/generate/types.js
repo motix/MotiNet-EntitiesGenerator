@@ -43,6 +43,7 @@
  * @property {string} name
  * @property {string} displayName
  * @property {boolean} parameterListLineBreak
+ * @property {boolean} abstractModel
  * @property {Module} module
  * @property {EntityFeatureSetting} entityFeatureSetting
  * @property {TimeTrackedEntityFeatureSetting} timeTrackedEntityFeatureSetting
@@ -76,7 +77,7 @@
  */
 
 /**
- * @typedef {FeatureSetting & {scopeName: string}} ScopedNameBasedEntityFeatureSetting
+ * @typedef {FeatureSetting & {scopeName: string, deleteRestrict: boolean, hasSortedChildrenInScope: boolean}} ScopedNameBasedEntityFeatureSetting
  */
 
 /**

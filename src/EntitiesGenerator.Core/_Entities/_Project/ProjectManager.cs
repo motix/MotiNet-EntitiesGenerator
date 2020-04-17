@@ -10,12 +10,14 @@ namespace EntitiesGenerator
     {
         public ProjectManager(
             IProjectStore<TProject> store,
-            IProjectAccessor<TProject> projectAccessor,
-            IEnumerable<IValidator<TProject>> projectValidators,
+            IProjectAccessor<TProject> accessor,
+            IEnumerable<IValidator<TProject>> validators,
             ILogger<ProjectManager<TProject>> logger,
-            ILookupNormalizer nameNormalizer)
-            : base(store, projectAccessor, projectValidators, logger)
-            => NameNormalizer = nameNormalizer ?? throw new ArgumentNullException(nameof(nameNormalizer));
+            ILookupNormalizer<TProject> nameNormalizer)
+            : base(store, accessor, validators, logger)
+        {
+            NameNormalizer = nameNormalizer ?? throw new ArgumentNullException(nameof(nameNormalizer));
+        }
 
         public IEntityStore<TProject> EntityStore => Store as IEntityStore<TProject>;
 

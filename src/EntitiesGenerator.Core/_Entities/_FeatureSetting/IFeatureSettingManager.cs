@@ -2,7 +2,8 @@ using MotiNet.Entities;
 
 namespace EntitiesGenerator
 {
-    // Entity Features: None
+    // Entity Features:
+    // - Entity
 
     public interface IFeatureSettingManager<TFeatureSetting>
         : IEntityManager<TFeatureSetting>

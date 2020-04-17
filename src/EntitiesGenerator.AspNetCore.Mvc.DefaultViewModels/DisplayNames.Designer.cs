@@ -61,11 +61,29 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Abstract Model.
+        /// </summary>
+        public static string AbstractModel {
+            get {
+                return ResourceManager.GetString("AbstractModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Active.
         /// </summary>
         public static string Active {
             get {
                 return ResourceManager.GetString("Active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Restrict.
+        /// </summary>
+        public static string DeleteRestrict {
+            get {
+                return ResourceManager.GetString("DeleteRestrict", resourceCulture);
             }
         }
         
@@ -111,6 +129,15 @@ namespace EntitiesGenerator.Mvc {
         public static string HasOwnNamespace {
             get {
                 return ResourceManager.GetString("HasOwnNamespace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Has Sorted Children in Scope.
+        /// </summary>
+        public static string HasSortedChildrenInScope {
+            get {
+                return ResourceManager.GetString("HasSortedChildrenInScope", resourceCulture);
             }
         }
         

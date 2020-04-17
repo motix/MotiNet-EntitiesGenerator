@@ -17,7 +17,7 @@ namespace EntitiesGenerator
             IItemAccessor<TItem, TModule> itemAccessor,
             IEnumerable<IValidator<TItem, TModule>> itemValidators,
             ILogger<ItemManager<TItem, TModule>> logger,
-            ILookupNormalizer nameNormalizer,
+            ILookupNormalizer<TItem> nameNormalizer,
             IHttpContextAccessor contextAccessor)
             : base(store, itemAccessor, itemValidators, logger, nameNormalizer)
             => _cancel = contextAccessor?.HttpContext?.RequestAborted ?? CancellationToken.None;

@@ -9,10 +9,10 @@ namespace EntitiesGenerator
     {
         public ItemsRelationshipManager(
             IItemsRelationshipStore<TItemsRelationship> store,
-            IItemsRelationshipAccessor<TItemsRelationship> itemsRelationshipAccessor,
-            IEnumerable<IValidator<TItemsRelationship>> itemsRelationshipValidators,
+            IItemsRelationshipAccessor<TItemsRelationship> accessor,
+            IEnumerable<IValidator<TItemsRelationship>> validators,
             ILogger<ItemsRelationshipManager<TItemsRelationship>> logger)
-            : base(store, itemsRelationshipAccessor, itemsRelationshipValidators, logger)
+            : base(store, accessor, validators, logger)
         { }
 
         public IEntityStore<TItemsRelationship> EntityStore => Store as IEntityStore<TItemsRelationship>;

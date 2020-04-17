@@ -57,7 +57,9 @@ export default class ReadableIdEntityFeatureGenerator extends FeatureGenerator {
     sm_EntityClass_EntityPropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`[StringLength(StringLengths.Guid)]
+        data.push(
+            `public ${item.name}() => Id = Guid.NewGuid().ToString();`,
+            `[StringLength(StringLengths.Guid)]
 public string Id { get; set; }`);
     }
 
@@ -78,5 +80,19 @@ public string Id { get; set; }`);
 public object GetIdSource(${item.name} ${_.lowerFirst(item.name)}) => throw new NotImplementedException();`);
         }
         data.push(`public void SetId(${item.name} ${_.lowerFirst(item.name)}, string id) => ${_.lowerFirst(item.name)}.Id = id;`);
+    }
+
+    // AspNetCore.Mvc.DefaultViewModels
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_EntityViewModelsClass_BasePropertyDeclarationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(
+            `protected ${item.name}ViewModelBase() => Id = Guid.NewGuid().ToString();`,
+            'public string Id { get; set; }');
     }
 }

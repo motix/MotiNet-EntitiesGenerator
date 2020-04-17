@@ -3,6 +3,7 @@
 namespace EntitiesGenerator
 {
     // Entity Features:
+    // - Entity
     // - NameBasedEntity
 
     public interface IProjectManager<TProject>

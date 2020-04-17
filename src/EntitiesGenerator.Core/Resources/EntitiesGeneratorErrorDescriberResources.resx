@@ -117,22 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DuplicateItemName" xml:space="preserve">
-    <value>Item name '{0}' has already been used.</value>
+  <data name="DuplicateProjectName" xml:space="preserve">
+    <value>Project name '{0}' has already been used.</value>
+  </data>
+  <data name="InvalidProjectName" xml:space="preserve">
+    <value>Project name '{0}' is invalid.</value>
   </data>
   <data name="DuplicateModuleName" xml:space="preserve">
     <value>Module name '{0}' has already been used.</value>
   </data>
-  <data name="DuplicateProjectName" xml:space="preserve">
-    <value>Project name '{0}' has already been used.</value>
-  </data>
-  <data name="InvalidItemName" xml:space="preserve">
-    <value>Item name '{0}' is invalid.</value>
-  </data>
   <data name="InvalidModuleName" xml:space="preserve">
     <value>Module name '{0}' is invalid.</value>
   </data>
-  <data name="InvalidProjectName" xml:space="preserve">
-    <value>Project name '{0}' is invalid.</value>
+  <data name="DuplicateItemName" xml:space="preserve">
+    <value>Item name '{0}' has already been used.</value>
+  </data>
+  <data name="InvalidItemName" xml:space="preserve">
+    <value>Item name '{0}' is invalid.</value>
   </data>
 </root>
