@@ -106,4 +106,21 @@ public bool IsActive { get; set; }`);
   <value>Active</value>
 </data>`);
     }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_DisplayNamesResxDesignerClass_ItemsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`/// <summary>
+///   Looks up a localized string similar to Active.
+/// </summary>
+public static string Active {
+    get {
+        return ResourceManager.GetString("Active", resourceCulture);
+    }
+}`);
+    }
 }

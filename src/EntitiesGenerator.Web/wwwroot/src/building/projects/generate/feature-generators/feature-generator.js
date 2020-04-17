@@ -470,6 +470,14 @@
     aspDv_DisplayNamesResx_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
     }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_DisplayNamesResxDesignerClass_ItemsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+    }
 }
 
 class ItemNotHasFeatureError {

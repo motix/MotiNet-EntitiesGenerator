@@ -285,4 +285,21 @@ public string Name { get; set; }`);
   <value>Name</value>
 </data>`);
     }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_DisplayNamesResxDesignerClass_ItemsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`/// <summary>
+///   Looks up a localized string similar to Name.
+/// </summary>
+public static string Name {
+    get {
+        return ResourceManager.GetString("Name", resourceCulture);
+    }
+}`);
+    }
 }

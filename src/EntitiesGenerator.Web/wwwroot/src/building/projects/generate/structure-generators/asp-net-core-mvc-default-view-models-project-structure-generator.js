@@ -54,6 +54,11 @@ export class AspDvProjectSG {
             },
             {
                 type: 'file',
+                name: 'DisplayNames.Designer.cs',
+                generator: new CG.AspDvProject_DisplayNamesResxDesignerClassGenerator(features, module)
+            },
+            {
+                type: 'file',
                 name: moduleCommonName + 'Profile.cs',
                 generator: new CG.AspDvProject_ProfileClassGenerator(features, module)
             },

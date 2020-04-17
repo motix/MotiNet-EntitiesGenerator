@@ -318,4 +318,21 @@ public string Code { get; set; }`);
   <value>Code</value>
 </data>`);
     }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_DisplayNamesResxDesignerClass_ItemsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`/// <summary>
+///   Looks up a localized string similar to Code.
+/// </summary>
+public static string Code {
+    get {
+        return ResourceManager.GetString("Code", resourceCulture);
+    }
+}`);
+    }
 }

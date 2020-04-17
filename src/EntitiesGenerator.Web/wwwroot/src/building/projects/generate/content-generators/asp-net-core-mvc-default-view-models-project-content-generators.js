@@ -170,6 +170,28 @@ export class AspDvProject_DisplayNamesResxGenerator extends ModuleSpecificConten
     }
 }
 
+export class AspDvProject_DisplayNamesResxDesignerClassGenerator extends ModuleSpecificContentGenerator {
+    get language() { return 'markup'; }
+
+    generate() {
+        const itemsData = [];
+
+        for (const item of this.module.items) {
+            for (const feature of this.features.allFeatures) {
+                if (feature.itemHasFeature(item)) {
+                    feature.aspDv_DisplayNamesResxDesignerClass_ItemsData(item, itemsData);
+                }
+            }
+        }
+
+        const items = StringHelper.joinLines(_.uniq(itemsData), 2, '\n', { start: 2 });
+
+        var content = ContentHelper.generateResourceFileDesignerClassContent(items);
+
+        return content;
+    }
+}
+
 export class AspDvProject_ProfileClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
         const namespace = AspDvProjectSG.getDefaultNamespace(this.module);

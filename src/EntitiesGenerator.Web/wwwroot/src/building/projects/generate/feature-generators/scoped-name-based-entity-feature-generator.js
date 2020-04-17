@@ -572,4 +572,40 @@ public ICollection<${item.name}LiteViewModel> ${pluralize(item.name)} { get; set
   <value>${_.startCase(pluralize(item.name))}</value>
 </data>`);
     }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_DisplayNamesResxDesignerClass_ItemsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        const scopeName = this.scopeName(item);
+
+        data.push(
+            `/// <summary>
+///   Looks up a localized string similar to ${scopeName}.
+/// </summary>
+public static string ${scopeName} {
+    get {
+        return ResourceManager.GetString("${scopeName}", resourceCulture);
+    }
+}`,
+            `/// <summary>
+///   Looks up a localized string similar to Name.
+/// </summary>
+public static string Name {
+    get {
+        return ResourceManager.GetString("Name", resourceCulture);
+    }
+}`,
+            `/// <summary>
+///   Looks up a localized string similar to ${pluralize(item.name)}.
+/// </summary>
+public static string ${pluralize(item.name)} {
+    get {
+        return ResourceManager.GetString("${pluralize(item.name)}", resourceCulture);
+    }
+}`);
+    }
 }
