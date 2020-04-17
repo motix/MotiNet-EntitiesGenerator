@@ -53,6 +53,8 @@ export class EfSmProject_DbContextClassGenerator extends CSharpModuleSpecificCon
                 if (feature.itemHasFeature(item)) {
                     feature.efSm_DbContextClass_EntityConfigurationsData(item, entityConfigurationsData);
                 }
+
+                feature.efSm_DbContextClass_EntityConfigurationsData_FromOthers(item, entityConfigurationsData);
             }
 
             if (entityConfigurationsData.length > 0) {
@@ -134,7 +136,7 @@ using System.Threading.Tasks;
 
 namespace ${namespace}
 {
-    public class ${entityName}Store<TDbContext>${storeBaseAndInterfaces}
+    public partial class ${entityName}Store<TDbContext>${storeBaseAndInterfaces}
         where TDbContext : DbContext
     {
         public ${entityName}Store(TDbContext dbContext)${storeBaseConstructorCall} { }${storePropertyDeclarations}${storeMethodDeclarations}${storeMemberDeclarations}

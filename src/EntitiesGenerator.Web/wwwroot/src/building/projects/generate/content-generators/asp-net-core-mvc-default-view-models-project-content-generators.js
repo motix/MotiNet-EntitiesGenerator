@@ -200,7 +200,19 @@ export class AspDvProject_ProfileClassGenerator extends CSharpModuleSpecificCont
         const createEntityMapsData = [];
 
         for (const entity of entities) {
-            createEntityMapsData.push(`CreateMap(builder.${entity.name}Type, typeof(${entity.name}ViewModel))
+            const createEntityMapChainedMethodsData = [];
+
+            for (const feature of this.features.allFeatures) {
+                if (feature.itemHasFeature(entity.item)) {
+                    feature.aspDv_ProfileClass_CreateEntityMapChainedMethodsData(entity.item, createEntityMapChainedMethodsData);
+                }
+
+                feature.aspDv_ProfileClass_CreateEntityMapChainedMethodsData_FromOthers(entity.item, createEntityMapChainedMethodsData);
+            }
+
+            const createEntityMapChainedMethods = StringHelper.joinLines(_.uniq(createEntityMapChainedMethodsData), 1, '', { start: 1 });
+
+            createEntityMapsData.push(`CreateMap(builder.${entity.name}Type, typeof(${entity.name}ViewModel))${createEntityMapChainedMethods}
     .ReverseMap();
 CreateMap(builder.${entity.name}Type, typeof(${entity.name}LiteViewModel));`);
         }

@@ -179,19 +179,11 @@ export class CoreProject_EntityManagerClassGenerator extends CSharpEntitySpecifi
 
         constructorParametersData.push(
             `I${entityName}Store${entityGenericTypeParameters} store`,
-            `I${entityName}Accessor${entityGenericTypeParameters} accessor`
+            `I${entityName}Accessor${entityGenericTypeParameters} accessor`,
+            `IEnumerable<IValidator${entityGenericTypeParameters}> validators`,
+            `ILogger<${entityName}Manager${entityGenericTypeParameters}> logger`
         );
-        baseConstructorParametersData.push('store', 'accessor');
-
-        if (this.features.itemValidationRequired(this.item)) {
-            constructorParametersData.push(`IEnumerable<IValidator${entityGenericTypeParameters}> validators`);
-            baseConstructorParametersData.push('validators');
-        } else {
-            baseConstructorParametersData.push('null');
-        }
-
-        constructorParametersData.push(`ILogger<${entityName}Manager${entityGenericTypeParameters}> logger`);
-        baseConstructorParametersData.push('logger');
+        baseConstructorParametersData.push('store', 'accessor', 'validators', 'logger');
 
         for (const feature of this.features.allFeatures) {
             if (feature.itemHasFeature(this.item)) {
@@ -314,7 +306,8 @@ export class CoreProject_ErrorDescriberClassGenerator extends CSharpModuleSpecif
             }
         }
 
-        const describerMethods = StringHelper.joinLines(_.uniq(describerMethodsData), 2, '\n', { start: 2 });
+        const describerMethods = StringHelper.joinLines(_.uniq(describerMethodsData), 2, '\n', { start: 2 })
+                                             .replace(/#endregion.*/g, '#endregion');
 
         const content = `using Microsoft.Extensions.Localization;
 using ${namespace}.Resources;
@@ -465,7 +458,7 @@ export class CoreProject_DependencyInjectionClassGenerator extends CSharpModuleS
 
             if (this.features.itemValidationRequired(item)) {
                 entityServiceRegistrationsData.push(
-                    `services.TryAddScoped<IValidator<T${entityName}>, ${entityName}Validator${entityGenericTypeParameters}>();`);
+                    `services.TryAddScoped<IValidator${entityGenericTypeParameters}, ${entityName}Validator${entityGenericTypeParameters}>();`);
             }
 
             for (const feature of this.features.allFeatures) {

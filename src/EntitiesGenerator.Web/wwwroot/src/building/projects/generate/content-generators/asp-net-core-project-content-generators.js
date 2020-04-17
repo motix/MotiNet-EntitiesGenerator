@@ -47,17 +47,11 @@ export class AspProject_EntityManagerClassGenerator extends CSharpEntitySpecific
 
         constructorParametersData.push(
             `I${entityName}Store${entityGenericTypeParameters} store`,
-            `I${entityName}Accessor${entityGenericTypeParameters} accessor`
+            `I${entityName}Accessor${entityGenericTypeParameters} accessor`,
+            `IEnumerable<IValidator${entityGenericTypeParameters}> validators`,
+            `ILogger<${entityName}Manager${entityGenericTypeParameters}> logger`
         );
-        baseConstructorParametersData.push('store', 'accessor');
-
-        if (this.features.itemValidationRequired(this.item)) {
-            constructorParametersData.push(`IEnumerable<IValidator${entityGenericTypeParameters}> validators`);
-            baseConstructorParametersData.push('validators');
-        }
-
-        constructorParametersData.push(`ILogger<${entityName}Manager${entityGenericTypeParameters}> logger`);
-        baseConstructorParametersData.push('logger');
+        baseConstructorParametersData.push('store', 'accessor', 'validators', 'logger');
 
         for (const feature of this.features.allFeatures) {
             if (feature.itemHasFeature(this.item)) {
