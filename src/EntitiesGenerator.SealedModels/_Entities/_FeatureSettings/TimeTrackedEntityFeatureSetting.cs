@@ -1,6 +1,6 @@
 ﻿namespace EntitiesGenerator
 {
-    public sealed class TimeTrackedEntityFeatureSetting : FeatureSettingBase
+    public sealed class TimeTrackedEntityFeatureSetting : FeatureSetting
     {
         public override int Position => 2;
     }

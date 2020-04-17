@@ -2,7 +2,7 @@
 
 namespace EntitiesGenerator
 {
-    public sealed class ScopedNameBasedEntityFeatureSetting : FeatureSettingBase
+    public sealed class ScopedNameBasedEntityFeatureSetting : FeatureSetting
     {
         public override int Position => 6;
 

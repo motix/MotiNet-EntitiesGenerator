@@ -37,7 +37,7 @@ namespace EntitiesGenerator.EntityFrameworkCore
         {
             await base.UpdateAsync(entity, cancellationToken);
 
-            var feaureSettings = DbContext.Set<FeatureSettingBase>();
+            var feaureSettings = DbContext.Set<FeatureSetting>();
 
             feaureSettings.RemoveRange(feaureSettings.Where(x => x.ItemId == entity.Id));
             await DbContext.SaveChangesAsync(cancellationToken);

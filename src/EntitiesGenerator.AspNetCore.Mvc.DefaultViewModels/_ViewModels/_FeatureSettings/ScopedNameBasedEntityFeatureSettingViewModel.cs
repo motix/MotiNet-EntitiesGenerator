@@ -2,7 +2,7 @@
 
 namespace EntitiesGenerator.Mvc
 {
-    public class ScopedNameBasedEntityFeatureSettingViewModel : FeatureSettingBaseViewModel
+    public class ScopedNameBasedEntityFeatureSettingViewModel : FeatureSettingViewModel
     {
         [LocalizedRequired]
         [Display(Name = nameof(ScopeName), ResourceType = typeof(DisplayNames))]

@@ -1,4 +1,4 @@
 ﻿namespace EntitiesGenerator.Mvc
 {
-    public class ReadableIdEntityFeatureSettingViewModel : FeatureSettingBaseViewModel { }
+    public class ReadableIdEntityFeatureSettingViewModel : FeatureSettingViewModel { }
 }

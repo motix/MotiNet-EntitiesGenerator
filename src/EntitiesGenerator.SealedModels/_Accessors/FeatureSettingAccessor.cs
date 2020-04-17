@@ -1,7 +1,7 @@
 namespace EntitiesGenerator
 {
-    public class FeatureSettingAccessor : IFeatureSettingAccessor<FeatureSettingBase>
+    public class FeatureSettingAccessor : IFeatureSettingAccessor<FeatureSetting>
     {
-        public object GetId(FeatureSettingBase featureSetting) => featureSetting.Id;
+        public object GetId(FeatureSetting featureSetting) => featureSetting.Id;
     }
 }

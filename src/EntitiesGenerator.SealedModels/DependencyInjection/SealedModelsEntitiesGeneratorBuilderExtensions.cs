@@ -7,7 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static EntitiesGeneratorBuilder AddEntitiesGeneratorWithSealedModels(this IServiceCollection services)
             => services.AddEntitiesGenerator<Project, Module, Item,
-                                             FeatureSettingBase,
+                                             FeatureSetting,
                                              ItemsRelationship>()
                        .AddSealedModels();
 

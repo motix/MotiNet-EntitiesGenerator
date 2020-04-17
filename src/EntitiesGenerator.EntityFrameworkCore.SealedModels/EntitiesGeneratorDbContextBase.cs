@@ -5,7 +5,7 @@ namespace EntitiesGenerator.EntityFrameworkCore
 {
     public abstract class EntitiesGeneratorDbContextBase
         : EntitiesGeneratorDbContextBase<Project, Module, Item,
-                                         FeatureSettingBase,
+                                         FeatureSetting,
                                          ItemsRelationship,
                                          string>
     {
@@ -62,9 +62,9 @@ namespace EntitiesGenerator.EntityFrameworkCore
             builder.Ignore(x => x.OrderedFeatureSettings);
         }
 
-        protected override void ConfigureFeatureSetting(EntityTypeBuilder<FeatureSettingBase> builder)
+        protected override void ConfigureFeatureSetting(EntityTypeBuilder<FeatureSetting> builder)
         {
-            builder.HasIndex(nameof(FeatureSettingBase.ItemId), "Discriminator").IsUnique();
+            builder.HasIndex(nameof(FeatureSetting.ItemId), "Discriminator").IsUnique();
         }
 
         protected override void ConfigureItemsRelationship(EntityTypeBuilder<ItemsRelationship> builder)

@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 namespace EntitiesGenerator
 {
     // Entity
-    public abstract partial class FeatureSettingBase
+    public abstract partial class FeatureSetting
     {
-        protected FeatureSettingBase() => Id = Guid.NewGuid().ToString();
+        protected FeatureSetting() => Id = Guid.NewGuid().ToString();
 
         [StringLength(StringLengths.Guid)]
         public string Id { get; set; }
@@ -17,13 +17,13 @@ namespace EntitiesGenerator
     }
 
     // Relationships
-    partial class FeatureSettingBase
+    partial class FeatureSetting
     {
         public Item Item { get; set; }
     }
 
     // Customization
-    partial class FeatureSettingBase
+    partial class FeatureSetting
     {
         public abstract int Position { get; }
     }

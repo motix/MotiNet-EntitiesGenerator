@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntitiesGenerator.Mvc
 {
-    public abstract partial class FeatureSettingBaseViewModel
+    public abstract partial class FeatureSettingViewModel
     {
-        protected FeatureSettingBaseViewModel() => Id = Guid.NewGuid().ToString();
+        protected FeatureSettingViewModel() => Id = Guid.NewGuid().ToString();
 
         public string Id { get; set; }
 

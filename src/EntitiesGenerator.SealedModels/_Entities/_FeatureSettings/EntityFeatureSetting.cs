@@ -1,6 +1,6 @@
 ﻿namespace EntitiesGenerator
 {
-    public sealed class EntityFeatureSetting : FeatureSettingBase
+    public sealed class EntityFeatureSetting : FeatureSetting
     {
         public override int Position => 1;
     }

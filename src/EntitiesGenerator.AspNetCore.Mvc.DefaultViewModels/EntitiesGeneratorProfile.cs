@@ -22,7 +22,7 @@ namespace EntitiesGenerator.Mvc
                 .ReverseMap();
             CreateMap(builder.ItemType, typeof(ItemLiteViewModel));
 
-            CreateMap(builder.FeatureSettingType, typeof(FeatureSettingBaseViewModel))
+            CreateMap(builder.FeatureSettingType, typeof(FeatureSettingViewModel))
                 .IncludeAllDerived()
                 .ReverseMap()
                 .IncludeAllDerived();

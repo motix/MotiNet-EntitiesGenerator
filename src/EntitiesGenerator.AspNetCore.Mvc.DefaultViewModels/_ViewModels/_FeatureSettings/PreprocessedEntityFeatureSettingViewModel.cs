@@ -1,4 +1,4 @@
 ﻿namespace EntitiesGenerator.Mvc
 {
-    public class PreprocessedEntityFeatureSettingViewModel : FeatureSettingBaseViewModel { }
+    public class PreprocessedEntityFeatureSettingViewModel : FeatureSettingViewModel { }
 }

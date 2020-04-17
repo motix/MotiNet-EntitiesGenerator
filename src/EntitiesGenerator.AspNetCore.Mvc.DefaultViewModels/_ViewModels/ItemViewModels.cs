@@ -41,7 +41,7 @@ namespace EntitiesGenerator.Mvc
         public ModuleLiteViewModel Module { get; set; }
 
         [Display(Name = nameof(FeatureSettings), ResourceType = typeof(DisplayNames))]
-        public ICollection<FeatureSettingBaseViewModel> FeatureSettings { get; set; }
+        public ICollection<FeatureSettingViewModel> FeatureSettings { get; set; }
     }
 
     // Customization
@@ -65,7 +65,7 @@ namespace EntitiesGenerator.Mvc
 
         public void CollectFeatureSettings()
         {
-            FeatureSettings = new List<FeatureSettingBaseViewModel>
+            FeatureSettings = new List<FeatureSettingViewModel>
             {
                 EntityFeatureSetting,
                 TimeTrackedEntityFeatureSetting,
