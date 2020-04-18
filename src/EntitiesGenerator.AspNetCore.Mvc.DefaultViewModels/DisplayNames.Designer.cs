@@ -61,114 +61,6 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Abstract Model.
-        /// </summary>
-        public static string AbstractModel {
-            get {
-                return ResourceManager.GetString("AbstractModel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Active.
-        /// </summary>
-        public static string Active {
-            get {
-                return ResourceManager.GetString("Active", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Delete Restrict.
-        /// </summary>
-        public static string DeleteRestrict {
-            get {
-                return ResourceManager.GetString("DeleteRestrict", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Display Name.
-        /// </summary>
-        public static string DisplayName {
-            get {
-                return ResourceManager.GetString("DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Feature Settings.
-        /// </summary>
-        public static string FeatureSettings {
-            get {
-                return ResourceManager.GetString("FeatureSettings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Generate Location.
-        /// </summary>
-        public static string GenerateLocation {
-            get {
-                return ResourceManager.GetString("GenerateLocation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Has Code Generator.
-        /// </summary>
-        public static string HasCodeGenerator {
-            get {
-                return ResourceManager.GetString("HasCodeGenerator", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Has Own Namespace.
-        /// </summary>
-        public static string HasOwnNamespace {
-            get {
-                return ResourceManager.GetString("HasOwnNamespace", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Has Sorted Children in Scope.
-        /// </summary>
-        public static string HasSortedChildrenInScope {
-            get {
-                return ResourceManager.GetString("HasSortedChildrenInScope", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Item.
-        /// </summary>
-        public static string Item {
-            get {
-                return ResourceManager.GetString("Item", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Item 1.
-        /// </summary>
-        public static string Item1 {
-            get {
-                return ResourceManager.GetString("Item1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Item 2.
-        /// </summary>
-        public static string Item2 {
-            get {
-                return ResourceManager.GetString("Item2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Items.
         /// </summary>
         public static string Items {
@@ -205,65 +97,11 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Namespace.
-        /// </summary>
-        public static string Namespace {
-            get {
-                return ResourceManager.GetString("Namespace", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Parameter List Line Break.
-        /// </summary>
-        public static string ParameterListLineBreak {
-            get {
-                return ResourceManager.GetString("ParameterListLineBreak", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Position.
-        /// </summary>
-        public static string Position {
-            get {
-                return ResourceManager.GetString("Position", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Project.
         /// </summary>
         public static string Project {
             get {
                 return ResourceManager.GetString("Project", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Relationships.
-        /// </summary>
-        public static string Relationships {
-            get {
-                return ResourceManager.GetString("Relationships", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Scope Name.
-        /// </summary>
-        public static string ScopeName {
-            get {
-                return ResourceManager.GetString("ScopeName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Working Location.
-        /// </summary>
-        public static string WorkingLocation {
-            get {
-                return ResourceManager.GetString("WorkingLocation", resourceCulture);
             }
         }
     }

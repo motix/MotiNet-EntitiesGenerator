@@ -288,7 +288,7 @@
      * @param {Item} item
      * @param {string[]} data
      */
-    sm_EntityClass_CustomizationsPropertyDeclarationsData(item, data) {
+    sm_EntityClass_CustomizationPropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
     }
 
@@ -296,7 +296,7 @@
      * @param {Item} item
      * @param {string[]} data
      */
-    sm_EntityClass_CustomizationsPropertyDeclarationsData_FromOthers(item, data) {
+    sm_EntityClass_CustomizationPropertyDeclarationsData_FromOthers(item, data) {
     }
 
     /**

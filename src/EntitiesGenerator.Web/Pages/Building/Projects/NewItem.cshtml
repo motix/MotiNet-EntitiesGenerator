@@ -9,6 +9,7 @@
     var emptyItem = new ItemViewModel();
     var emptyCodeBasedEntityFeatureSetting = new CodeBasedEntityFeatureSetting();
     var emptyScopedNameBasedEntityFeatureSetting = new ScopedNameBasedEntityFeatureSettingViewModel();
+    var emptyReadableIdEntityFeatureSetting = new ReadableIdEntityFeatureSettingViewModel();
 
     displayNameCollector.Collect(x => emptyItem.Position, Html)
                         .Collect(x => emptyItem.Name, Html)
@@ -19,7 +20,9 @@
                         .Collect(x => emptyCodeBasedEntityFeatureSetting.HasCodeGenerator, Html)
                         .Collect(x => emptyScopedNameBasedEntityFeatureSetting.ScopeName, Html)
                         .Collect(x => emptyScopedNameBasedEntityFeatureSetting.DeleteRestrict, Html)
-                        .Collect(x => emptyScopedNameBasedEntityFeatureSetting.HasSortedChildrenInScope, Html);
+                        .Collect(x => emptyScopedNameBasedEntityFeatureSetting.HasSortedChildrenInScope, Html)
+                        .Collect(x => emptyScopedNameBasedEntityFeatureSetting.SortedChildrenInScopePropertyName, Html)
+                        .Collect(x => emptyReadableIdEntityFeatureSetting.IdSourcePropertyName, Html);
 }
 
 @section Head {

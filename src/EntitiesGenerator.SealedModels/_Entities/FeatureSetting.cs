@@ -10,21 +10,5 @@ namespace EntitiesGenerator
 
         [StringLength(StringLengths.Guid)]
         public string Id { get; set; }
-
-        [Required]
-        [StringLength(StringLengths.Guid)]
-        public string ItemId { get; set; }
-    }
-
-    // Relationships
-    partial class FeatureSetting
-    {
-        public Item Item { get; set; }
-    }
-
-    // Customization
-    partial class FeatureSetting
-    {
-        public abstract int Position { get; }
     }
 }

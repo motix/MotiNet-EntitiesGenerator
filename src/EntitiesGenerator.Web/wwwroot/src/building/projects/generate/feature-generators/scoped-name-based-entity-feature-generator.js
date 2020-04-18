@@ -68,6 +68,13 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
         return this.itemFeatureSetting(item).hasSortedChildrenInScope;
     }
 
+    /**
+     * @param {Item} item
+     */
+    sortedChildrenInScopePropertyName(item) {
+        return this.itemFeatureSetting(item).sortedChildrenInScopePropertyName;
+    }
+
     // Project specific content
 
     // Core
@@ -347,11 +354,11 @@ public string Id { get; set; }`);
      * @param {Item} item
      * @param {string[]} data
      */
-    sm_EntityClass_CustomizationsPropertyDeclarationsData_FromOthers(item, data) {
+    sm_EntityClass_CustomizationPropertyDeclarationsData_FromOthers(item, data) {
         for (const otherItem of item.module.items) {
             if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name &&
                 this.hasSortedChildrenInScope(otherItem)) {
-                data.push(`public IEnumerable<${otherItem.name}> Ordered${pluralize(otherItem.name)} => ${pluralize(otherItem.name)}?.OrderBy(x => x.Position);`);
+                data.push(`public IEnumerable<${otherItem.name}> Ordered${pluralize(otherItem.name)} => ${pluralize(otherItem.name)}?.OrderBy(x => x.${this.sortedChildrenInScopePropertyName(otherItem)});`);
             }
         }
     }
@@ -464,8 +471,8 @@ public string Id { get; set; }`);
         const scopeName = this.scopeName(item);
 
         data.push(`// Unique name in scope
-builder.HasIndex(nameof(${entityName}.Name), nameof(${entityName}.${scopeName}Id)).IsUnique();
-builder.HasIndex(nameof(${entityName}.NormalizedName), nameof(${entityName}.${scopeName}Id)).IsUnique();`);
+builder.HasIndex(nameof(${entityName}.${scopeName}Id), nameof(${entityName}.Name)).IsUnique();
+builder.HasIndex(nameof(${entityName}.${scopeName}Id), nameof(${entityName}.NormalizedName)).IsUnique();`);
 
         if (this.deleteRestrict(item)) {
             data.push(`// Restrict delete

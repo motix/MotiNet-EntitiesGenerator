@@ -8,8 +8,8 @@ namespace EntitiesGenerator
 {
     // Entity
     public sealed partial class Project
-        : IIdWiseEntity<string>,
-          INameWiseEntity
+        : INameWiseEntity,
+          IIdWiseEntity<string>
     {
         public Project() => Id = Guid.NewGuid().ToString();
 
@@ -23,15 +23,6 @@ namespace EntitiesGenerator
         [Required]
         [StringLength(StringLengths.TitleContent)]
         public string NormalizedName { get; set; }
-
-        [StringLength(StringLengths.TinyContent)]
-        public string Namespace { get; set; }
-
-        [StringLength(StringLengths.Website)]
-        public string GenerateLocation { get; set; }
-
-        [StringLength(StringLengths.Website)]
-        public string WorkingLocation { get; set; }
     }
 
     // Relationships

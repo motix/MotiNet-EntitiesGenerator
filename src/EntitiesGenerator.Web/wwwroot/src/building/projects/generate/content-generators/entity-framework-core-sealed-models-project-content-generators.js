@@ -75,7 +75,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ${namespace}
 {
-    public abstract class ${moduleCommonName}DbContextBase
+    public abstract partial class ${moduleCommonName}DbContextBase
         : ${moduleCommonName}DbContextBase${moduleSpecificTypeParameters}
     {
         protected ${moduleCommonName}DbContextBase(DbContextOptions options) : base(options) { }

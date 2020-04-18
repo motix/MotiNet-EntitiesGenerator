@@ -81,15 +81,15 @@ using System.ComponentModel.DataAnnotations;
 namespace ${namespace}
 {
     // Base
-    public abstract class ${entityName}ViewModelBase
+    public abstract partial class ${entityName}ViewModelBase
     {${basePropertyDeclarations}}
 
     // Full
-    public class ${entityName}ViewModel : ${entityName}ViewModelBase
+    public partial class ${entityName}ViewModel : ${entityName}ViewModelBase
     {${fullPropertyDeclarations}}
 
     // Lite
-    public class ${entityName}LiteViewModel : ${entityName}ViewModelBase
+    public partial class ${entityName}LiteViewModel : ${entityName}ViewModelBase
     { }
 }
 `;
@@ -131,15 +131,15 @@ using System.ComponentModel.DataAnnotations;
 namespace ${namespace}
 {
     // Base
-    public abstract class ${subEntityName}ViewModelBase
+    public abstract partial class ${subEntityName}ViewModelBase
     {${basePropertyDeclarations}}
 
     // Full
-    public class ${subEntityName}ViewModel : ${subEntityName}ViewModelBase
+    public partial class ${subEntityName}ViewModel : ${subEntityName}ViewModelBase
     {${fullPropertyDeclarations}}
 
     // Lite
-    public class ${subEntityName}LiteViewModel : ${subEntityName}ViewModelBase
+    public partial class ${subEntityName}LiteViewModel : ${subEntityName}ViewModelBase
     { }
 }
 `;
@@ -217,17 +217,25 @@ export class AspDvProject_ProfileClassGenerator extends CSharpModuleSpecificCont
 CreateMap(builder.${entity.name}Type, typeof(${entity.name}LiteViewModel));`);
         }
 
-        const createEntityMaps = StringHelper.joinLines(createEntityMapsData, 3, '\n', { start: 1, end: 1, endIndent: 2, spaceIfEmpty: true });
+        const createEntityMaps = StringHelper.joinLines(createEntityMapsData, 3, '\n', { start: 1, end: 1 });
 
         const content = `using AutoMapper;
 using MotiNet.AutoMapper;
 
 namespace ${namespace}
 {
-    public class ${moduleCommonName}Profile : Profile
+    public partial class ${moduleCommonName}Profile : Profile
     {
         public ${moduleCommonName}Profile(${moduleCommonName}Builder builder)
-        {${createEntityMaps}}
+        {${createEntityMaps}
+            var internalMethod = GetType().GetMethod("ConstructorInternal",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+            if (internalMethod != null)
+            {
+                internalMethod.Invoke(this, new object[] { builder });
+            }
+        }
     }
 }
 `;
@@ -252,8 +260,8 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class DefaultViewModels${moduleCommonName}BuilderExtensions
     {
-        public static ${moduleCommonName}Profile GetDefaultViewModelsProfile(this ${moduleCommonName}Builder builder)
-            => new ${moduleCommonName}Profile(builder);
+        public static Profile GetDefaultViewModelsProfile(this ${moduleCommonName}Builder builder)
+            => new EntitiesGeneratorProfile(builder);
 
         public static ${moduleCommonName}Builder AddDefaultViewModels(this ${moduleCommonName}Builder builder)
         {

@@ -45,26 +45,26 @@ export class SmProject_EntityClassGenerator extends CSharpEntitySpecificContentG
         const entityInterfacesData = [];
         const entityPropertyDeclarationsData = [];
         const relationshipsPropertyDeclarationsData = [];
-        const customizationsPropertyDeclarationsData = [];
+        const customizationPropertyDeclarationsData = [];
 
         for (const feature of this.features.allFeatures) {
             if (feature.itemHasFeature(this.item)) {
                 feature.sm_EntityClass_EntityInterfacesData(this.item, entityInterfacesData);
                 feature.sm_EntityClass_EntityPropertyDeclarationsData(this.item, entityPropertyDeclarationsData);
                 feature.sm_EntityClass_RelationshipsPropertyDeclarationsData(this.item, relationshipsPropertyDeclarationsData);
-                feature.sm_EntityClass_CustomizationsPropertyDeclarationsData(this.item, customizationsPropertyDeclarationsData);
+                feature.sm_EntityClass_CustomizationPropertyDeclarationsData(this.item, customizationPropertyDeclarationsData);
             }
 
             feature.sm_EntityClass_EntityInterfacesData_FromOthers(this.item, entityInterfacesData);
             feature.sm_EntityClass_EntityPropertyDeclarationsData_FromOthers(this.item, entityPropertyDeclarationsData);
             feature.sm_EntityClass_RelationshipsPropertyDeclarationsData_FromOthers(this.item, relationshipsPropertyDeclarationsData);
-            feature.sm_EntityClass_CustomizationsPropertyDeclarationsData_FromOthers(this.item, customizationsPropertyDeclarationsData);
+            feature.sm_EntityClass_CustomizationPropertyDeclarationsData_FromOthers(this.item, customizationPropertyDeclarationsData);
         }
 
         const entityInterfaces = StringHelper.generateBaseBlock(_.uniq(entityInterfacesData), 2, { start: 1 });
         const entityPropertyDeclarations = StringHelper.joinLines(_.uniq(entityPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
         const relationshipsPropertyDeclarations = StringHelper.joinLines(_.uniq(relationshipsPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
-        const customizationsPropertyDeclarations = StringHelper.joinLines(_.uniq(customizationsPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
+        const customizationPropertyDeclarations = StringHelper.joinLines(_.uniq(customizationPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
 
         const relationshipsPartial = relationshipsPropertyDeclarationsData.length === 0 ? '' : `
 
@@ -72,11 +72,11 @@ export class SmProject_EntityClassGenerator extends CSharpEntitySpecificContentG
     partial class ${entityName}
     {${relationshipsPropertyDeclarations}}`;
 
-        const customizationsPartial = customizationsPropertyDeclarationsData.length === 0 ? '' : `
+        const customizationPartial = customizationPropertyDeclarationsData.length === 0 ? '' : `
 
-    // Customizations
+    // Customization
     partial class ${entityName}
-    {${customizationsPropertyDeclarations}}`;
+    {${customizationPropertyDeclarations}}`;
 
         const content = `using MotiNet.Entities;
 using System;
@@ -88,7 +88,7 @@ namespace ${namespace}
 {
     // Entity
     public ${classModifier} partial class ${entityName}${entityInterfaces}
-    {${entityPropertyDeclarations}}${relationshipsPartial}${customizationsPartial}
+    {${entityPropertyDeclarations}}${relationshipsPartial}${customizationPartial}
 }
 `;
 
@@ -214,6 +214,14 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var services = builder.Services;
 ${serviceRegistrations}
+            var internalMethod = typeof(SealedModels${moduleCommonName}BuilderExtensions).GetMethod("AddSealedModelsInternal",
+                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+
+            if (internalMethod != null)
+            {
+                internalMethod.Invoke(null, new object[] { builder });
+            }
+
             return builder;
         }
     }

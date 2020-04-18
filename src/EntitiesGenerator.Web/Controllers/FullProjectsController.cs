@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using EntitiesGenerator.Mvc;
 using EntitiesGenerator.Web.ViewModels.Building;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using MotiNet.Entities;
 using MotiNet.Entities.Mvc.Controllers;
@@ -34,13 +33,13 @@ namespace EntitiesGenerator.Web.Controllers
             if (viewModel.ClearOutput && Directory.Exists(project.GenerateLocation))
             {
                 var folders = Directory.GetDirectories(project.GenerateLocation);
-                foreach(var folder in folders)
+                foreach (var folder in folders)
                 {
                     Directory.Delete(folder, true);
                 }
 
                 var files = Directory.GetFiles(project.GenerateLocation);
-                foreach(var file in files)
+                foreach (var file in files)
                 {
                     System.IO.File.Delete(file);
                 }
@@ -103,7 +102,7 @@ namespace EntitiesGenerator.Web.Controllers
                 {
                     itemViewModel.Module = null;
                     itemViewModel.DistributeFeatureSettings();
-                    foreach(var setting in itemViewModel.FeatureSettings)
+                    foreach (var setting in itemViewModel.FeatureSettings)
                     {
                         setting.Item = null;
                     }

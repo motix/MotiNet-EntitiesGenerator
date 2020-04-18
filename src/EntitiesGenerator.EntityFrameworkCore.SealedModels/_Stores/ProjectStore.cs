@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EntitiesGenerator.EntityFrameworkCore
 {
-    public class ProjectStore<TDbContext>
+    public partial class ProjectStore<TDbContext>
         : EntityStore<Project, TDbContext>,
           IProjectStore<Project>,
           INameBasedEntityStoreMarker<Project, TDbContext>

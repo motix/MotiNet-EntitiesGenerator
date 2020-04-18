@@ -1,6 +1,5 @@
 ﻿using MotiNet.Entities;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,8 +8,8 @@ namespace EntitiesGenerator
 {
     // Entity
     public sealed partial class Module
-        : IIdWiseEntity<string>,
-          INameWiseEntity
+        : INameWiseEntity,
+          IIdWiseEntity<string>
     {
         public Module() => Id = Guid.NewGuid().ToString();
 
@@ -21,8 +20,6 @@ namespace EntitiesGenerator
         [StringLength(StringLengths.Guid)]
         public string ProjectId { get; set; }
 
-        public int Position { get; set; }
-
         [Required]
         [StringLength(StringLengths.TitleContent)]
         public string Name { get; set; }
@@ -30,8 +27,6 @@ namespace EntitiesGenerator
         [Required]
         [StringLength(StringLengths.TitleContent)]
         public string NormalizedName { get; set; }
-
-        public bool HasOwnNamespace { get; set; }
     }
 
     // Relationships

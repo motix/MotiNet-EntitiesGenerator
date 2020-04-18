@@ -14,6 +14,15 @@ export default class ReadableIdEntityFeatureGenerator extends FeatureGenerator {
         return super.itemFeatureSetting(item);
     }
 
+    // Feature settings
+
+    /**
+     * @param {Item} item
+     */
+    idSourcePropertyName(item) {
+        return this.itemFeatureSetting(item).idSourcePropertyName;
+    }
+
     // Project specific content
 
     // Core
@@ -72,16 +81,9 @@ public string Id { get; set; }`);
     sm_EntityAccessorClass_AccessorMethodsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        if (item.codeBasedEntityFeatureSetting !== null) {
-            data.push(`public object GetIdSource(${item.name} ${_.lowerFirst(item.name)}) => ${_.lowerFirst(item.name)}.Code;`);
-        } else if (item.nameBasedEntityFeatureSetting !== null ||
-            item.scopedNameBasedEntityFeatureSetting !== null) {
-            data.push(`public object GetIdSource(${item.name} ${_.lowerFirst(item.name)}) => ${_.lowerFirst(item.name)}.Name;`);
-        } else {
-            data.push(`// TODO:: Implement
-public object GetIdSource(${item.name} ${_.lowerFirst(item.name)}) => throw new NotImplementedException();`);
-        }
-        data.push(`public void SetId(${item.name} ${_.lowerFirst(item.name)}, string id) => ${_.lowerFirst(item.name)}.Id = id;`);
+        data.push(
+            `public object GetIdSource(${item.name} ${_.lowerFirst(item.name)}) => ${_.lowerFirst(item.name)}.${this.idSourcePropertyName(item)};`,
+            `public void SetId(${item.name} ${_.lowerFirst(item.name)}, string id) => ${_.lowerFirst(item.name)}.Id = id;`);
     }
 
     // AspNetCore.Mvc.DefaultViewModels

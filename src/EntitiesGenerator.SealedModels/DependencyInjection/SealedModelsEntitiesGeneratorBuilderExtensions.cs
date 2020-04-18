@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class SealedModelsEntitiesGeneratorBuilderExtensions
+    public static partial class SealedModelsEntitiesGeneratorBuilderExtensions
     {
         public static EntitiesGeneratorBuilder AddEntitiesGeneratorWithSealedModels(this IServiceCollection services)
             => services.AddEntitiesGenerator<Project, Module, Item,
@@ -13,17 +13,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static EntitiesGeneratorBuilder AddSealedModels(this EntitiesGeneratorBuilder builder)
         {
-            // DomainSpecificTypes
-
-            builder.DomainSpecificTypes.Add(nameof(EntityFeatureSetting), typeof(EntityFeatureSetting));
-            builder.DomainSpecificTypes.Add(nameof(TimeTrackedEntityFeatureSetting), typeof(TimeTrackedEntityFeatureSetting));
-            builder.DomainSpecificTypes.Add(nameof(CodeBasedEntityFeatureSetting), typeof(CodeBasedEntityFeatureSetting));
-            builder.DomainSpecificTypes.Add(nameof(NameBasedEntityFeatureSetting), typeof(NameBasedEntityFeatureSetting));
-            builder.DomainSpecificTypes.Add(nameof(ScopedNameBasedEntityFeatureSetting), typeof(ScopedNameBasedEntityFeatureSetting));
-            builder.DomainSpecificTypes.Add(nameof(ReadableIdEntityFeatureSetting), typeof(ReadableIdEntityFeatureSetting));
-            builder.DomainSpecificTypes.Add(nameof(OnOffEntityFeatureSetting), typeof(OnOffEntityFeatureSetting));
-            builder.DomainSpecificTypes.Add(nameof(PreprocessedEntityFeatureSetting), typeof(PreprocessedEntityFeatureSetting));
-
             var services = builder.Services;
 
             services.TryAddScoped(
@@ -45,6 +34,14 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped(
                 typeof(IItemsRelationshipAccessor<>).MakeGenericType(builder.ItemsRelationshipType),
                 typeof(ItemsRelationshipAccessor));
+
+            var internalMethod = typeof(SealedModelsEntitiesGeneratorBuilderExtensions).GetMethod("AddSealedModelsInternal",
+                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+
+            if (internalMethod != null)
+            {
+                internalMethod.Invoke(null, new object[] { builder });
+            }
 
             return builder;
         }

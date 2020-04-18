@@ -3,7 +3,7 @@ using MotiNet.AutoMapper;
 
 namespace EntitiesGenerator.Mvc
 {
-    public class EntitiesGeneratorProfile : Profile
+    public partial class EntitiesGeneratorProfile : Profile
     {
         public EntitiesGeneratorProfile(EntitiesGeneratorBuilder builder)
         {
@@ -18,41 +18,24 @@ namespace EntitiesGenerator.Mvc
             CreateMap(builder.ModuleType, typeof(ModuleLiteViewModel));
 
             CreateMap(builder.ItemType, typeof(ItemViewModel))
-                .SwapMemberWithOrderedMember(nameof(ItemViewModel.FeatureSettings))
                 .ReverseMap();
             CreateMap(builder.ItemType, typeof(ItemLiteViewModel));
 
             CreateMap(builder.FeatureSettingType, typeof(FeatureSettingViewModel))
-                .IncludeAllDerived()
-                .ReverseMap()
-                .IncludeAllDerived();
-            CreateMap(builder.DomainSpecificTypes[nameof(EntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
-                      typeof(EntityFeatureSettingViewModel))
                 .ReverseMap();
-            CreateMap(builder.DomainSpecificTypes[nameof(TimeTrackedEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
-                      typeof(TimeTrackedEntityFeatureSettingViewModel))
-                .ReverseMap();
-            CreateMap(builder.DomainSpecificTypes[nameof(CodeBasedEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
-                      typeof(CodeBasedEntityFeatureSettingViewModel))
-                .ReverseMap();
-            CreateMap(builder.DomainSpecificTypes[nameof(NameBasedEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
-                      typeof(NameBasedEntityFeatureSettingViewModel))
-                .ReverseMap();
-            CreateMap(builder.DomainSpecificTypes[nameof(ScopedNameBasedEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
-                      typeof(ScopedNameBasedEntityFeatureSettingViewModel))
-                .ReverseMap();
-            CreateMap(builder.DomainSpecificTypes[nameof(ReadableIdEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
-                      typeof(ReadableIdEntityFeatureSettingViewModel))
-                .ReverseMap();
-            CreateMap(builder.DomainSpecificTypes[nameof(OnOffEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
-                      typeof(OnOffEntityFeatureSettingViewModel))
-                .ReverseMap();
-            CreateMap(builder.DomainSpecificTypes[nameof(PreprocessedEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
-                      typeof(PreprocessedEntityFeatureSettingViewModel))
-                .ReverseMap();
+            CreateMap(builder.FeatureSettingType, typeof(FeatureSettingLiteViewModel));
 
             CreateMap(builder.ItemsRelationshipType, typeof(ItemsRelationshipViewModel))
                 .ReverseMap();
+            CreateMap(builder.ItemsRelationshipType, typeof(ItemsRelationshipLiteViewModel));
+
+            var internalMethod = GetType().GetMethod("ConstructorInternal",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+            if (internalMethod != null)
+            {
+                internalMethod.Invoke(this, new object[] { builder });
+            }
         }
     }
 }

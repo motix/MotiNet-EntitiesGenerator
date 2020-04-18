@@ -11,8 +11,8 @@ namespace EntitiesGenerator.EntityFrameworkCore
         : DbContext
         where TProject : class
         where TModule : class
-        where TItem: class
-        where TFeatureSetting: class
+        where TItem : class
+        where TFeatureSetting : class
         where TItemsRelationship : class
         where TKey : IEquatable<TKey>
     {
@@ -21,7 +21,7 @@ namespace EntitiesGenerator.EntityFrameworkCore
         protected EntitiesGeneratorDbContextBase() { }
 
         public DbSet<TProject> Projects { get; set; }
-        
+
         public DbSet<TModule> Modules { get; set; }
 
         public DbSet<TItem> Items { get; set; }
@@ -40,9 +40,9 @@ namespace EntitiesGenerator.EntityFrameworkCore
         }
 
         protected virtual void ConfigureProject(EntityTypeBuilder<TProject> builder) { }
-        
+
         protected virtual void ConfigureModule(EntityTypeBuilder<TModule> builder) { }
-        
+
         protected virtual void ConfigureItem(EntityTypeBuilder<TItem> builder) { }
 
         protected virtual void ConfigureFeatureSetting(EntityTypeBuilder<TFeatureSetting> builder) { }

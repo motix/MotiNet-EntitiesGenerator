@@ -6,18 +6,19 @@ using System.Threading;
 
 namespace EntitiesGenerator
 {
-    public class AspNetProjectManager<TProject> : ProjectManager<TProject> where TProject : class
+    public class AspNetProjectManager<TProject> : ProjectManager<TProject>
+        where TProject : class
     {
         private readonly CancellationToken _cancel;
-        
+
         public AspNetProjectManager(
             IProjectStore<TProject> store,
-            IProjectAccessor<TProject> projectAccessor,
-            IEnumerable<IValidator<TProject>> projectValidators,
+            IProjectAccessor<TProject> accessor,
+            IEnumerable<IValidator<TProject>> validators,
             ILogger<ProjectManager<TProject>> logger,
             ILookupNormalizer<TProject> nameNormalizer,
             IHttpContextAccessor contextAccessor)
-            : base(store, projectAccessor, projectValidators, logger, nameNormalizer)
+            : base(store, accessor, validators, logger, nameNormalizer)
             => _cancel = contextAccessor?.HttpContext?.RequestAborted ?? CancellationToken.None;
 
         public override CancellationToken CancellationToken => _cancel;

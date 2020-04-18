@@ -14,12 +14,12 @@ namespace EntitiesGenerator
 
         public AspNetItemManager(
             IItemStore<TItem, TModule> store,
-            IItemAccessor<TItem, TModule> itemAccessor,
-            IEnumerable<IValidator<TItem, TModule>> itemValidators,
+            IItemAccessor<TItem, TModule> accessor,
+            IEnumerable<IValidator<TItem, TModule>> validators,
             ILogger<ItemManager<TItem, TModule>> logger,
             ILookupNormalizer<TItem> nameNormalizer,
             IHttpContextAccessor contextAccessor)
-            : base(store, itemAccessor, itemValidators, logger, nameNormalizer)
+            : base(store, accessor, validators, logger, nameNormalizer)
             => _cancel = contextAccessor?.HttpContext?.RequestAborted ?? CancellationToken.None;
 
         public override CancellationToken CancellationToken => _cancel;

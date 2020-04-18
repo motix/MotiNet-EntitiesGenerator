@@ -13,5 +13,8 @@ namespace EntitiesGenerator
         public bool DeleteRestrict { get; set; }
 
         public bool HasSortedChildrenInScope { get; set; }
+
+        [StringLength(StringLengths.TitleContent)]
+        public string SortedChildrenInScopePropertyName { get; set; }
     }
 }

@@ -90,11 +90,11 @@
                             <span class="custom-control custom-switch">
                                 <input type="checkbox"
                                        class="custom-control-input"
-                                       id="entityFeatureSettingEnabledSwitch"
+                                       id="entityFeatureSetting_Enabled_Switch"
                                        v-bind:disabled="!newMode && !editMode"
                                        v-model="entity.entityFeatureSetting.enabled"
                                        @change="dirty()">
-                                <label class="custom-control-label" for="entityFeatureSettingEnabledSwitch">Entity</label>
+                                <label class="custom-control-label" for="entityFeatureSetting_Enabled_Switch">Entity</label>
                             </span>
                         </h4>
                     </section>
@@ -103,11 +103,11 @@
                             <span class="custom-control custom-switch">
                                 <input type="checkbox"
                                        class="custom-control-input"
-                                       id="timeTrackedEntityFeatureSettingEnabledSwitch"
+                                       id="timeTrackedEntityFeatureSetting_Enabled_Switch"
                                        v-bind:disabled="!newMode && !editMode"
                                        v-model="entity.timeTrackedEntityFeatureSetting.enabled"
                                        @change="dirty()">
-                                <label class="custom-control-label" for="timeTrackedEntityFeatureSettingEnabledSwitch">Time Tracked Entity</label>
+                                <label class="custom-control-label" for="timeTrackedEntityFeatureSetting_Enabled_Switch">Time Tracked Entity</label>
                             </span>
                         </h4>
                     </section>
@@ -116,11 +116,11 @@
                             <span class="custom-control custom-switch">
                                 <input type="checkbox"
                                        class="custom-control-input"
-                                       id="codeBasedEntityFeatureSettingEnabledSwitch"
+                                       id="codeBasedEntityFeatureSetting_Enabled_Switch"
                                        v-bind:disabled="!newMode && !editMode"
                                        v-model="entity.codeBasedEntityFeatureSetting.enabled"
                                        @change="dirty()">
-                                <label class="custom-control-label" for="codeBasedEntityFeatureSettingEnabledSwitch">Code Based Entity</label>
+                                <label class="custom-control-label" for="codeBasedEntityFeatureSetting_Enabled_Switch">Code Based Entity</label>
                             </span>
                         </h4>
                         <div class="ml-4 pl-3 border-left" v-if="entity.codeBasedEntityFeatureSetting.enabled">
@@ -128,11 +128,11 @@
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox"
                                            class="custom-control-input"
-                                           id="codeBasedEntityFeatureSettingHasCodeGeneratorSwitch"
+                                           id="codeBasedEntityFeatureSetting_HasCodeGenerator_Switch"
                                            v-bind:disabled="!newMode && !editMode"
                                            v-model="entity.codeBasedEntityFeatureSetting.hasCodeGenerator"
                                            @change="dirty()">
-                                    <label class="custom-control-label" for="codeBasedEntityFeatureSettingHasCodeGeneratorSwitch">{{displayNames['HasCodeGenerator']}}</label>
+                                    <label class="custom-control-label" for="codeBasedEntityFeatureSetting_HasCodeGenerator_Switch">{{displayNames['HasCodeGenerator']}}</label>
                                 </div>
                             </div>
                         </div>
@@ -142,11 +142,11 @@
                             <span class="custom-control custom-switch">
                                 <input type="checkbox"
                                        class="custom-control-input"
-                                       id="nameBasedEntityFeatureSettingEnabledSwitch"
+                                       id="nameBasedEntityFeatureSetting_Enabled_Switch"
                                        v-bind:disabled="!newMode && !editMode"
                                        v-model="entity.nameBasedEntityFeatureSetting.enabled"
                                        @change="dirty()">
-                                <label class="custom-control-label" for="nameBasedEntityFeatureSettingEnabledSwitch">Name Based Entity</label>
+                                <label class="custom-control-label" for="nameBasedEntityFeatureSetting_Enabled_Switch">Name Based Entity</label>
                             </span>
                         </h4>
                     </section>
@@ -155,11 +155,11 @@
                             <span class="custom-control custom-switch">
                                 <input type="checkbox"
                                        class="custom-control-input"
-                                       id="scopedNameBasedEntityFeatureSettingEnabledSwitch"
+                                       id="scopedNameBasedEntityFeatureSetting_Enabled_Switch"
                                        v-bind:disabled="!newMode && !editMode"
                                        v-model="entity.scopedNameBasedEntityFeatureSetting.enabled"
                                        @change="dirty()">
-                                <label class="custom-control-label" for="scopedNameBasedEntityFeatureSettingEnabledSwitch">Scoped Name Based Entity</label>
+                                <label class="custom-control-label" for="scopedNameBasedEntityFeatureSetting_Enabled_Switch">Scoped Name Based Entity</label>
                             </span>
                         </h4>
                         <div class="ml-4 pl-3 border-left" v-if="entity.scopedNameBasedEntityFeatureSetting.enabled">
@@ -183,23 +183,39 @@
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox"
                                            class="custom-control-input"
-                                           id="scopedNameBasedEntityFeatureSettingDeleteRestrictSwitch"
+                                           id="scopedNameBasedEntityFeatureSetting_DeleteRestrict_Switch"
                                            v-bind:disabled="!newMode && !editMode"
                                            v-model="entity.scopedNameBasedEntityFeatureSetting.deleteRestrict"
                                            @change="dirty()">
-                                    <label class="custom-control-label" for="scopedNameBasedEntityFeatureSettingDeleteRestrictSwitch">{{displayNames['DeleteRestrict']}}</label>
+                                    <label class="custom-control-label" for="scopedNameBasedEntityFeatureSetting_DeleteRestrict_Switch">{{displayNames['DeleteRestrict']}}</label>
                                 </div>
                             </div>
                             <div>
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox"
                                            class="custom-control-input"
-                                           id="scopedNameBasedEntityFeatureSettingHasSortedChildrenInScopeSwitch"
+                                           id="scopedNameBasedEntityFeatureSetting_HasSortedChildrenInScope_Switch"
                                            v-bind:disabled="!newMode && !editMode"
                                            v-model="entity.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope"
                                            @change="dirty()">
-                                    <label class="custom-control-label" for="scopedNameBasedEntityFeatureSettingHasSortedChildrenInScopeSwitch">{{displayNames['HasSortedChildrenInScope']}}</label>
+                                    <label class="custom-control-label" for="scopedNameBasedEntityFeatureSetting_HasSortedChildrenInScope_Switch">{{displayNames['HasSortedChildrenInScope']}}</label>
                                 </div>
+                            </div>
+                            <div v-if="entity.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope">
+                                <strong>{{displayNames['SortedChildrenInScopePropertyName']}}:</strong>
+                                <template v-if="editMode || newMode">
+                                    <single-line-input :placeholder="displayNames['SortedChildrenInScopePropertyName']"
+                                                       placeholder-css-class="text-muted"
+                                                       v-model="entity.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopePropertyName"
+                                                       @input="dirty()"
+                                                       class="d-inline-block"></single-line-input>
+                                    <div class="small text-danger">
+                                        <div v-for="error in entity.errors.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopePropertyName">{{error}}</div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    {{entity.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopePropertyName}}
+                                </template>
                             </div>
                         </div>
                     </section>
@@ -208,24 +224,42 @@
                             <span class="custom-control custom-switch">
                                 <input type="checkbox"
                                        class="custom-control-input"
-                                       id="readableIdEntityFeatureSettingEnabledSwitch"
+                                       id="readableIdEntityFeatureSetting_Enabled_Switch"
                                        v-bind:disabled="!newMode && !editMode"
                                        v-model="entity.readableIdEntityFeatureSetting.enabled"
                                        @change="dirty()">
-                                <label class="custom-control-label" for="readableIdEntityFeatureSettingEnabledSwitch">Readable ID Entity</label>
+                                <label class="custom-control-label" for="readableIdEntityFeatureSetting_Enabled_Switch">Readable ID Entity</label>
                             </span>
                         </h4>
+                        <div class="ml-4 pl-3 border-left" v-if="entity.readableIdEntityFeatureSetting.enabled">
+                            <div>
+                                <strong>{{displayNames['IdSourcePropertyName']}}:</strong>
+                                <template v-if="editMode || newMode">
+                                    <single-line-input :placeholder="displayNames['IdSourcePropertyName']"
+                                                       placeholder-css-class="text-muted"
+                                                       v-model="entity.readableIdEntityFeatureSetting.idSourcePropertyName"
+                                                       @input="dirty()"
+                                                       class="d-inline-block"></single-line-input>
+                                    <div class="small text-danger">
+                                        <div v-for="error in entity.errors.readableIdEntityFeatureSetting.idSourcePropertyName">{{error}}</div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    {{entity.readableIdEntityFeatureSetting.idSourcePropertyName}}
+                                </template>
+                            </div>
+                        </div>
                     </section>
                     <section class="mt-3">
                         <h4>
                             <span class="custom-control custom-switch">
                                 <input type="checkbox"
                                        class="custom-control-input"
-                                       id="onOffEntityFeatureSettingEnabledSwitch"
+                                       id="onOffEntityFeatureSetting_Enabled_Switch"
                                        v-bind:disabled="!newMode && !editMode"
                                        v-model="entity.onOffEntityFeatureSetting.enabled"
                                        @change="dirty()">
-                                <label class="custom-control-label" for="onOffEntityFeatureSettingEnabledSwitch">On Off Entity</label>
+                                <label class="custom-control-label" for="onOffEntityFeatureSetting_Enabled_Switch">On Off Entity</label>
                             </span>
                         </h4>
                     </section>
@@ -234,11 +268,11 @@
                             <span class="custom-control custom-switch">
                                 <input type="checkbox"
                                        class="custom-control-input"
-                                       id="preprocessedEntityFeatureSettingEnabledSwitch"
+                                       id="preprocessedEntityFeatureSetting_Enabled_Switch"
                                        v-bind:disabled="!newMode && !editMode"
                                        v-model="entity.preprocessedEntityFeatureSetting.enabled"
                                        @change="dirty()">
-                                <label class="custom-control-label" for="preprocessedEntityFeatureSettingEnabledSwitch">Preprocessed Entity</label>
+                                <label class="custom-control-label" for="preprocessedEntityFeatureSetting_Enabled_Switch">Preprocessed Entity</label>
                             </span>
                         </h4>
                     </section>
@@ -311,7 +345,11 @@
                 name: [],
                 displayName: [],
                 scopedNameBasedEntityFeatureSetting: {
-                    scopeName: []
+                    scopeName: [],
+                    sortedChildrenInScopePropertyName: []
+                },
+                readableIdEntityFeatureSetting: {
+                    idSourcePropertyName: []
                 }
             }
         }
@@ -349,7 +387,8 @@
             return {
                 itemId: '_',
                 enabled: false,
-                scopeName: null
+                scopeName: null,
+                sortedChildrenInScopePropertyName: null
             };
         }
 
@@ -377,6 +416,12 @@
         convertToWorkEntity(loadedItem) {
             const editableItem = super.convertToWorkEntity(loadedItem);
 
+            for (const settingName of ContentHelper.featureSettingPropertyNames) {
+                if (editableItem[settingName]) {
+                    editableItem[settingName] = Object.assign({}, editableItem[settingName]);
+                }
+            }
+
             this.fillMissingFeatureSettings(editableItem);
 
             return editableItem;
@@ -384,6 +429,13 @@
 
         convertToSerializableEntity(editableItem) {
             const serializableItem = super.convertToSerializableEntity(editableItem);
+
+            // Nullable strings
+            if (serializableItem.scopedNameBasedEntityFeatureSetting && !serializableItem.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope) {
+                this.normalizeNullableStrings(serializableItem.scopedNameBasedEntityFeatureSetting, [
+                    'sortedChildrenInScopePropertyName'
+                ]);
+            }
 
             delete serializableItem.module;
             this.removeDisabledFeatureSettings(serializableItem);
@@ -406,7 +458,15 @@
             editableItem.scopedNameBasedEntityFeatureSetting.enabled === true && !editableItem.scopedNameBasedEntityFeatureSetting.scopeName &&
                 editableItem.errors.scopedNameBasedEntityFeatureSetting.scopeName.push('Scope Name is required.');
 
-            return !this.hasError(editableItem.errors);
+            editableItem.scopedNameBasedEntityFeatureSetting.enabled === true && editableItem.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope && !editableItem.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopePropertyName &&
+                editableItem.errors.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopePropertyName.push('Sorted Children in Scope Property Name is required.');
+
+            editableItem.readableIdEntityFeatureSetting.enabled === true && !editableItem.readableIdEntityFeatureSetting.idSourcePropertyName &&
+                editableItem.errors.readableIdEntityFeatureSetting.idSourcePropertyName.push('ID Source Property Name is required.');
+
+            return !this.hasError(editableItem.errors) &&
+                !this.hasError(editableItem.errors.scopedNameBasedEntityFeatureSetting) &&
+                !this.hasError(editableItem.errors.readableIdEntityFeatureSetting);
         }
 
         fillMissingFeatureSettings(item) {

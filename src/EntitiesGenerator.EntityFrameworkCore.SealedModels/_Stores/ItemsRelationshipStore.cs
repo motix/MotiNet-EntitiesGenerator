@@ -3,7 +3,7 @@ using MotiNet.Entities.EntityFrameworkCore;
 
 namespace EntitiesGenerator.EntityFrameworkCore
 {
-    public class ItemsRelationshipStore<TDbContext>
+    public partial class ItemsRelationshipStore<TDbContext>
         : EntityStore<ItemsRelationship, TDbContext>,
           IItemsRelationshipStore<ItemsRelationship>
         where TDbContext : DbContext

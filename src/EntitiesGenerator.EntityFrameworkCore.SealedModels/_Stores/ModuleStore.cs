@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EntitiesGenerator.EntityFrameworkCore
 {
-    public class ModuleStore<TDbContext>
+    public partial class ModuleStore<TDbContext>
         : EntityStore<Module, TDbContext>,
           IModuleStore<Module, Project>,
           IScopedNameBasedEntityStoreMarker<Module, Project, TDbContext>

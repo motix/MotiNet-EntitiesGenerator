@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace EntitiesGenerator.Mvc
 {
     // Base
-    public abstract class ModuleViewModelBase
+    public abstract partial class ModuleViewModelBase
     {
         protected ModuleViewModelBase() => Id = Guid.NewGuid().ToString();
 
@@ -15,29 +15,22 @@ namespace EntitiesGenerator.Mvc
         [Display(Name = "Project", ResourceType = typeof(DisplayNames))]
         public string ProjectId { get; set; }
 
-        [Display(Name = nameof(Position), ResourceType = typeof(DisplayNames))]
-        public int Position { get; set; }
-
         [LocalizedRequired]
         [Display(Name = nameof(Name), ResourceType = typeof(DisplayNames))]
         public string Name { get; set; }
-
-        [Display(Name = nameof(HasOwnNamespace), ResourceType = typeof(DisplayNames))]
-        public bool HasOwnNamespace { get; set; }
     }
 
     // Full
-    public class ModuleViewModel : ModuleViewModelBase
+    public partial class ModuleViewModel : ModuleViewModelBase
     {
         [Display(Name = nameof(Project), ResourceType = typeof(DisplayNames))]
         public ProjectLiteViewModel Project { get; set; }
 
         [Display(Name = nameof(Items), ResourceType = typeof(DisplayNames))]
         public ICollection<ItemLiteViewModel> Items { get; set; }
-
-        public ICollection<ItemViewModel> FullItems { get; set; }
     }
 
     // Lite
-    public class ModuleLiteViewModel : ModuleViewModelBase { }
+    public partial class ModuleLiteViewModel : ModuleViewModelBase
+    { }
 }

@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using EntitiesGenerator.EntityFrameworkCore;
+﻿using EntitiesGenerator.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace EntitiesGenerator.Web.Data
 {

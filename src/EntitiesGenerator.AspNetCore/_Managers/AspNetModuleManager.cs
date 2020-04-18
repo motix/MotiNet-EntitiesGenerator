@@ -14,12 +14,12 @@ namespace EntitiesGenerator
 
         public AspNetModuleManager(
             IModuleStore<TModule, TProject> store,
-            IModuleAccessor<TModule, TProject> moduleAccessor,
-            IEnumerable<IValidator<TModule, TProject>> moduleValidators,
+            IModuleAccessor<TModule, TProject> accessor,
+            IEnumerable<IValidator<TModule, TProject>> validators,
             ILogger<ModuleManager<TModule, TProject>> logger,
             ILookupNormalizer<TModule> nameNormalizer,
             IHttpContextAccessor contextAccessor)
-            : base(store, moduleAccessor, moduleValidators, logger, nameNormalizer)
+            : base(store, accessor, validators, logger, nameNormalizer)
             => _cancel = contextAccessor?.HttpContext?.RequestAborted ?? CancellationToken.None;
 
         public override CancellationToken CancellationToken => _cancel;

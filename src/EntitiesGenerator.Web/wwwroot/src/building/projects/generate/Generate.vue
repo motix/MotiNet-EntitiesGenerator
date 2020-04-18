@@ -21,7 +21,7 @@
                     <button class="btn btn-sm btn-outline-danger"
                             href="javascript:void(0)"
                             title="Clear Generate Location"
-                            v-bind:disabled="freezed"
+                            v-bind:disabled="true || freezed"
                             @click="clearGenerateLocation"
                             v-if="entity.generateLocation">
                         <font-awesome-icon :icon="['fal', 'broom']" fixed-width></font-awesome-icon>

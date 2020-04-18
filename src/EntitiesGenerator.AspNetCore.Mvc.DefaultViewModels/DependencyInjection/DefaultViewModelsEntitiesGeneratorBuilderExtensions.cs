@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class DefaultViewModelsEntitiesGeneratorBuilderExtensions
     {
-        public static EntitiesGeneratorProfile GetDefaultViewModelsProfile(this EntitiesGeneratorBuilder builder)
+        public static Profile GetDefaultViewModelsProfile(this EntitiesGeneratorBuilder builder)
             => new EntitiesGeneratorProfile(builder);
 
         public static EntitiesGeneratorBuilder AddDefaultViewModels(this EntitiesGeneratorBuilder builder)

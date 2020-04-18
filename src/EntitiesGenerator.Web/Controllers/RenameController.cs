@@ -99,7 +99,7 @@ namespace EntitiesGenerator.Web.Controllers
             Action<string, string> moveAction)
         {
             var items = new List<dynamic>();
-            
+
             foreach (var oldItem in oldItems)
             {
                 var itemPath = Path.GetDirectoryName(oldItem);

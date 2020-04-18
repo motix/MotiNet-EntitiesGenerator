@@ -18,7 +18,7 @@ namespace EntitiesGenerator.Web.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("EntitiesGenerator.FeatureSettingBase", b =>
+            modelBuilder.Entity("EntitiesGenerator.FeatureSetting", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(36)")
@@ -40,7 +40,7 @@ namespace EntitiesGenerator.Web.Data.Migrations
 
                     b.ToTable("FeatureSettings");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("FeatureSettingBase");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("FeatureSetting");
                 });
 
             modelBuilder.Entity("EntitiesGenerator.Item", b =>
@@ -194,7 +194,7 @@ namespace EntitiesGenerator.Web.Data.Migrations
 
             modelBuilder.Entity("EntitiesGenerator.CodeBasedEntityFeatureSetting", b =>
                 {
-                    b.HasBaseType("EntitiesGenerator.FeatureSettingBase");
+                    b.HasBaseType("EntitiesGenerator.FeatureSetting");
 
                     b.Property<bool>("HasCodeGenerator")
                         .HasColumnType("bit");
@@ -204,42 +204,47 @@ namespace EntitiesGenerator.Web.Data.Migrations
 
             modelBuilder.Entity("EntitiesGenerator.EntityFeatureSetting", b =>
                 {
-                    b.HasBaseType("EntitiesGenerator.FeatureSettingBase");
+                    b.HasBaseType("EntitiesGenerator.FeatureSetting");
 
                     b.HasDiscriminator().HasValue("EntityFeatureSetting");
                 });
 
             modelBuilder.Entity("EntitiesGenerator.NameBasedEntityFeatureSetting", b =>
                 {
-                    b.HasBaseType("EntitiesGenerator.FeatureSettingBase");
+                    b.HasBaseType("EntitiesGenerator.FeatureSetting");
 
                     b.HasDiscriminator().HasValue("NameBasedEntityFeatureSetting");
                 });
 
             modelBuilder.Entity("EntitiesGenerator.OnOffEntityFeatureSetting", b =>
                 {
-                    b.HasBaseType("EntitiesGenerator.FeatureSettingBase");
+                    b.HasBaseType("EntitiesGenerator.FeatureSetting");
 
                     b.HasDiscriminator().HasValue("OnOffEntityFeatureSetting");
                 });
 
             modelBuilder.Entity("EntitiesGenerator.PreprocessedEntityFeatureSetting", b =>
                 {
-                    b.HasBaseType("EntitiesGenerator.FeatureSettingBase");
+                    b.HasBaseType("EntitiesGenerator.FeatureSetting");
 
                     b.HasDiscriminator().HasValue("PreprocessedEntityFeatureSetting");
                 });
 
             modelBuilder.Entity("EntitiesGenerator.ReadableIdEntityFeatureSetting", b =>
                 {
-                    b.HasBaseType("EntitiesGenerator.FeatureSettingBase");
+                    b.HasBaseType("EntitiesGenerator.FeatureSetting");
+
+                    b.Property<string>("IdSourcePropertyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasDiscriminator().HasValue("ReadableIdEntityFeatureSetting");
                 });
 
             modelBuilder.Entity("EntitiesGenerator.ScopedNameBasedEntityFeatureSetting", b =>
                 {
-                    b.HasBaseType("EntitiesGenerator.FeatureSettingBase");
+                    b.HasBaseType("EntitiesGenerator.FeatureSetting");
 
                     b.Property<bool>("DeleteRestrict")
                         .HasColumnType("bit");
@@ -252,17 +257,21 @@ namespace EntitiesGenerator.Web.Data.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
+                    b.Property<string>("SortedChildrenInScopePropertyName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
                     b.HasDiscriminator().HasValue("ScopedNameBasedEntityFeatureSetting");
                 });
 
             modelBuilder.Entity("EntitiesGenerator.TimeTrackedEntityFeatureSetting", b =>
                 {
-                    b.HasBaseType("EntitiesGenerator.FeatureSettingBase");
+                    b.HasBaseType("EntitiesGenerator.FeatureSetting");
 
                     b.HasDiscriminator().HasValue("TimeTrackedEntityFeatureSetting");
                 });
 
-            modelBuilder.Entity("EntitiesGenerator.FeatureSettingBase", b =>
+            modelBuilder.Entity("EntitiesGenerator.FeatureSetting", b =>
                 {
                     b.HasOne("EntitiesGenerator.Item", "Item")
                         .WithMany("FeatureSettings")
