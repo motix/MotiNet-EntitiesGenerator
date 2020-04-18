@@ -174,6 +174,7 @@ export class AspDvProject_DisplayNamesResxDesignerClassGenerator extends ModuleS
     get language() { return 'markup'; }
 
     generate() {
+        const namespace = AspDvProjectSG.getDefaultNamespace(this.module);
         const itemsData = [];
 
         for (const item of this.module.items) {
@@ -191,7 +192,7 @@ export class AspDvProject_DisplayNamesResxDesignerClassGenerator extends ModuleS
         items = items.replace(regex, _.repeat(' ', 8));
         items = '\n' + _.repeat(' ', 8) + '\n' + items;
 
-        var content = ContentHelper.generateResourceFileDesignerClassContent(items);
+        var content = ContentHelper.generateResourceFileDesignerClassContent(namespace, items);
 
         return content;
     }
@@ -266,7 +267,7 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class DefaultViewModels${moduleCommonName}BuilderExtensions
     {
         public static Profile GetDefaultViewModelsProfile(this ${moduleCommonName}Builder builder)
-            => new EntitiesGeneratorProfile(builder);
+            => new ${moduleCommonName}Profile(builder);
 
         public static ${moduleCommonName}Builder AddDefaultViewModels(this ${moduleCommonName}Builder builder)
         {
