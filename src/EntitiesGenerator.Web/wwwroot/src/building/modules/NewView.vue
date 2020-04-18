@@ -89,6 +89,10 @@
                             <tr>
                                 <th scope="col" class="text-right w-tight">{{displayNames['Position']}}</th>
                                 <th scope="col">{{displayNames['Name']}}</th>
+                                <th scope="col">{{displayNames['DisplayName']}}</th>
+                                <th scope="col" class="text-center">{{displayNames['ParameterListLineBreak']}}</th>
+                                <th scope="col" class="text-center">{{displayNames['AbstractModel']}}</th>
+                                <th scope="col">{{displayNames['FeatureSettings']}}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -96,6 +100,18 @@
                                 <td class="text-right">{{item.position}}</td>
                                 <td>
                                     <a :href="viewItemUrl + '/' + item.id">{{item.name}}</a>
+                                </td>
+                                <td>{{item.displayName}}</td>
+                                <td class="text-center">
+                                    <font-awesome-icon :icon="['fal', 'check-square']" fixed-width v-if="item.parameterListLineBreak"></font-awesome-icon>
+                                    <font-awesome-icon :icon="['fal', 'square']" fixed-width v-if="!item.parameterListLineBreak"></font-awesome-icon>
+                                </td>
+                                <td class="text-center">
+                                    <font-awesome-icon :icon="['fal', 'check-square']" fixed-width v-if="item.abstractModel"></font-awesome-icon>
+                                    <font-awesome-icon :icon="['fal', 'square']" fixed-width v-if="!item.abstractModel"></font-awesome-icon>
+                                </td>
+                                <td>
+
                                 </td>
                             </tr>
                         </tbody>

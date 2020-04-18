@@ -6,11 +6,17 @@
     ViewData["Title"] = Model.Entity.Name;
     MvcHelper.SetActiveSubMenuItem(ViewData, "Projects");
 
+    var emptyItem = new ItemViewModel();
+
     displayNameCollector.Collect(x => Model.Entity.Position, Html)
-                        .Collect(x => Model.Entity.Name, Html)
-                        .Collect(x => Model.Entity.HasOwnNamespace, Html)
-                        .Collect(x => Model.Entity.Project, Html)
-                        .Collect(x => Model.Entity.Items, Html);
+                .Collect(x => Model.Entity.Name, Html)
+                .Collect(x => Model.Entity.HasOwnNamespace, Html)
+                .Collect(x => Model.Entity.Project, Html)
+                .Collect(x => Model.Entity.Items, Html)
+                .Collect(x => emptyItem.DisplayName, Html)
+                .Collect(x => emptyItem.ParameterListLineBreak, Html)
+                .Collect(x => emptyItem.AbstractModel, Html)
+                .Collect(x => emptyItem.FeatureSettings, Html);
 }
 
 @section Head {

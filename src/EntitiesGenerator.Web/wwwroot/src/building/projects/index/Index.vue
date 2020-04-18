@@ -3,6 +3,8 @@
         <extension point="entityTableHeaders">
             <th scope="col">{{displayNames['Name']}}</th>
             <th scope="col">{{displayNames['Namespace']}}</th>
+            <th scope="col">{{displayNames['GenerateLocation']}}</th>
+            <th scope="col">{{displayNames['WorkingLocation']}}</th>
         </extension>
 
         <extension point="entityTableCells">
@@ -10,6 +12,8 @@
                 <a :href="viewEntityUrl + '/' + entity.id">{{entity.name}}</a>
             </td>
             <td>{{entity.namespace}}</td>
+            <td>{{entity.generateLocation}}</td>
+            <td>{{entity.workingLocation}}</td>
         </extension>
     </extensions>
 </template>

@@ -9,7 +9,9 @@
     var projects = new ProjectViewModel();
 
     displayNameCollector.Collect(x => projects.Name, Html)
-                        .Collect(x => projects.Namespace, Html);
+                        .Collect(x => projects.Namespace, Html)
+                        .Collect(x => projects.GenerateLocation, Html)
+                        .Collect(x => projects.WorkingLocation, Html);
 }
 
 <section id="app" v-cloak>

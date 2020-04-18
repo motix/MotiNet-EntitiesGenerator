@@ -19,7 +19,7 @@
             <div v-for="error in entity.errors.name">{{error}}</div>
         </extension>
         <extension point="toolbarExtra">
-            <div class="btn-group mr-2">
+            <div class="btn-group mr-2" v-if="!newMode">
                 <a class="btn btn-sm btn-outline-primary"
                    :href="generateUrl"
                    title="Generate"
