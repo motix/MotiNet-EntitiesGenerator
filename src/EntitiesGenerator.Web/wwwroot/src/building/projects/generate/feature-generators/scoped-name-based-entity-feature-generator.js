@@ -203,17 +203,25 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
 
     /**
      * @param {Item} item
-     * @param {string[]} data
+     * @param {{key: string, content: string}[]} data
      */
     core_ErrorDescriberResourcesResx_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`<data name="Duplicate${item.name}Name" xml:space="preserve">
+        data.push(
+            {
+                key: `Duplicate${item.name}Name`,
+                content: `<data name="Duplicate${item.name}Name" xml:space="preserve">
   <value>${item.displayName} name '{0}' has already been used.</value>
-</data>
-<data name="Invalid${item.name}Name" xml:space="preserve">
+</data>`
+            },
+            {
+                key: `Invalid${item.name}Name`,
+                content: `<data name="Invalid${item.name}Name" xml:space="preserve">
   <value>${item.displayName} name '{0}' is invalid.</value>
-</data>`);
+</data>`
+            }
+        );
     }
 
     /**
@@ -646,7 +654,7 @@ public ICollection<${item.name}LiteViewModel> ${pluralize(item.name)} { get; set
 
     /**
      * @param {Item} item
-     * @param {string[]} data
+     * @param {{key: string, content: string}[]} data
      */
     aspDv_DisplayNamesResx_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
@@ -654,20 +662,29 @@ public ICollection<${item.name}LiteViewModel> ${pluralize(item.name)} { get; set
         const scopeName = this.scopeName(item);
 
         data.push(
-            `<data name="${scopeName}" xml:space="preserve">
+            {
+                key: scopeName,
+                content: `<data name="${scopeName}" xml:space="preserve">
   <value>${scopeName}</value>
-</data>`,
-            `<data name="Name" xml:space="preserve">
+</data>`
+            },
+            {
+                key: 'Name',
+                content: `<data name="Name" xml:space="preserve">
   <value>Name</value>
-</data>`,
-            `<data name="${pluralize(item.name)}" xml:space="preserve">
+</data>`
+            },
+            {
+                key: pluralize(item.name),
+                content: `<data name="${pluralize(item.name)}" xml:space="preserve">
   <value>${_.startCase(pluralize(item.name))}</value>
-</data>`);
+</data>`
+            });
     }
 
     /**
      * @param {Item} item
-     * @param {string[]} data
+     * @param {{key: string, content: string}[]} data
      */
     aspDv_DisplayNamesResxDesignerClass_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
@@ -675,29 +692,38 @@ public ICollection<${item.name}LiteViewModel> ${pluralize(item.name)} { get; set
         const scopeName = this.scopeName(item);
 
         data.push(
-            `/// <summary>
+            {
+                key: scopeName,
+                content: `/// <summary>
 ///   Looks up a localized string similar to ${scopeName}.
 /// </summary>
 public static string ${scopeName} {
     get {
         return ResourceManager.GetString("${scopeName}", resourceCulture);
     }
-}`,
-            `/// <summary>
+}`
+            },
+            {
+                key: 'Name',
+                content: `/// <summary>
 ///   Looks up a localized string similar to Name.
 /// </summary>
 public static string Name {
     get {
         return ResourceManager.GetString("Name", resourceCulture);
     }
-}`,
-            `/// <summary>
+}`
+            },
+            {
+                key: pluralize(item.name),
+                content: `/// <summary>
 ///   Looks up a localized string similar to ${pluralize(item.name)}.
 /// </summary>
 public static string ${pluralize(item.name)} {
     get {
         return ResourceManager.GetString("${pluralize(item.name)}", resourceCulture);
     }
-}`);
+}`
+            });
     }
 }

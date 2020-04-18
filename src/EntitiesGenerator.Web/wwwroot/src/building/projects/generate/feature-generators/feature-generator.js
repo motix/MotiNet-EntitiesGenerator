@@ -199,7 +199,7 @@
 
     /**
      * @param {Item} item
-     * @param {string[]} data
+     * @param {{key: string, xml: string}[]} data
      */
     core_ErrorDescriberResourcesResx_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
@@ -487,7 +487,7 @@
 
     /**
      * @param {Item} item
-     * @param {string[]} data
+     * @param {{key: string, content: string}[]} data
      */
     aspDv_DisplayNamesResx_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
@@ -495,7 +495,7 @@
 
     /**
      * @param {Item} item
-     * @param {string[]} data
+     * @param {{key: string, content: string}[]} data
      */
     aspDv_DisplayNamesResxDesignerClass_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);

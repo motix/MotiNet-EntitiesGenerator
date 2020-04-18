@@ -137,17 +137,24 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
 
     /**
      * @param {Item} item
-     * @param {string[]} data
+     * @param {{key: string, content: string}[]} data
      */
     core_ErrorDescriberResourcesResx_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`<data name="Duplicate${item.name}Name" xml:space="preserve">
+        data.push(
+            {
+                key: `Duplicate${item.name}Name`,
+                content: `<data name="Duplicate${item.name}Name" xml:space="preserve">
   <value>${item.displayName} name '{0}' has already been used.</value>
-</data>
-<data name="Invalid${item.name}Name" xml:space="preserve">
+</data>`
+            },
+            {
+                key: `Invalid${item.name}Name`,
+                content: `<data name="Invalid${item.name}Name" xml:space="preserve">
   <value>${item.displayName} name '{0}' is invalid.</value>
-</data>`);
+</data>`
+            });
     }
 
     /**
@@ -285,30 +292,36 @@ public string Name { get; set; }`);
 
     /**
      * @param {Item} item
-     * @param {string[]} data
+     * @param {{key: string, content: string}[]} data
      */
     aspDv_DisplayNamesResx_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`<data name="Name" xml:space="preserve">
+        data.push({
+            key: 'Name',
+            content: `<data name="Name" xml:space="preserve">
   <value>Name</value>
-</data>`);
+</data>`
+        });
     }
 
     /**
      * @param {Item} item
-     * @param {string[]} data
+     * @param {{key: string, content: string}[]} data
      */
     aspDv_DisplayNamesResxDesignerClass_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`/// <summary>
+        data.push({
+            key: 'Name',
+            content: `/// <summary>
 ///   Looks up a localized string similar to Name.
 /// </summary>
 public static string Name {
     get {
         return ResourceManager.GetString("Name", resourceCulture);
     }
-}`);
+}`
+        });
     }
 }

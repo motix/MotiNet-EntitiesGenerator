@@ -97,30 +97,36 @@ public bool IsActive { get; set; }`);
 
     /**
      * @param {Item} item
-     * @param {string[]} data
+     * @param {{key: string, content: string}[]} data
      */
     aspDv_DisplayNamesResx_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`<data name="Active" xml:space="preserve">
+        data.push({
+            key: 'Active',
+            content: `<data name="Active" xml:space="preserve">
   <value>Active</value>
-</data>`);
+</data>`
+        });
     }
 
     /**
      * @param {Item} item
-     * @param {string[]} data
+     * @param {{key: string, content: string}[]} data
      */
     aspDv_DisplayNamesResxDesignerClass_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`/// <summary>
+        data.push({
+            key: 'Active',
+            content: `/// <summary>
 ///   Looks up a localized string similar to Active.
 /// </summary>
 public static string Active {
     get {
         return ResourceManager.GetString("Active", resourceCulture);
     }
-}`);
+}`
+        });
     }
 }

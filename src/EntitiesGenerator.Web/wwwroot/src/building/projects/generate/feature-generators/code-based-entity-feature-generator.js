@@ -160,18 +160,24 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
 
     /**
      * @param {Item} item
-     * @param {string[]} data
+     * @param {{key: string, content: string}[]} data
      */
     core_ErrorDescriberResourcesResx_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
         data.push(
-            `<data name="Duplicate${item.name}Code" xml:space="preserve">
+            {
+                key: `Duplicate${item.name}Code`,
+                content: `<data name="Duplicate${item.name}Code" xml:space="preserve">
   <value>${item.displayName} code '{0}' has already been used.</value>
-</data>`,
-            `<data name="Invalid${item.name}Code" xml:space="preserve">
+</data>`
+            },
+            {
+                key: `Invalid${item.name}Code`,
+                content: `<data name="Invalid${item.name}Code" xml:space="preserve">
   <value>${item.displayName} code '{0}' is invalid.</value>
-</data>`);
+</data>`
+            });
     }
 
     /**
@@ -313,30 +319,36 @@ public string Code { get; set; }`);
 
     /**
      * @param {Item} item
-     * @param {string[]} data
+     * @param {{key: string, content: string}[]} data
      */
     aspDv_DisplayNamesResx_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`<data name="Code" xml:space="preserve">
+        data.push({
+            key: 'Code',
+            content: `<data name="Code" xml:space="preserve">
   <value>Code</value>
-</data>`);
+</data>`
+        });
     }
 
     /**
      * @param {Item} item
-     * @param {string[]} data
+     * @param {{key: string, content: string}[]} data
      */
     aspDv_DisplayNamesResxDesignerClass_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`/// <summary>
+        data.push({
+            key: 'Code',
+            content: `/// <summary>
 ///   Looks up a localized string similar to Code.
 /// </summary>
 public static string Code {
     get {
         return ResourceManager.GetString("Code", resourceCulture);
     }
-}`);
+}`
+        });
     }
 }

@@ -162,7 +162,7 @@ export class AspDvProject_DisplayNamesResxGenerator extends ModuleSpecificConten
             }
         }
 
-        const items = StringHelper.joinLines(_.uniq(itemsData), .5, '', { start: 1 });
+        const items = StringHelper.joinLines(_.uniq(_.map(_.sortBy(itemsData, 'key'), 'content')), .5, '', { start: 1 });
 
         var content = ContentHelper.generateResourceFileContent(items);
 
@@ -184,7 +184,12 @@ export class AspDvProject_DisplayNamesResxDesignerClassGenerator extends ModuleS
             }
         }
 
-        const items = StringHelper.joinLines(_.uniq(itemsData), 2, '\n', { start: 2 });
+        var items = StringHelper.joinLines(_.uniq(_.map(_.sortBy(itemsData, 'key'), 'content')), 2, '\n// Keep this space');
+
+        // Visual Studio generates spaces on empty lines
+        const regex = new RegExp(`^${_.repeat(' ', 8)}// Keep this space`, 'gm')
+        items = items.replace(regex, _.repeat(' ', 8));
+        items = '\n' + _.repeat(' ', 8) + '\n' + items;
 
         var content = ContentHelper.generateResourceFileDesignerClassContent(items);
 
