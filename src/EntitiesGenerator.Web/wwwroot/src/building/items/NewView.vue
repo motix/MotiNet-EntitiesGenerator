@@ -268,6 +268,75 @@
                             <span class="custom-control custom-switch">
                                 <input type="checkbox"
                                        class="custom-control-input"
+                                       id="childEntityFeatureSetting_Enabled_Switch"
+                                       v-bind:disabled="!newMode && !editMode"
+                                       v-model="entity.childEntityFeatureSetting.enabled"
+                                       @change="dirty()">
+                                <label class="custom-control-label" for="childEntityFeatureSetting_Enabled_Switch">Child Entity</label>
+                            </span>
+                        </h4>
+                        <div class="ml-4 pl-3 border-left" v-if="entity.childEntityFeatureSetting.enabled">
+                            <div>
+                                <strong>{{displayNames['ParentName']}}:</strong>
+                                <template v-if="editMode || newMode">
+                                    <single-line-input :placeholder="displayNames['ParentName']"
+                                                       placeholder-css-class="text-muted"
+                                                       v-model="entity.childEntityFeatureSetting.parentName"
+                                                       @input="dirty()"
+                                                       class="d-inline-block"></single-line-input>
+                                    <div class="small text-danger">
+                                        <div v-for="error in entity.errors.childEntityFeatureSetting.parentName">{{error}}</div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    {{entity.childEntityFeatureSetting.parentName}}
+                                </template>
+                            </div>
+                            <div>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox"
+                                           class="custom-control-input"
+                                           id="childEntityFeatureSetting_DeleteRestrict_Switch"
+                                           v-bind:disabled="!newMode && !editMode"
+                                           v-model="entity.childEntityFeatureSetting.deleteRestrict"
+                                           @change="dirty()">
+                                    <label class="custom-control-label" for="childEntityFeatureSetting_DeleteRestrict_Switch">{{displayNames['DeleteRestrict']}}</label>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox"
+                                           class="custom-control-input"
+                                           id="childEntityFeatureSetting_HasSortedChildrenInParent_Switch"
+                                           v-bind:disabled="!newMode && !editMode"
+                                           v-model="entity.childEntityFeatureSetting.hasSortedChildrenInParent"
+                                           @change="dirty()">
+                                    <label class="custom-control-label" for="childEntityFeatureSetting_HasSortedChildrenInParent_Switch">{{displayNames['HasSortedChildrenInParent']}}</label>
+                                </div>
+                            </div>
+                            <div v-if="entity.childEntityFeatureSetting.hasSortedChildrenInParent">
+                                <strong>{{displayNames['SortedChildrenInParentCriteriaPropertyName']}}:</strong>
+                                <template v-if="editMode || newMode">
+                                    <single-line-input :placeholder="displayNames['SortedChildrenInParentCriteriaPropertyName']"
+                                                       placeholder-css-class="text-muted"
+                                                       v-model="entity.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName"
+                                                       @input="dirty()"
+                                                       class="d-inline-block"></single-line-input>
+                                    <div class="small text-danger">
+                                        <div v-for="error in entity.errors.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName">{{error}}</div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    {{entity.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName}}
+                                </template>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="mt-3">
+                        <h4>
+                            <span class="custom-control custom-switch">
+                                <input type="checkbox"
+                                       class="custom-control-input"
                                        id="preprocessedEntityFeatureSetting_Enabled_Switch"
                                        v-bind:disabled="!newMode && !editMode"
                                        v-model="entity.preprocessedEntityFeatureSetting.enabled"
@@ -348,6 +417,10 @@
                     scopeName: [],
                     sortedChildrenInScopeCriteriaPropertyName: []
                 },
+                childEntityFeatureSetting: {
+                    parentName: [],
+                    sortedChildrenInParentCriteriaPropertyName: []
+                },
                 readableIdEntityFeatureSetting: {
                     idSourcePropertyName: []
                 }
@@ -406,6 +479,15 @@
             };
         }
 
+        get emptyChildEntityFeatureSetting() {
+            return {
+                itemId: '_',
+                enabled: false,
+                parentName: null,
+                sortedChildrenInParentCriteriaPropertyName: null
+            };
+        }
+
         get emptyPreprocessedEntityFeatureSetting() {
             return {
                 itemId: '_',
@@ -431,9 +513,16 @@
             const serializableItem = super.convertToSerializableEntity(editableItem);
 
             // Nullable strings
+
             if (serializableItem.scopedNameBasedEntityFeatureSetting && !serializableItem.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope) {
                 this.normalizeNullableStrings(serializableItem.scopedNameBasedEntityFeatureSetting, [
                     'sortedChildrenInScopeCriteriaPropertyName'
+                ]);
+            }
+
+            if (serializableItem.childEntityFeatureSetting && !serializableItem.childEntityFeatureSetting.hasSortedChildrenInParent) {
+                this.normalizeNullableStrings(serializableItem.childEntityFeatureSetting, [
+                    'sortedChildrenInParentCriteriaPropertyName'
                 ]);
             }
 
@@ -461,11 +550,18 @@
             editableItem.scopedNameBasedEntityFeatureSetting.enabled === true && editableItem.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope && !editableItem.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName &&
                 editableItem.errors.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName.push('Sorted Children in Scope Property Name is required.');
 
+            editableItem.childEntityFeatureSetting.enabled === true && !editableItem.childEntityFeatureSetting.parentName &&
+                editableItem.errors.childEntityFeatureSetting.parentName.push('Parent Name is required.');
+
+            editableItem.childEntityFeatureSetting.enabled === true && editableItem.childEntityFeatureSetting.hasSortedChildrenInParent && !editableItem.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName &&
+                editableItem.errors.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName.push('Sorted Children in Parent Property Name is required.');
+
             editableItem.readableIdEntityFeatureSetting.enabled === true && !editableItem.readableIdEntityFeatureSetting.idSourcePropertyName &&
                 editableItem.errors.readableIdEntityFeatureSetting.idSourcePropertyName.push('ID Source Property Name is required.');
 
             return !this.hasError(editableItem.errors) &&
                 !this.hasError(editableItem.errors.scopedNameBasedEntityFeatureSetting) &&
+                !this.hasError(editableItem.errors.childEntityFeatureSetting) &&
                 !this.hasError(editableItem.errors.readableIdEntityFeatureSetting);
         }
 

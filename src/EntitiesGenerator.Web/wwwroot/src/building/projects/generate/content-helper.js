@@ -15,6 +15,7 @@ export default class ContentHelper {
             'ScopedNameBasedEntity',
             'ReadableIdEntity',
             'OnOffEntity',
+            'ChildEntity',
             'PreprocessedEntity'
         ];
     }

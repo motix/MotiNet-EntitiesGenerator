@@ -44,6 +44,8 @@ namespace EntitiesGenerator.Mvc
 
         public OnOffEntityFeatureSettingViewModel OnOffEntityFeatureSetting { get; set; }
 
+        public ChildEntityFeatureSettingViewModel ChildEntityFeatureSetting { get; set; }
+
         public PreprocessedEntityFeatureSettingViewModel PreprocessedEntityFeatureSetting { get; set; }
 
         public void CollectFeatureSettings()
@@ -57,6 +59,7 @@ namespace EntitiesGenerator.Mvc
                 ScopedNameBasedEntityFeatureSetting,
                 ReadableIdEntityFeatureSetting,
                 OnOffEntityFeatureSetting,
+                ChildEntityFeatureSetting,
                 PreprocessedEntityFeatureSetting
             };
 
@@ -67,41 +70,37 @@ namespace EntitiesGenerator.Mvc
         {
             foreach (var setting in FeatureSettings)
             {
-                if (setting is EntityFeatureSettingViewModel)
+                switch (setting)
                 {
-                    EntityFeatureSetting = (EntityFeatureSettingViewModel)setting;
-                }
-                else if (setting is TimeTrackedEntityFeatureSettingViewModel)
-                {
-                    TimeTrackedEntityFeatureSetting = (TimeTrackedEntityFeatureSettingViewModel)setting;
-                }
-                else if (setting is CodeBasedEntityFeatureSettingViewModel)
-                {
-                    CodeBasedEntityFeatureSetting = (CodeBasedEntityFeatureSettingViewModel)setting;
-                }
-                else if (setting is NameBasedEntityFeatureSettingViewModel)
-                {
-                    NameBasedEntityFeatureSetting = (NameBasedEntityFeatureSettingViewModel)setting;
-                }
-                else if (setting is ScopedNameBasedEntityFeatureSettingViewModel)
-                {
-                    ScopedNameBasedEntityFeatureSetting = (ScopedNameBasedEntityFeatureSettingViewModel)setting;
-                }
-                else if (setting is ReadableIdEntityFeatureSettingViewModel)
-                {
-                    ReadableIdEntityFeatureSetting = (ReadableIdEntityFeatureSettingViewModel)setting;
-                }
-                else if (setting is OnOffEntityFeatureSettingViewModel)
-                {
-                    OnOffEntityFeatureSetting = (OnOffEntityFeatureSettingViewModel)setting;
-                }
-                else if (setting is PreprocessedEntityFeatureSettingViewModel)
-                {
-                    PreprocessedEntityFeatureSetting = (PreprocessedEntityFeatureSettingViewModel)setting;
-                }
-                else
-                {
-                    throw new NotImplementedException();
+                    case EntityFeatureSettingViewModel viewModel:
+                        EntityFeatureSetting = viewModel;
+                        break;
+                    case TimeTrackedEntityFeatureSettingViewModel viewModel:
+                        TimeTrackedEntityFeatureSetting = viewModel;
+                        break;
+                    case CodeBasedEntityFeatureSettingViewModel viewModel:
+                        CodeBasedEntityFeatureSetting = viewModel;
+                        break;
+                    case NameBasedEntityFeatureSettingViewModel viewModel:
+                        NameBasedEntityFeatureSetting = viewModel;
+                        break;
+                    case ScopedNameBasedEntityFeatureSettingViewModel viewModel:
+                        ScopedNameBasedEntityFeatureSetting = viewModel;
+                        break;
+                    case ReadableIdEntityFeatureSettingViewModel viewModel:
+                        ReadableIdEntityFeatureSetting = viewModel;
+                        break;
+                    case OnOffEntityFeatureSettingViewModel viewModel:
+                        OnOffEntityFeatureSetting = viewModel;
+                        break;
+                    case ChildEntityFeatureSettingViewModel viewModel:
+                        ChildEntityFeatureSetting = viewModel;
+                        break;
+                    case PreprocessedEntityFeatureSettingViewModel viewModel:
+                        PreprocessedEntityFeatureSetting = viewModel;
+                        break;
+                    default:
+                        throw new NotImplementedException();
                 }
             }
         }

@@ -141,6 +141,9 @@
   <data name="HasOwnNamespace" xml:space="preserve">
     <value>Has Own Namespace</value>
   </data>
+  <data name="HasSortedChildrenInParent" xml:space="preserve">
+    <value>Has Sorted Children in Parent</value>
+  </data>
   <data name="HasSortedChildrenInScope" xml:space="preserve">
     <value>Has Sorted Children in Scope</value>
   </data>
@@ -174,6 +177,9 @@
   <data name="ParameterListLineBreak" xml:space="preserve">
     <value>Parameter List Line Break</value>
   </data>
+  <data name="ParentName" xml:space="preserve">
+    <value>Parent Name</value>
+  </data>
   <data name="Position" xml:space="preserve">
     <value>Position</value>
   </data>
@@ -185,6 +191,9 @@
   </data>
   <data name="ScopeName" xml:space="preserve">
     <value>Scope Name</value>
+  </data>
+  <data name="SortedChildrenInParentCriteriaPropertyName" xml:space="preserve">
+    <value>Sorted Children in Parent Criteria Property Name</value>
   </data>
   <data name="SortedChildrenInScopeCriteriaPropertyName" xml:space="preserve">
     <value>Sorted Children in Scope Criteria Property Name</value>

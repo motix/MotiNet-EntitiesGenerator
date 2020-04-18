@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace EntitiesGenerator.EntityFrameworkCore
 {
@@ -19,6 +20,8 @@ namespace EntitiesGenerator.EntityFrameworkCore
 
         public DbSet<OnOffEntityFeatureSetting> OnOffEntityFeatureSettings { get; set; }
 
+        public DbSet<ChildEntityFeatureSetting> ChildEntityFeatureSettings { get; set; }
+
         public DbSet<PreprocessedEntityFeatureSetting> PreprocessedEntityFeatureSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,6 +29,8 @@ namespace EntitiesGenerator.EntityFrameworkCore
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Item>(ConfigureItemInternal);
+            modelBuilder.Entity<ScopedNameBasedEntityFeatureSetting>(ConfigureScopedNameBasedEntityFeatureSetting);
+            modelBuilder.Entity<ChildEntityFeatureSetting>(ConfigureChildEntityFeatureSetting);
         }
 
         protected virtual void ConfigureItemInternal(EntityTypeBuilder<Item> builder)
@@ -37,6 +42,18 @@ namespace EntitiesGenerator.EntityFrameworkCore
         protected override void ConfigureFeatureSetting(EntityTypeBuilder<FeatureSetting> builder)
         {
             builder.HasIndex(nameof(FeatureSetting.ItemId), "Discriminator").IsUnique();
+        }
+
+        protected virtual void ConfigureScopedNameBasedEntityFeatureSetting(EntityTypeBuilder<ScopedNameBasedEntityFeatureSetting> builder)
+        {
+            builder.Property(x => x.DeleteRestrict)
+                   .HasColumnName("DeleteRestrict");
+        }
+
+        protected virtual void ConfigureChildEntityFeatureSetting(EntityTypeBuilder<ChildEntityFeatureSetting> builder)
+        {
+            builder.Property(x => x.DeleteRestrict)
+                   .HasColumnName("DeleteRestrict");
         }
 
         protected override void ConfigureItemsRelationship(EntityTypeBuilder<ItemsRelationship> builder)

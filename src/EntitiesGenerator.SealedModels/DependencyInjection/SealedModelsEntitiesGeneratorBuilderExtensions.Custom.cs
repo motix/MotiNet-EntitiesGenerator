@@ -13,6 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.DomainSpecificTypes.Add(nameof(ScopedNameBasedEntityFeatureSetting), typeof(ScopedNameBasedEntityFeatureSetting));
             builder.DomainSpecificTypes.Add(nameof(ReadableIdEntityFeatureSetting), typeof(ReadableIdEntityFeatureSetting));
             builder.DomainSpecificTypes.Add(nameof(OnOffEntityFeatureSetting), typeof(OnOffEntityFeatureSetting));
+            builder.DomainSpecificTypes.Add(nameof(ChildEntityFeatureSetting), typeof(ChildEntityFeatureSetting));
             builder.DomainSpecificTypes.Add(nameof(PreprocessedEntityFeatureSetting), typeof(PreprocessedEntityFeatureSetting));
 
             return builder;

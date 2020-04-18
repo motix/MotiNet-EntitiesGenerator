@@ -133,6 +133,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Has Sorted Children in Parent.
+        /// </summary>
+        public static string HasSortedChildrenInParent {
+            get {
+                return ResourceManager.GetString("HasSortedChildrenInParent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Has Sorted Children in Scope.
         /// </summary>
         public static string HasSortedChildrenInScope {
@@ -232,6 +241,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parent Name.
+        /// </summary>
+        public static string ParentName {
+            get {
+                return ResourceManager.GetString("ParentName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Position.
         /// </summary>
         public static string Position {
@@ -264,6 +282,15 @@ namespace EntitiesGenerator.Mvc {
         public static string ScopeName {
             get {
                 return ResourceManager.GetString("ScopeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorted Children in Parent Criteria Property Name.
+        /// </summary>
+        public static string SortedChildrenInParentCriteriaPropertyName {
+            get {
+                return ResourceManager.GetString("SortedChildrenInParentCriteriaPropertyName", resourceCulture);
             }
         }
         

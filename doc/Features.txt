@@ -8,6 +8,6 @@
 8  OnOffEntity
 		9  DeleteMarkEntity
 		10 TaggedEntity
-		11 ChildEntity
+11 ChildEntity
 		12 MasterDetailsEntity
 13 PreprocessedEntity
