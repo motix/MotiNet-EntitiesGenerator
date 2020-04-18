@@ -77,7 +77,7 @@
  */
 
 /**
- * @typedef {FeatureSetting & {scopeName: string, deleteRestrict: boolean, hasSortedChildrenInScope: boolean, sortedChildrenInScopePropertyName: string}} ScopedNameBasedEntityFeatureSetting
+ * @typedef {FeatureSetting & {scopeName: string, deleteRestrict: boolean, hasSortedChildrenInScope: boolean, sortedChildrenInScopeCriteriaPropertyName: string}} ScopedNameBasedEntityFeatureSetting
  */
 
 /**

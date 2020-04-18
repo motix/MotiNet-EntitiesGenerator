@@ -14,7 +14,7 @@ namespace EntitiesGenerator.Mvc
         [Display(Name = nameof(HasSortedChildrenInScope), ResourceType = typeof(DisplayNames_Custom))]
         public bool HasSortedChildrenInScope { get; set; }
 
-        [Display(Name = nameof(SortedChildrenInScopePropertyName), ResourceType = typeof(DisplayNames_Custom))]
-        public string SortedChildrenInScopePropertyName { get; set; }
+        [Display(Name = nameof(SortedChildrenInScopeCriteriaPropertyName), ResourceType = typeof(DisplayNames_Custom))]
+        public string SortedChildrenInScopeCriteriaPropertyName { get; set; }
     }
 }

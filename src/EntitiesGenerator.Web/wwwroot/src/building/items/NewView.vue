@@ -202,19 +202,19 @@
                                 </div>
                             </div>
                             <div v-if="entity.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope">
-                                <strong>{{displayNames['SortedChildrenInScopePropertyName']}}:</strong>
+                                <strong>{{displayNames['SortedChildrenInScopeCriteriaPropertyName']}}:</strong>
                                 <template v-if="editMode || newMode">
-                                    <single-line-input :placeholder="displayNames['SortedChildrenInScopePropertyName']"
+                                    <single-line-input :placeholder="displayNames['SortedChildrenInScopeCriteriaPropertyName']"
                                                        placeholder-css-class="text-muted"
-                                                       v-model="entity.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopePropertyName"
+                                                       v-model="entity.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName"
                                                        @input="dirty()"
                                                        class="d-inline-block"></single-line-input>
                                     <div class="small text-danger">
-                                        <div v-for="error in entity.errors.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopePropertyName">{{error}}</div>
+                                        <div v-for="error in entity.errors.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName">{{error}}</div>
                                     </div>
                                 </template>
                                 <template v-else>
-                                    {{entity.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopePropertyName}}
+                                    {{entity.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName}}
                                 </template>
                             </div>
                         </div>
@@ -346,7 +346,7 @@
                 displayName: [],
                 scopedNameBasedEntityFeatureSetting: {
                     scopeName: [],
-                    sortedChildrenInScopePropertyName: []
+                    sortedChildrenInScopeCriteriaPropertyName: []
                 },
                 readableIdEntityFeatureSetting: {
                     idSourcePropertyName: []
@@ -388,7 +388,7 @@
                 itemId: '_',
                 enabled: false,
                 scopeName: null,
-                sortedChildrenInScopePropertyName: null
+                sortedChildrenInScopeCriteriaPropertyName: null
             };
         }
 
@@ -433,7 +433,7 @@
             // Nullable strings
             if (serializableItem.scopedNameBasedEntityFeatureSetting && !serializableItem.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope) {
                 this.normalizeNullableStrings(serializableItem.scopedNameBasedEntityFeatureSetting, [
-                    'sortedChildrenInScopePropertyName'
+                    'sortedChildrenInScopeCriteriaPropertyName'
                 ]);
             }
 
@@ -458,8 +458,8 @@
             editableItem.scopedNameBasedEntityFeatureSetting.enabled === true && !editableItem.scopedNameBasedEntityFeatureSetting.scopeName &&
                 editableItem.errors.scopedNameBasedEntityFeatureSetting.scopeName.push('Scope Name is required.');
 
-            editableItem.scopedNameBasedEntityFeatureSetting.enabled === true && editableItem.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope && !editableItem.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopePropertyName &&
-                editableItem.errors.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopePropertyName.push('Sorted Children in Scope Property Name is required.');
+            editableItem.scopedNameBasedEntityFeatureSetting.enabled === true && editableItem.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope && !editableItem.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName &&
+                editableItem.errors.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName.push('Sorted Children in Scope Property Name is required.');
 
             editableItem.readableIdEntityFeatureSetting.enabled === true && !editableItem.readableIdEntityFeatureSetting.idSourcePropertyName &&
                 editableItem.errors.readableIdEntityFeatureSetting.idSourcePropertyName.push('ID Source Property Name is required.');

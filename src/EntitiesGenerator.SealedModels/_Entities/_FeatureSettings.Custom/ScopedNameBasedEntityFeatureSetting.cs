@@ -15,6 +15,6 @@ namespace EntitiesGenerator
         public bool HasSortedChildrenInScope { get; set; }
 
         [StringLength(StringLengths.TitleContent)]
-        public string SortedChildrenInScopePropertyName { get; set; }
+        public string SortedChildrenInScopeCriteriaPropertyName { get; set; }
     }
 }

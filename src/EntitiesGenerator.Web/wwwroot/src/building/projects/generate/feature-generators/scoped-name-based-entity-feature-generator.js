@@ -71,8 +71,8 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
     /**
      * @param {Item} item
      */
-    sortedChildrenInScopePropertyName(item) {
-        return this.itemFeatureSetting(item).sortedChildrenInScopePropertyName;
+    sortedChildrenInScopeCriteriaPropertyName(item) {
+        return this.itemFeatureSetting(item).sortedChildrenInScopeCriteriaPropertyName;
     }
 
     // Project specific content
@@ -366,7 +366,7 @@ public string Id { get; set; }`);
         for (const otherItem of item.module.items) {
             if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name &&
                 this.hasSortedChildrenInScope(otherItem)) {
-                data.push(`public IEnumerable<${otherItem.name}> Ordered${pluralize(otherItem.name)} => ${pluralize(otherItem.name)}?.OrderBy(x => x.${this.sortedChildrenInScopePropertyName(otherItem)});`);
+                data.push(`public IEnumerable<${otherItem.name}> Ordered${pluralize(otherItem.name)} => ${pluralize(otherItem.name)}?.OrderBy(x => x.${this.sortedChildrenInScopeCriteriaPropertyName(otherItem)});`);
             }
         }
     }

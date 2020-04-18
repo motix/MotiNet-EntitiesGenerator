@@ -186,8 +186,8 @@
   <data name="ScopeName" xml:space="preserve">
     <value>Scope Name</value>
   </data>
-  <data name="SortedChildrenInScopePropertyName" xml:space="preserve">
-    <value>Sorted Children in Scope Property Name</value>
+  <data name="SortedChildrenInScopeCriteriaPropertyName" xml:space="preserve">
+    <value>Sorted Children in Scope Criteria Property Name</value>
   </data>
   <data name="WorkingLocation" xml:space="preserve">
     <value>Working Location</value>

@@ -268,11 +268,11 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sorted Children in Scope Property Name.
+        ///   Looks up a localized string similar to Sorted Children in Scope Criteria Property Name.
         /// </summary>
-        public static string SortedChildrenInScopePropertyName {
+        public static string SortedChildrenInScopeCriteriaPropertyName {
             get {
-                return ResourceManager.GetString("SortedChildrenInScopePropertyName", resourceCulture);
+                return ResourceManager.GetString("SortedChildrenInScopeCriteriaPropertyName", resourceCulture);
             }
         }
         
