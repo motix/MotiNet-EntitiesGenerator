@@ -79,6 +79,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Code Property Name.
+        /// </summary>
+        public static string CodePropertyName {
+            get {
+                return ResourceManager.GetString("CodePropertyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete Restrict.
         /// </summary>
         public static string DeleteRestrict {
@@ -219,6 +228,15 @@ namespace EntitiesGenerator.Mvc {
         public static string Name {
             get {
                 return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name Property Name.
+        /// </summary>
+        public static string NamePropertyName {
+            get {
+                return ResourceManager.GetString("NamePropertyName", resourceCulture);
             }
         }
         

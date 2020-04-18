@@ -123,6 +123,9 @@
   <data name="Active" xml:space="preserve">
     <value>Active</value>
   </data>
+  <data name="CodePropertyName" xml:space="preserve">
+    <value>Code Property Name</value>
+  </data>
   <data name="DeleteRestrict" xml:space="preserve">
     <value>Delete Restrict</value>
   </data>
@@ -170,6 +173,9 @@
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
+  </data>
+  <data name="NamePropertyName" xml:space="preserve">
+    <value>Name Property Name</value>
   </data>
   <data name="Namespace" xml:space="preserve">
     <value>Namespace</value>

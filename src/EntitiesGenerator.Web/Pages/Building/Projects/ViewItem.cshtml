@@ -6,7 +6,8 @@
     ViewData["Title"] = Model.Entity.Name;
     MvcHelper.SetActiveSubMenuItem(ViewData, "Projects");
 
-    var emptyCodeBasedEntityFeatureSetting = new CodeBasedEntityFeatureSetting();
+    var emptyCodeBasedEntityFeatureSetting = new CodeBasedEntityFeatureSettingViewModel();
+    var emptyNameBasedEntityFeatureSetting = new NameBasedEntityFeatureSettingViewModel();
     var emptyScopedNameBasedEntityFeatureSetting = new ScopedNameBasedEntityFeatureSettingViewModel();
     var emptyReadableIdEntityFeatureSetting = new ReadableIdEntityFeatureSettingViewModel();
     var childEntityFeatureSetting = new ChildEntityFeatureSettingViewModel();
@@ -17,7 +18,9 @@
                         .Collect(x => Model.Entity.ParameterListLineBreak, Html)
                         .Collect(x => Model.Entity.AbstractModel, Html)
                         .Collect(x => Model.Entity.FeatureSettings, Html)
+                        .Collect(x => emptyCodeBasedEntityFeatureSetting.CodePropertyName, Html)
                         .Collect(x => emptyCodeBasedEntityFeatureSetting.HasCodeGenerator, Html)
+                        .Collect(x => emptyNameBasedEntityFeatureSetting.NamePropertyName, Html)
                         .Collect(x => emptyScopedNameBasedEntityFeatureSetting.ScopeName, Html)
                         .Collect(x => emptyScopedNameBasedEntityFeatureSetting.DeleteRestrict, Html)
                         .Collect(x => emptyScopedNameBasedEntityFeatureSetting.HasSortedChildrenInScope, Html)

@@ -10,6 +10,9 @@ namespace EntitiesGenerator
         [StringLength(StringLengths.TitleContent)]
         public string ScopeName { get; set; }
 
+        [StringLength(StringLengths.TitleContent)]
+        public string NamePropertyName { get; set; }
+
         public bool DeleteRestrict { get; set; }
 
         public bool HasSortedChildrenInScope { get; set; }

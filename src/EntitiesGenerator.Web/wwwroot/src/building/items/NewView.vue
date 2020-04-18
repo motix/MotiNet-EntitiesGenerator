@@ -85,6 +85,7 @@
             <section class="mt-4" v-if="!newMode">
                 <h3>{{displayNames['FeatureSettings']}}</h3>
                 <div>
+                    <!--EntityFeatureSetting-->
                     <section class="mt-3">
                         <h4>
                             <span class="custom-control custom-switch">
@@ -98,6 +99,8 @@
                             </span>
                         </h4>
                     </section>
+
+                    <!--TimeTrackedEntityFeatureSetting-->
                     <section class="mt-3">
                         <h4>
                             <span class="custom-control custom-switch">
@@ -111,6 +114,8 @@
                             </span>
                         </h4>
                     </section>
+
+                    <!--CodeBasedEntityFeatureSetting-->
                     <section class="mt-3">
                         <h4>
                             <span class="custom-control custom-switch">
@@ -125,6 +130,19 @@
                         </h4>
                         <div class="ml-4 pl-3 border-left" v-if="entity.codeBasedEntityFeatureSetting.enabled">
                             <div>
+                                <strong>{{displayNames['CodePropertyName']}}:</strong>
+                                <template v-if="editMode || newMode">
+                                    <single-line-input :placeholder="displayNames['CodePropertyName']"
+                                                       placeholder-css-class="text-muted"
+                                                       v-model="entity.codeBasedEntityFeatureSetting.codePropertyName"
+                                                       @input="dirty()"
+                                                       class="d-inline-block"></single-line-input>
+                                </template>
+                                <template v-else>
+                                    {{entity.codeBasedEntityFeatureSetting.codePropertyName}}
+                                </template>
+                            </div>
+                            <div>
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox"
                                            class="custom-control-input"
@@ -137,6 +155,8 @@
                             </div>
                         </div>
                     </section>
+
+                    <!--NameBasedEntityFeatureSetting-->
                     <section class="mt-3">
                         <h4>
                             <span class="custom-control custom-switch">
@@ -149,7 +169,24 @@
                                 <label class="custom-control-label" for="nameBasedEntityFeatureSetting_Enabled_Switch">Name Based Entity</label>
                             </span>
                         </h4>
+                        <div class="ml-4 pl-3 border-left" v-if="entity.nameBasedEntityFeatureSetting.enabled">
+                            <div>
+                                <strong>{{displayNames['NamePropertyName']}}:</strong>
+                                <template v-if="editMode || newMode">
+                                    <single-line-input :placeholder="displayNames['NamePropertyName']"
+                                                       placeholder-css-class="text-muted"
+                                                       v-model="entity.nameBasedEntityFeatureSetting.namePropertyName"
+                                                       @input="dirty()"
+                                                       class="d-inline-block"></single-line-input>
+                                </template>
+                                <template v-else>
+                                    {{entity.nameBasedEntityFeatureSetting.namePropertyName}}
+                                </template>
+                            </div>
+                        </div>
                     </section>
+
+                    <!--ScopedNameBasedEntityFeatureSetting-->
                     <section class="mt-3">
                         <h4>
                             <span class="custom-control custom-switch">
@@ -177,6 +214,19 @@
                                 </template>
                                 <template v-else>
                                     {{entity.scopedNameBasedEntityFeatureSetting.scopeName}}
+                                </template>
+                            </div>
+                            <div>
+                                <strong>{{displayNames['NamePropertyName']}}:</strong>
+                                <template v-if="editMode || newMode">
+                                    <single-line-input :placeholder="displayNames['NamePropertyName']"
+                                                       placeholder-css-class="text-muted"
+                                                       v-model="entity.scopedNameBasedEntityFeatureSetting.namePropertyName"
+                                                       @input="dirty()"
+                                                       class="d-inline-block"></single-line-input>
+                                </template>
+                                <template v-else>
+                                    {{entity.scopedNameBasedEntityFeatureSetting.namePropertyName}}
                                 </template>
                             </div>
                             <div>
@@ -219,6 +269,8 @@
                             </div>
                         </div>
                     </section>
+
+                    <!--ReadableIdEntityFeatureSetting-->
                     <section class="mt-3">
                         <h4>
                             <span class="custom-control custom-switch">
@@ -250,6 +302,8 @@
                             </div>
                         </div>
                     </section>
+
+                    <!--OnOffEntityFeatureSetting-->
                     <section class="mt-3">
                         <h4>
                             <span class="custom-control custom-switch">
@@ -263,6 +317,8 @@
                             </span>
                         </h4>
                     </section>
+
+                    <!--ChildEntityFeatureSetting-->
                     <section class="mt-3">
                         <h4>
                             <span class="custom-control custom-switch">
@@ -332,6 +388,8 @@
                             </div>
                         </div>
                     </section>
+
+                    <!--PreprocessedEntityFeatureSetting-->
                     <section class="mt-3">
                         <h4>
                             <span class="custom-control custom-switch">
@@ -445,6 +503,7 @@
             return {
                 itemId: '_',
                 enabled: false,
+                codePropertyName: null,
                 hasCodeGenerator: true
             };
         }
@@ -452,6 +511,7 @@
         get emptyNameBasedEntityFeatureSetting() {
             return {
                 itemId: '_',
+                namePropertyName: null,
                 enabled: false
             };
         }
@@ -461,6 +521,9 @@
                 itemId: '_',
                 enabled: false,
                 scopeName: null,
+                namePropertyName: null,
+                deleteRestrict: false,
+                hasSortedChildrenInScope: false,
                 sortedChildrenInScopeCriteriaPropertyName: null
             };
         }
@@ -468,7 +531,8 @@
         get emptyReadableIdEntityFeatureSetting() {
             return {
                 itemId: '_',
-                enabled: false
+                enabled: false,
+                IdSourcePropertyName: null
             };
         }
 
@@ -484,6 +548,8 @@
                 itemId: '_',
                 enabled: false,
                 parentName: null,
+                deleteRestrict: false,
+                hasSortedChildrenInParent: false,
                 sortedChildrenInParentCriteriaPropertyName: null
             };
         }
@@ -514,10 +580,28 @@
 
             // Nullable strings
 
-            if (serializableItem.scopedNameBasedEntityFeatureSetting && !serializableItem.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope) {
-                this.normalizeNullableStrings(serializableItem.scopedNameBasedEntityFeatureSetting, [
-                    'sortedChildrenInScopeCriteriaPropertyName'
+            if (serializableItem.codeBasedEntityFeatureSetting) {
+                this.normalizeNullableStrings(serializableItem.codeBasedEntityFeatureSetting, [
+                    'codePropertyName'
                 ]);
+            }
+
+            if (serializableItem.nameBasedEntityFeatureSetting) {
+                this.normalizeNullableStrings(serializableItem.nameBasedEntityFeatureSetting, [
+                    'namePropertyName'
+                ]);
+            }
+
+            if (serializableItem.scopedNameBasedEntityFeatureSetting) {
+                this.normalizeNullableStrings(serializableItem.scopedNameBasedEntityFeatureSetting, [
+                    'namePropertyName'
+                ]);
+
+                if (!serializableItem.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope) {
+                    this.normalizeNullableStrings(serializableItem.scopedNameBasedEntityFeatureSetting, [
+                        'sortedChildrenInScopeCriteriaPropertyName'
+                    ]);
+                }
             }
 
             if (serializableItem.childEntityFeatureSetting && !serializableItem.childEntityFeatureSetting.hasSortedChildrenInParent) {

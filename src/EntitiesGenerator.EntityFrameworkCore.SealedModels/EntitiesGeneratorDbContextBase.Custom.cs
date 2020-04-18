@@ -29,6 +29,7 @@ namespace EntitiesGenerator.EntityFrameworkCore
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Item>(ConfigureItemInternal);
+            modelBuilder.Entity<NameBasedEntityFeatureSetting>(ConfigureNameBasedEntityFeatureSetting);
             modelBuilder.Entity<ScopedNameBasedEntityFeatureSetting>(ConfigureScopedNameBasedEntityFeatureSetting);
             modelBuilder.Entity<ChildEntityFeatureSetting>(ConfigureChildEntityFeatureSetting);
         }
@@ -44,16 +45,24 @@ namespace EntitiesGenerator.EntityFrameworkCore
             builder.HasIndex(nameof(FeatureSetting.ItemId), "Discriminator").IsUnique();
         }
 
+        protected virtual void ConfigureNameBasedEntityFeatureSetting(EntityTypeBuilder<NameBasedEntityFeatureSetting> builder)
+        {
+            builder.Property(x => x.NamePropertyName)
+                   .HasColumnName(nameof(NameBasedEntityFeatureSetting.NamePropertyName));
+        }
+
         protected virtual void ConfigureScopedNameBasedEntityFeatureSetting(EntityTypeBuilder<ScopedNameBasedEntityFeatureSetting> builder)
         {
+            builder.Property(x => x.NamePropertyName)
+                   .HasColumnName(nameof(ScopedNameBasedEntityFeatureSetting.NamePropertyName));
             builder.Property(x => x.DeleteRestrict)
-                   .HasColumnName("DeleteRestrict");
+                   .HasColumnName(nameof(ScopedNameBasedEntityFeatureSetting.DeleteRestrict));
         }
 
         protected virtual void ConfigureChildEntityFeatureSetting(EntityTypeBuilder<ChildEntityFeatureSetting> builder)
         {
             builder.Property(x => x.DeleteRestrict)
-                   .HasColumnName("DeleteRestrict");
+                   .HasColumnName(nameof(ChildEntityFeatureSetting.DeleteRestrict));
         }
 
         protected override void ConfigureItemsRelationship(EntityTypeBuilder<ItemsRelationship> builder)
