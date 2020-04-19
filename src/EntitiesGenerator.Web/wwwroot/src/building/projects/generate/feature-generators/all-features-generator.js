@@ -5,6 +5,7 @@ import NameBasedEntityFeatureGenerator from './name-based-entity-feature-generat
 import ScopedNameBasedEntityFeatureGenerator from './scoped-name-based-entity-feature-generator';
 import ReadableIdEntityFeatureGenerator from './readable-id-entity-feature-generator';
 import OnOffEntityFeatureGenerator from './on-off-entity-feature-generator';
+import ChildEntityFeatureGenerator from './child-entity-feature-generator';
 import PreprocessedEntityFeatureGenerator from './preprocessed-entity-feature-generator';
 import FeatureGenerator from './feature-generator';
 import { StringHelper } from '../content-helper';
@@ -18,6 +19,7 @@ export default class AllFeaturesGenerator {
         this.scopedNameBasedEntityFeatureGenerator = new ScopedNameBasedEntityFeatureGenerator();
         this.readableIdEntityFeatureGenerator = new ReadableIdEntityFeatureGenerator();
         this.onOffEntityFeatureGenerator = new OnOffEntityFeatureGenerator();
+        this.childEntityFeatureGenerator = new ChildEntityFeatureGenerator();
         this.preprocessedEntityFeatureGenerator = new PreprocessedEntityFeatureGenerator();
 
         /**
@@ -31,6 +33,7 @@ export default class AllFeaturesGenerator {
             this.scopedNameBasedEntityFeatureGenerator,
             this.readableIdEntityFeatureGenerator,
             this.onOffEntityFeatureGenerator,
+            this.childEntityFeatureGenerator,
             this.preprocessedEntityFeatureGenerator
         ];
     }

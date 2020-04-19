@@ -52,6 +52,7 @@
  * @property {ScopedNameBasedEntityFeatureSetting} scopedNameBasedEntityFeatureSetting
  * @property {ReadableIdEntityFeatureSetting} readableIdEntityFeatureSetting
  * @property {OnOffEntityFeatureSetting} onOffEntityFeatureSetting
+ * @property {ChildEntityFeatureSetting} childEntityFeatureSetting
  * @property {PreprocessedEntityFeatureSetting} preprocessedEntityFeatureSetting
  */
 
@@ -86,6 +87,10 @@
 
 /**
  * @typedef {FeatureSetting} OnOffEntityFeatureSetting
+ */
+
+/**
+ * @typedef {FeatureSetting & {parentName: string, deleteRestrict: boolean, hasSortedChildrenInParent: boolean, sortedChildrenInParentCriteriaPropertyName: string}} ChildEntityFeatureSetting
  */
 
 /**
