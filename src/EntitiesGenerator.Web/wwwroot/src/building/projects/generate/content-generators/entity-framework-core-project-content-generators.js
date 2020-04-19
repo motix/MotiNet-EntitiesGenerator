@@ -36,7 +36,7 @@ export class EfProject_DbContextClassGenerator extends CSharpModuleSpecificConte
         const namespace = EfProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
         const moduleGenericTypeParameters = this.features.moduleGenericTypeParameters(this.module,
-            `public abstract class ${moduleCommonName}DbContextBase`.length / 4 + 1, true);
+            `public abstract partial class ${moduleCommonName}DbContextBase`.length / 4 + 1, true);
         const moduleGenericTypeConstraints = this.features.moduleGenericTypeConstraints(this.module, 2, true, { start: 1 });
         const propertyDeclarationsData = [];
         const configureEntityRegistrationsData = [];
@@ -60,7 +60,7 @@ export class EfProject_DbContextClassGenerator extends CSharpModuleSpecificConte
         }
 
         const propertyDeclarations = StringHelper.joinLines(_.uniq(propertyDeclarationsData), 2, '\n', { start: 1, end: 1 });
-        const configureEntityRegistrations = StringHelper.joinLines(_.uniq(configureEntityRegistrationsData), 3, '', { start: 1, end: 1, endIndent: 2, spaceIfEmpty: true });
+        const configureEntityRegistrations = StringHelper.joinLines(_.uniq(configureEntityRegistrationsData), 3, '', { start: 1, end: 1, spaceIfEmpty: true });
         const configureEntityMethods = StringHelper.joinLines(_.uniq(configureEntityMethodsData), 2, '\n', { start: 2 });
 
         const content = `using Microsoft.EntityFrameworkCore;
@@ -69,7 +69,7 @@ using System;
 
 namespace ${namespace}
 {
-    public abstract class ${moduleCommonName}DbContextBase${moduleGenericTypeParameters}
+    public abstract partial class ${moduleCommonName}DbContextBase${moduleGenericTypeParameters}
         : DbContext${moduleGenericTypeConstraints}
     {
         protected ${moduleCommonName}DbContextBase(DbContextOptions options) : base(options) { }
@@ -77,7 +77,15 @@ namespace ${namespace}
         protected ${moduleCommonName}DbContextBase() { }
 ${propertyDeclarations}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {${configureEntityRegistrations}}${configureEntityMethods}
+        {${configureEntityRegistrations}
+            var internalMethod = GetType().GetMethod("OnModelCreatingInternal",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+            if (internalMethod != null)
+            {
+                internalMethod.Invoke(this, new object[] { modelBuilder });
+            }
+        }${configureEntityMethods}
     }
 }
 `;

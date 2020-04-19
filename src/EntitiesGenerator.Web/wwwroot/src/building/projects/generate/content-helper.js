@@ -238,7 +238,7 @@ namespace ${namespace} {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("EntitiesGenerator.Mvc.DisplayNames", typeof(DisplayNames).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("${namespace}.DisplayNames", typeof(DisplayNames).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

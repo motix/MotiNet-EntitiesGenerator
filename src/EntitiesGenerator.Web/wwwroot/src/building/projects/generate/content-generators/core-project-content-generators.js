@@ -270,12 +270,12 @@ ${entityGenericTypeConstraints}
             var theManager = this.GetManager<T${entityName}, I${entityName}Manager${entityGenericTypeParameters}>(manager);
             var errors = new List<GenericError>();${validations}
 
-            var internalMethod = typeof(${entityName}Validator${entityGenericTypeParameters}).GetMethod("ValidateInternalAsync",
+            var internalMethod = GetType().GetMethod("ValidateInternalAsync",
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
 
             if (internalMethod != null)
             {
-                internalMethod.Invoke(null, new object[] { manager, ${lowerFirstEntityName}, errors });
+                internalMethod.Invoke(this, new object[] { manager, ${lowerFirstEntityName}, errors });
             }
 
             return GenericResult.GetResult(errors);
