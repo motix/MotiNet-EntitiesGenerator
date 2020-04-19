@@ -252,7 +252,7 @@ using System.Threading.Tasks;
 
 namespace ${namespace}
 {
-    public class ${entityName}Validator${entityGenericTypeParameters} : IValidator${entityGenericTypeParameters}
+    public partial class ${entityName}Validator${entityGenericTypeParameters} : IValidator${entityGenericTypeParameters}
 ${entityGenericTypeConstraints}
     {
         public ${entityName}Validator(I${entityName}Accessor${entityGenericTypeParameters} accessor, ${moduleCommonName}ErrorDescriber errorDescriber)
@@ -269,6 +269,14 @@ ${entityGenericTypeConstraints}
         {
             var theManager = this.GetManager<T${entityName}, I${entityName}Manager${entityGenericTypeParameters}>(manager);
             var errors = new List<GenericError>();${validations}
+
+            var internalMethod = typeof(${entityName}Validator${entityGenericTypeParameters}).GetMethod("ValidateInternalAsync",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+            if (internalMethod != null)
+            {
+                internalMethod.Invoke(null, new object[] { manager, ${lowerFirstEntityName}, errors });
+            }
 
             return GenericResult.GetResult(errors);
         }${subEntityValidateMethods}

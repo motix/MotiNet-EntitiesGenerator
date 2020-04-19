@@ -21,7 +21,7 @@
                     <button class="btn btn-sm btn-outline-danger"
                             href="javascript:void(0)"
                             title="Clear Generate Location"
-                            v-bind:disabled="true || freezed"
+                            v-bind:disabled="freezed"
                             @click="clearGenerateLocation"
                             v-if="entity.generateLocation">
                         <font-awesome-icon :icon="['fal', 'broom']" fixed-width></font-awesome-icon>
@@ -97,6 +97,11 @@
         static get props() {
             return {
                 ...super.props,
+                preSelection: {
+                    type: Array,
+                    required: false,
+                    default: []
+                },
                 saveGeneratedProjectUrl: {
                     type: String,
                     required: true
@@ -226,30 +231,41 @@
         }
 
         $clearGenerateLocation() {
-            const data = {
-                projectId: this.vm.entity.id
-            };
+            Swal.fire({
+                icon: 'error',
+                title: 'Clear',
+                text: "Are you sure want to clear Generate Location? All custom code will be lost!",
+                showCancelButton: true,
+                reverseButtons: true,
+                focusConfirm: false
+            }).then((result) => {
+                if (result.value) {
+                    const data = {
+                        projectId: this.vm.entity.id
+                    };
 
-            this.vm.freezed = true;
-            axios
-                .post(this.vm.clearGenerateLocationUrl, data)
-                .then(response => {
-                    if (response.data === true) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Generate Location cleared.',
-                            showConfirmButton: false,
-                            timer: 1500
+                    this.vm.freezed = true;
+                    axios
+                        .post(this.vm.clearGenerateLocationUrl, data)
+                        .then(response => {
+                            if (response.data === true) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Generate Location cleared.',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            } else {
+                                this.showError('There is error clearing Generate Location.');
+                            }
+                            this.vm.freezed = false;
+                        })
+                        .catch(error => {
+                            this.showError('There is error clearing Generate Location.', error);
+                            this.vm.freezed = false;
                         });
-                    } else {
-                        this.showError('There is error clearing Generate Location.');
-                    }
-                    this.vm.freezed = false;
-                })
-                .catch(error => {
-                    this.showError('There is error clearing Generate Location.', error);
-                    this.vm.freezed = false;
-                });
+                }
+            });
         }
 
         // Internal
@@ -265,6 +281,26 @@
             setId(solutionStructure);
 
             this.vm.solutionStructure = solutionStructure;
+
+            if (this.vm.preSelection.length > 0) {
+                window.setTimeout(() => {
+                    var node = this.vm.solutionStructure;
+
+                    $(`#collapse_${node.children[0].id}`).collapse('show');
+
+                    for (const index of this.vm.preSelection) {
+                        node = node.children[index];
+
+                        if (node.folderType === 'projectFolder') {
+                            $(`#collapse_${node.children[0].id}`).collapse('show');
+                        } else {
+                            $(`#collapse_${node.id}`).collapse('show');
+                        }
+                    }
+
+                    this.vm.select(node);
+                });
+            }
 
             function setId(node) {
                 node.id = id;

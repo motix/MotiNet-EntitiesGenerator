@@ -57,6 +57,13 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
     /**
      * @param {Item} item
      */
+    namePropertyName(item) {
+        return this.itemFeatureSetting(item).namePropertyName;
+    }
+
+    /**
+     * @param {Item} item
+     */
     deleteRestrict(item) {
         return this.itemFeatureSetting(item).deleteRestrict;
     }
@@ -116,7 +123,10 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
     core_EntityManagerClass_ConstructorParametersData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`ILookupNormalizer<T${item.name}> nameNormalizer`);
+        const namePropertyName = this.namePropertyName(item);
+        const lowerFirstNamePropertyName = _.lowerFirst(namePropertyName);
+
+        data.push(`ILookupNormalizer<T${item.name}> ${lowerFirstNamePropertyName}Normalizer`);
     }
 
     /**
@@ -126,7 +136,10 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
     core_EntityManagerClass_PropertiesAssignmentsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push('NameNormalizer = nameNormalizer ?? throw new ArgumentNullException(nameof(nameNormalizer));');
+        const namePropertyName = this.namePropertyName(item);
+        const lowerFirstNamePropertyName = _.lowerFirst(namePropertyName);
+
+        data.push(`NameNormalizer = ${lowerFirstNamePropertyName}Normalizer ?? throw new ArgumentNullException(nameof(${lowerFirstNamePropertyName}Normalizer));`);
     }
 
     /**
@@ -158,8 +171,11 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
     core_EntityValidatorClass_ValidationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
+        const namePropertyName = this.namePropertyName(item);
+        const lowerFirstNamePropertyName = _.lowerFirst(namePropertyName);
+
         data.push(`await this.ValidateNameAsync(theManager, Accessor, ${_.lowerFirst(item.name)}, errors,
-    name => ErrorDescriber.Invalid${item.name}Name(name), name => ErrorDescriber.Duplicate${item.name}Name(name));`);
+    ${lowerFirstNamePropertyName} => ErrorDescriber.Invalid${item.name}${namePropertyName}(${lowerFirstNamePropertyName}), ${lowerFirstNamePropertyName} => ErrorDescriber.Duplicate${item.name}${namePropertyName}(${lowerFirstNamePropertyName}));`);
     }
 
     /**
@@ -185,19 +201,20 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
 
         const entityName = item.name;
         const lowerFirstEntityName = _.lowerFirst(entityName);
+        const namePropertyName = this.namePropertyName(item);
 
-        data.push(`public virtual GenericError Invalid${entityName}Name(string ${lowerFirstEntityName}Name)
+        data.push(`public virtual GenericError Invalid${entityName}${namePropertyName}(string ${lowerFirstEntityName}${namePropertyName})
     => new GenericError
     {
-        Code = nameof(Invalid${entityName}Name),
-        Description = _localizer[nameof(Invalid${entityName}Name), ${lowerFirstEntityName}Name]
+        Code = nameof(Invalid${entityName}${namePropertyName}),
+        Description = _localizer[nameof(Invalid${entityName}${namePropertyName}), ${lowerFirstEntityName}${namePropertyName}]
     };
 
-public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntityName}Name)
+public virtual GenericError Duplicate${entityName}${namePropertyName}(string ${lowerFirstEntityName}${namePropertyName})
     => new GenericError
     {
-        Code = nameof(Duplicate${entityName}Name),
-        Description = _localizer[nameof(Duplicate${entityName}Name), ${lowerFirstEntityName}Name]
+        Code = nameof(Duplicate${entityName}${namePropertyName}),
+        Description = _localizer[nameof(Duplicate${entityName}${namePropertyName}), ${lowerFirstEntityName}${namePropertyName}]
     };`);
     }
 
@@ -208,20 +225,22 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
     core_ErrorDescriberResourcesResx_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
+        const namePropertyName = this.namePropertyName(item);
+        const lowerNameDisplayName = _.lowerCase(namePropertyName);
+
         data.push(
             {
-                key: `Duplicate${item.name}Name`,
-                content: `<data name="Duplicate${item.name}Name" xml:space="preserve">
-  <value>${item.displayName} name '{0}' has already been used.</value>
+                key: `Duplicate${item.name}${namePropertyName}`,
+                content: `<data name="Duplicate${item.name}${namePropertyName}" xml:space="preserve">
+  <value>${item.displayName} ${lowerNameDisplayName} '{0}' has already been used.</value>
 </data>`
             },
             {
-                key: `Invalid${item.name}Name`,
-                content: `<data name="Invalid${item.name}Name" xml:space="preserve">
-  <value>${item.displayName} name '{0}' is invalid.</value>
+                key: `Invalid${item.name}${namePropertyName}`,
+                content: `<data name="Invalid${item.name}${namePropertyName}" xml:space="preserve">
+  <value>${item.displayName} ${lowerNameDisplayName} '{0}' is invalid.</value>
 </data>`
-            }
-        );
+            });
     }
 
     /**
@@ -279,7 +298,11 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
     sm_EntityClass_EntityInterfacesData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push('INameWiseEntity');
+        const namePropertyName = this.namePropertyName(item);
+
+        if (namePropertyName === 'Name') {
+            data.push('INameWiseEntity');
+        }
     }
 
     /**
@@ -302,6 +325,7 @@ public virtual GenericError Duplicate${entityName}Name(string ${lowerFirstEntity
         this.throwIfItemNotHaveFeature(item);
 
         const constructorModifier = item.abstractModel ? 'protected' : 'public';
+        const namePropertyName = this.namePropertyName(item);
 
         data.push(
             `${constructorModifier} ${item.name}() => Id = Guid.NewGuid().ToString();`,
@@ -312,10 +336,10 @@ public string Id { get; set; }`,
 public string ${this.scopeName(item)}Id { get; set; }`,
             `[Required]
 [StringLength(StringLengths.TitleContent)]
-public string Name { get; set; }`,
+public string ${namePropertyName} { get; set; }`,
             `[Required]
 [StringLength(StringLengths.TitleContent)]
-public string NormalizedName { get; set; }`);
+public string Normalized${namePropertyName} { get; set; }`);
     }
 
     /**
@@ -415,11 +439,12 @@ public string Id { get; set; }`);
         const lowerFirstEntityName = _.lowerFirst(entityName);
         const scopeName = this.scopeName(item);
         const lowerFirstScopeName = _.lowerFirst(scopeName);
+        const namePropertyName = this.namePropertyName(item);
 
         data.push(
             `public object GetId(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Id;`,
-            `public string GetName(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.Name;`,
-            `public void SetNormalizedName(${entityName} ${lowerFirstEntityName}, string normalizedName) => ${lowerFirstEntityName}.NormalizedName = normalizedName;`,
+            `public string GetName(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.${namePropertyName};`,
+            `public void SetNormalizedName(${entityName} ${lowerFirstEntityName}, string normalized${namePropertyName}) => ${lowerFirstEntityName}.Normalized${namePropertyName} = normalized${namePropertyName};`,
             `public object GetScopeId(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.${scopeName}Id;`,
             `public void SetScopeId(${entityName} ${lowerFirstEntityName}, object ${lowerFirstScopeName}Id) => ${lowerFirstEntityName}.${scopeName}Id = (string)${lowerFirstScopeName}Id;`,
             `public ${scopeName} GetScope(${entityName} ${lowerFirstEntityName}) => ${lowerFirstEntityName}.${scopeName};`,
@@ -477,10 +502,11 @@ public string Id { get; set; }`);
         const entityName = item.name;
         const pluralEntityName = pluralize(entityName);
         const scopeName = this.scopeName(item);
+        const namePropertyName = this.namePropertyName(item);
 
         data.push(`// Unique name in scope
-builder.HasIndex(nameof(${entityName}.${scopeName}Id), nameof(${entityName}.Name)).IsUnique();
-builder.HasIndex(nameof(${entityName}.${scopeName}Id), nameof(${entityName}.NormalizedName)).IsUnique();`);
+builder.HasIndex(nameof(${entityName}.${scopeName}Id), nameof(${entityName}.{namePropertyName})).IsUnique();
+builder.HasIndex(nameof(${entityName}.${scopeName}Id), nameof(${entityName}.Normalized${namePropertyName})).IsUnique();`);
 
         if (this.deleteRestrict(item)) {
             data.push(`// Restrict delete
@@ -524,12 +550,18 @@ builder.Ignore(x => x.Ordered${pluralize(otherItem.name)});`);
         const entityName = item.name;
         const scopeName = this.scopeName(item);
         const lowerFirstScopeName = _.lowerFirst(scopeName);
+        const namePropertyName = this.namePropertyName(item);
+        var nameSelecor = '';
+
+        if (namePropertyName !== 'Name') {
+            nameSelecor = `, x => x.${namePropertyName}, x => x.Id`;
+        }
 
         data.push(
-            `public ${entityName} FindByName(string normalizedName, ${scopeName} ${lowerFirstScopeName})
-    => ScopedNameBasedEntityStoreHelper.FindEntityByName(this, normalizedName, ${lowerFirstScopeName}, x => x.${scopeName}Id);`,
-            `public Task<${entityName}> FindByNameAsync(string normalizedName, ${scopeName} ${lowerFirstScopeName}, CancellationToken cancellationToken)
-    => ScopedNameBasedEntityStoreHelper.FindEntityByNameAsync(this, normalizedName, ${lowerFirstScopeName}, x => x.${scopeName}Id, cancellationToken);`,
+            `public ${entityName} FindByName(string normalized${namePropertyName}, ${scopeName} ${lowerFirstScopeName})
+    => ScopedNameBasedEntityStoreHelper.FindEntityByName(this, normalized${namePropertyName}, ${lowerFirstScopeName}, x => x.${scopeName}Id${nameSelecor});`,
+            `public Task<${entityName}> FindByNameAsync(string normalized${namePropertyName}, ${scopeName} ${lowerFirstScopeName}, CancellationToken cancellationToken)
+    => ScopedNameBasedEntityStoreHelper.FindEntityByNameAsync(this, normalized${namePropertyName}, ${lowerFirstScopeName}, x => x.${scopeName}Id${nameSelecor}, cancellationToken);`,
             `public ${scopeName} FindScopeById(object id)
     => ScopedNameBasedEntityStoreHelper.FindScopeById(this, id);`,
             `public Task<${scopeName}> FindScopeByIdAsync(object id, CancellationToken cancellationToken)
@@ -558,7 +590,10 @@ builder.Ignore(x => x.Ordered${pluralize(otherItem.name)});`);
     asp_EntityManagerClass_ConstructorParametersData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`ILookupNormalizer<T${item.name}> nameNormalizer`);
+        const namePropertyName = this.namePropertyName(item);
+        const lowerFirstNamePropertyName = _.lowerFirst(namePropertyName);
+
+        data.push(`ILookupNormalizer<T${item.name}> ${lowerFirstNamePropertyName}Normalizer`);
     }
 
     /**
@@ -568,7 +603,10 @@ builder.Ignore(x => x.Ordered${pluralize(otherItem.name)});`);
     asp_EntityManagerClass_BaseConstructorParametersData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push('nameNormalizer');
+        const namePropertyName = this.namePropertyName(item);
+        const lowerFirstNamePropertyName = _.lowerFirst(namePropertyName);
+
+        data.push(`${lowerFirstNamePropertyName}Normalizer`);
     }
 
     // AspNetCore.Mvc.DefaultViewModels
@@ -581,6 +619,7 @@ builder.Ignore(x => x.Ordered${pluralize(otherItem.name)});`);
         this.throwIfItemNotHaveFeature(item);
 
         const scopeName = this.scopeName(item);
+        const namePropertyName = this.namePropertyName(item);
 
         data.push(
             `protected ${item.name}ViewModelBase() => Id = Guid.NewGuid().ToString();`,
@@ -589,8 +628,8 @@ builder.Ignore(x => x.Ordered${pluralize(otherItem.name)});`);
 [Display(Name = "${scopeName}", ResourceType = typeof(DisplayNames))]
 public string ${scopeName}Id { get; set; }`,
             `[LocalizedRequired]
-[Display(Name = nameof(Name), ResourceType = typeof(DisplayNames))]
-public string Name { get; set; }`);
+[Display(Name = nameof(${namePropertyName}), ResourceType = typeof(DisplayNames))]
+public string ${namePropertyName} { get; set; }`);
     }
 
     /**
@@ -660,6 +699,8 @@ public ICollection<${item.name}LiteViewModel> ${pluralize(item.name)} { get; set
         this.throwIfItemNotHaveFeature(item);
 
         const scopeName = this.scopeName(item);
+        const namePropertyName = this.namePropertyName(item);
+        const nameDisplayName = _.startCase(namePropertyName);
 
         data.push(
             {
@@ -669,9 +710,9 @@ public ICollection<${item.name}LiteViewModel> ${pluralize(item.name)} { get; set
 </data>`
             },
             {
-                key: 'Name',
-                content: `<data name="Name" xml:space="preserve">
-  <value>Name</value>
+                key: namePropertyName,
+                content: `<data name="${namePropertyName}" xml:space="preserve">
+  <value>${nameDisplayName}</value>
 </data>`
             },
             {
@@ -690,6 +731,8 @@ public ICollection<${item.name}LiteViewModel> ${pluralize(item.name)} { get; set
         this.throwIfItemNotHaveFeature(item);
 
         const scopeName = this.scopeName(item);
+        const namePropertyName = this.namePropertyName(item);
+        const nameDisplayName = _.startCase(namePropertyName);
 
         data.push(
             {
@@ -704,13 +747,13 @@ public static string ${scopeName} {
 }`
             },
             {
-                key: 'Name',
+                key: namePropertyName,
                 content: `/// <summary>
-///   Looks up a localized string similar to Name.
+///   Looks up a localized string similar to ${nameDisplayName}.
 /// </summary>
-public static string Name {
+public static string ${namePropertyName} {
     get {
-        return ResourceManager.GetString("Name", resourceCulture);
+        return ResourceManager.GetString("${namePropertyName}", resourceCulture);
     }
 }`
             },

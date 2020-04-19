@@ -1,4 +1,7 @@
-﻿export default class FeatureGenerator {
+﻿import '../types';
+import 'lodash';
+
+export default class FeatureGenerator {
     get featureType() {
         return null;
     }

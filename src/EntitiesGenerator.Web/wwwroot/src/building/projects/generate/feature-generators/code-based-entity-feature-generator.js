@@ -28,6 +28,13 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
     /**
      * @param {Item} item
      */
+    codePropertyName(item) {
+        return this.itemFeatureSetting(item).codePropertyName || 'Code';
+    }
+
+    /**
+     * @param {Item} item
+     */
     hasCodeGenerator(item) {
         return this.itemFeatureSetting(item).hasCodeGenerator;
     }
@@ -73,10 +80,13 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
     core_EntityManagerClass_ConstructorParametersData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`ILookupNormalizer<T${item.name}> codeNormalizer`);
+        const codePropertyName = this.codePropertyName(item);
+        const lowerFirstCodePropertyName = _.lowerFirst(codePropertyName);
+
+        data.push(`ILookupNormalizer<T${item.name}> ${lowerFirstCodePropertyName}Normalizer`);
 
         if (this.hasCodeGenerator(item)) {
-            data.push(`IEntityCodeGenerator<T${item.name}> codeGenerator`);
+            data.push(`IEntityCodeGenerator<T${item.name}> ${lowerFirstCodePropertyName}Generator`);
         }
     }
 
@@ -87,10 +97,13 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
     core_EntityManagerClass_PropertiesAssignmentsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push('CodeNormalizer = codeNormalizer ?? throw new ArgumentNullException(nameof(codeNormalizer));');
+        const codePropertyName = this.codePropertyName(item);
+        const lowerFirstCodePropertyName = _.lowerFirst(codePropertyName);
+
+        data.push(`CodeNormalizer = ${lowerFirstCodePropertyName}Normalizer ?? throw new ArgumentNullException(nameof(${lowerFirstCodePropertyName}Normalizer));`);
 
         if (this.hasCodeGenerator(item)) {
-            data.push('CodeGenerator = codeGenerator ?? throw new ArgumentNullException(nameof(codeGenerator));');
+            data.push(`CodeGenerator = ${lowerFirstCodePropertyName}Generator ?? throw new ArgumentNullException(nameof(${lowerFirstCodePropertyName}Generator));`);
         }
     }
 
@@ -129,8 +142,11 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
     core_EntityValidatorClass_ValidationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
+        const codePropertyName = this.codePropertyName(item);
+        const lowerFirstCodePropertyName = _.lowerFirst(codePropertyName);
+
         data.push(`await this.ValidateCodeAsync(theManager, Accessor, ${_.lowerFirst(item.name)}, errors,
-    code => ErrorDescriber.Invalid${item.name}Code(code), code => ErrorDescriber.Duplicate${item.name}Code(code));`);
+    ${lowerFirstCodePropertyName} => ErrorDescriber.Invalid${item.name}${codePropertyName}(${lowerFirstCodePropertyName}), ${lowerFirstCodePropertyName} => ErrorDescriber.Duplicate${item.name}${codePropertyName}(${lowerFirstCodePropertyName}));`);
     }
 
     /**
@@ -142,19 +158,20 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
 
         const entityName = item.name;
         const lowerFirstEntityName = _.lowerFirst(entityName);
+        const codePropertyName = this.codePropertyName(item);
 
         data.push(
-            `public virtual GenericError Invalid${entityName}Code(string ${lowerFirstEntityName}Code)
+            `public virtual GenericError Invalid${entityName}${codePropertyName}(string ${lowerFirstEntityName}${codePropertyName})
     => new GenericError
     {
-        Code = nameof(Invalid${entityName}Code),
-        Description = _localizer[nameof(Invalid${entityName}Code), ${lowerFirstEntityName}Code]
+        Code = nameof(Invalid${entityName}${codePropertyName}),
+        Description = _localizer[nameof(Invalid${entityName}${codePropertyName}), ${lowerFirstEntityName}${codePropertyName}]
     };`,
-            `public virtual GenericError Duplicate${entityName}Code(string ${lowerFirstEntityName}Code)
+            `public virtual GenericError Duplicate${entityName}${codePropertyName}(string ${lowerFirstEntityName}${codePropertyName})
     => new GenericError
     {
-        Code = nameof(Duplicate${entityName}Code),
-        Description = _localizer[nameof(Duplicate${entityName}Code), ${lowerFirstEntityName}Code]
+        Code = nameof(Duplicate${entityName}${codePropertyName}),
+        Description = _localizer[nameof(Duplicate${entityName}${codePropertyName}), ${lowerFirstEntityName}${codePropertyName}]
     };`);
     }
 
@@ -165,17 +182,20 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
     core_ErrorDescriberResourcesResx_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
+        const codePropertyName = this.codePropertyName(item);
+        const lowerCodeDisplayName = _.lowerCase(codePropertyName);
+
         data.push(
             {
-                key: `Duplicate${item.name}Code`,
-                content: `<data name="Duplicate${item.name}Code" xml:space="preserve">
-  <value>${item.displayName} code '{0}' has already been used.</value>
+                key: `Duplicate${item.name}${codePropertyName}`,
+                content: `<data name="Duplicate${item.name}${codePropertyName}" xml:space="preserve">
+  <value>${item.displayName} ${lowerCodeDisplayName} '{0}' has already been used.</value>
 </data>`
             },
             {
-                key: `Invalid${item.name}Code`,
-                content: `<data name="Invalid${item.name}Code" xml:space="preserve">
-  <value>${item.displayName} code '{0}' is invalid.</value>
+                key: `Invalid${item.name}${codePropertyName}`,
+                content: `<data name="Invalid${item.name}${codePropertyName}" xml:space="preserve">
+  <value>${item.displayName} ${lowerCodeDisplayName} '{0}' is invalid.</value>
 </data>`
             });
     }
@@ -199,7 +219,11 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
     sm_EntityClass_EntityInterfacesData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push('ICodeWiseEntity');
+        const codePropertyName = this.codePropertyName(item);
+
+        if (codePropertyName === 'Code') {
+            data.push('ICodeWiseEntity');
+        }
     }
 
     /**
@@ -210,6 +234,7 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
         this.throwIfItemNotHaveFeature(item);
 
         const constructorModifier = item.abstractModel ? 'protected' : 'public';
+        const codePropertyName = this.codePropertyName(item);
 
         data.push(
             `${constructorModifier} ${item.name}() => Id = Guid.NewGuid().ToString();`,
@@ -217,7 +242,7 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
 public string Id { get; set; }`,
             `[Required]
 [StringLength(StringLengths.TitleContent)]
-public string Code { get; set; }`);
+public string ${codePropertyName} { get; set; }`);
     }
 
     /**
@@ -227,10 +252,13 @@ public string Code { get; set; }`);
     sm_EntityAccessorClass_AccessorMethodsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
+        const codePropertyName = this.codePropertyName(item);
+        const lowerFirstCodePropertyName = _.lowerFirst(codePropertyName);
+
         data.push(
             `public object GetId(${item.name} ${_.lowerFirst(item.name)}) => ${_.lowerFirst(item.name)}.Id;`,
-            `public string GetCode(${item.name} ${_.lowerFirst(item.name)}) => ${_.lowerFirst(item.name)}.Code;`,
-            `public void SetCode(${item.name} ${_.lowerFirst(item.name)}, string code) => ${_.lowerFirst(item.name)}.Code = code;`);
+            `public string GetCode(${item.name} ${_.lowerFirst(item.name)}) => ${_.lowerFirst(item.name)}.${codePropertyName};`,
+            `public void SetCode(${item.name} ${_.lowerFirst(item.name)}, string ${lowerFirstCodePropertyName}) => ${_.lowerFirst(item.name)}.${codePropertyName} = ${lowerFirstCodePropertyName};`);
     }
 
     // EntityFrameworkCore.SealedModels
@@ -242,8 +270,10 @@ public string Code { get; set; }`);
     efSm_DbContextClass_EntityConfigurationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
+        const codePropertyName = this.codePropertyName(item);
+
         data.push(`// Unique code
-builder.HasIndex(x => x.Code).IsUnique();`);
+builder.HasIndex(x => x.${codePropertyName}).IsUnique();`);
     }
 
     /**
@@ -263,11 +293,18 @@ builder.HasIndex(x => x.Code).IsUnique();`);
     efSm_EntityStoreClass_StoreMethodDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
+        const codePropertyName = this.codePropertyName(item);
+        var codeSelecor = '';
+
+        if (codePropertyName !== 'Code') {
+            codeSelecor = `, x => x.${codePropertyName}`;
+        }
+
         data.push(
-            `public ${item.name} FindByCode(string normalizedCode)
-    => CodeBasedEntityStoreHelper.FindEntityByCode(this, normalizedCode);`,
-            `public Task<${item.name}> FindByCodeAsync(string normalizedCode, CancellationToken cancellationToken)
-    => CodeBasedEntityStoreHelper.FindEntityByCodeAsync(this, normalizedCode, cancellationToken);`);
+            `public ${item.name} FindByCode(string normalized${codePropertyName})
+    => CodeBasedEntityStoreHelper.FindEntityByCode(this, normalized${codePropertyName}${codeSelecor});`,
+            `public Task<${item.name}> FindByCodeAsync(string normalized${codePropertyName}, CancellationToken cancellationToken)
+    => CodeBasedEntityStoreHelper.FindEntityByCodeAsync(this, normalized${codePropertyName}${codeSelecor}, cancellationToken);`);
     }
 
     // AspNetCore
@@ -279,10 +316,13 @@ builder.HasIndex(x => x.Code).IsUnique();`);
     asp_EntityManagerClass_ConstructorParametersData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`ILookupNormalizer<T${item.name}> codeNormalizer`);
+        const codePropertyName = this.codePropertyName(item);
+        const lowerFirstCodePropertyName = _.lowerFirst(codePropertyName);
+
+        data.push(`ILookupNormalizer<T${item.name}> ${lowerFirstCodePropertyName}Normalizer`);
 
         if (this.hasCodeGenerator(item)) {
-            data.push(`IEntityCodeGenerator<T${item.name}> codeGenerator`);
+            data.push(`IEntityCodeGenerator<T${item.name}> ${lowerFirstCodePropertyName}Generator`);
         }
     }
 
@@ -293,10 +333,13 @@ builder.HasIndex(x => x.Code).IsUnique();`);
     asp_EntityManagerClass_BaseConstructorParametersData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push('codeNormalizer');
+        const codePropertyName = this.codePropertyName(item);
+        const lowerFirstCodePropertyName = _.lowerFirst(codePropertyName);
+
+        data.push(`${lowerFirstCodePropertyName}Normalizer`);
 
         if (this.hasCodeGenerator(item)) {
-            data.push('codeGenerator');
+            data.push(`${lowerFirstCodePropertyName}Generator`);
         }
     }
 
@@ -309,12 +352,14 @@ builder.HasIndex(x => x.Code).IsUnique();`);
     aspDv_EntityViewModelsClass_BasePropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
+        const codePropertyName = this.codePropertyName(item);
+
         data.push(
             `protected ${item.name}ViewModelBase() => Id = Guid.NewGuid().ToString();`,
             'public string Id { get; set; }',
             `[LocalizedRequired]
-[Display(Name = nameof(Code), ResourceType = typeof(DisplayNames))]
-public string Code { get; set; }`);
+[Display(Name = nameof(${codePropertyName}), ResourceType = typeof(DisplayNames))]
+public string ${codePropertyName} { get; set; }`);
     }
 
     /**
@@ -324,10 +369,13 @@ public string Code { get; set; }`);
     aspDv_DisplayNamesResx_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
+        const codePropertyName = this.codePropertyName(item);
+        const codeDisplayName = _.startCase(codePropertyName);
+
         data.push({
-            key: 'Code',
-            content: `<data name="Code" xml:space="preserve">
-  <value>Code</value>
+            key: codePropertyName,
+            content: `<data name="${codePropertyName}" xml:space="preserve">
+  <value>${codeDisplayName}</value>
 </data>`
         });
     }
@@ -339,14 +387,17 @@ public string Code { get; set; }`);
     aspDv_DisplayNamesResxDesignerClass_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
+        const codePropertyName = this.codePropertyName(item);
+        const codeDisplayName = _.startCase(codePropertyName);
+
         data.push({
-            key: 'Code',
+            key: codePropertyName,
             content: `/// <summary>
-///   Looks up a localized string similar to Code.
+///   Looks up a localized string similar to ${codeDisplayName}.
 /// </summary>
-public static string Code {
+public static string ${codePropertyName} {
     get {
-        return ResourceManager.GetString("Code", resourceCulture);
+        return ResourceManager.GetString("${codePropertyName}", resourceCulture);
     }
 }`
         });
