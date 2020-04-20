@@ -519,15 +519,15 @@
                 itemId: '_',
                 enabled: false,
                 codePropertyName: null,
-                hasCodeGenerator: true
+                hasCodeGenerator: false
             };
         }
 
         get emptyNameBasedEntityFeatureSetting() {
             return {
                 itemId: '_',
-                namePropertyName: null,
-                enabled: false
+                enabled: false,
+                namePropertyName: null
             };
         }
 
