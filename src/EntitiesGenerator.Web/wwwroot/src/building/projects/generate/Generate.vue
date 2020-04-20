@@ -100,7 +100,7 @@
                 preSelection: {
                     type: Array,
                     required: false,
-                    default: []
+                    default: () => []
                 },
                 saveGeneratedProjectUrl: {
                     type: String,

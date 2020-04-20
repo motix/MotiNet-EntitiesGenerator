@@ -505,7 +505,7 @@ public string Id { get; set; }`);
         const namePropertyName = this.namePropertyName(item);
 
         data.push(`// Unique name in scope
-builder.HasIndex(nameof(${entityName}.${scopeName}Id), nameof(${entityName}.{namePropertyName})).IsUnique();
+builder.HasIndex(nameof(${entityName}.${scopeName}Id), nameof(${entityName}.${namePropertyName})).IsUnique();
 builder.HasIndex(nameof(${entityName}.${scopeName}Id), nameof(${entityName}.Normalized${namePropertyName})).IsUnique();`);
 
         if (this.deleteRestrict(item)) {

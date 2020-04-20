@@ -4,7 +4,7 @@ namespace EntitiesGenerator
 {
     public sealed class CodeBasedEntityFeatureSetting : FeatureSetting
     {
-        public override int Position => 3;
+        public override int Position => 6;
 
         [StringLength(StringLengths.TitleContent)]
         public string CodePropertyName { get; set; }

@@ -4,7 +4,7 @@ namespace EntitiesGenerator
 {
     public sealed class ScopedNameBasedEntityFeatureSetting : FeatureSetting
     {
-        public override int Position => 6;
+        public override int Position => 9;
 
         [Required]
         [StringLength(StringLengths.TitleContent)]

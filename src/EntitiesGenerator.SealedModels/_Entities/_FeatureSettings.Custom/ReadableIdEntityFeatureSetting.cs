@@ -4,7 +4,7 @@ namespace EntitiesGenerator
 {
     public sealed class ReadableIdEntityFeatureSetting : FeatureSetting
     {
-        public override int Position => 7;
+        public override int Position => 2;
 
         [Required]
         [StringLength(StringLengths.TitleContent)]

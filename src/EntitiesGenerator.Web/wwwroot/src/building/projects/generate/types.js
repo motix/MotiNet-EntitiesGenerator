@@ -46,12 +46,12 @@
  * @property {boolean} abstractModel
  * @property {Module} module
  * @property {EntityFeatureSetting} entityFeatureSetting
+ * @property {ReadableIdEntityFeatureSetting} readableIdEntityFeatureSetting
  * @property {TimeTrackedEntityFeatureSetting} timeTrackedEntityFeatureSetting
+ * @property {OnOffEntityFeatureSetting} onOffEntityFeatureSetting
  * @property {CodeBasedEntityFeatureSetting} codeBasedEntityFeatureSetting
  * @property {NameBasedEntityFeatureSetting} nameBasedEntityFeatureSetting
  * @property {ScopedNameBasedEntityFeatureSetting} scopedNameBasedEntityFeatureSetting
- * @property {ReadableIdEntityFeatureSetting} readableIdEntityFeatureSetting
- * @property {OnOffEntityFeatureSetting} onOffEntityFeatureSetting
  * @property {ChildEntityFeatureSetting} childEntityFeatureSetting
  * @property {PreprocessedEntityFeatureSetting} preprocessedEntityFeatureSetting
  */
@@ -66,7 +66,15 @@
  */
 
 /**
+ * @typedef {FeatureSetting & {idSourcePropertyName: string}} ReadableIdEntityFeatureSetting
+ */
+
+/**
  * @typedef {FeatureSetting} TimeTrackedEntityFeatureSetting
+ */
+
+/**
+ * @typedef {FeatureSetting} OnOffEntityFeatureSetting
  */
 
 /**
@@ -79,14 +87,6 @@
 
 /**
  * @typedef {FeatureSetting & {scopeName: string, namePropertyName: string, deleteRestrict: boolean, hasSortedChildrenInScope: boolean, sortedChildrenInScopeCriteriaPropertyName: string}} ScopedNameBasedEntityFeatureSetting
- */
-
-/**
- * @typedef {FeatureSetting & {idSourcePropertyName: string}} ReadableIdEntityFeatureSetting
- */
-
-/**
- * @typedef {FeatureSetting} OnOffEntityFeatureSetting
  */
 
 /**

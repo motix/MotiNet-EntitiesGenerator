@@ -9,12 +9,12 @@ export default class ContentHelper {
     static get featureSettingTypes() {
         return [
             'Entity',
+            'ReadableIdEntity',
             'TimeTrackedEntity',
+            'OnOffEntity',
             'CodeBasedEntity',
             'NameBasedEntity',
             'ScopedNameBasedEntity',
-            'ReadableIdEntity',
-            'OnOffEntity',
             'ChildEntity',
             'PreprocessedEntity'
         ];

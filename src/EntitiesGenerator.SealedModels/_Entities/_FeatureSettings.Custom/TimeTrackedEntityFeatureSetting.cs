@@ -2,6 +2,6 @@
 {
     public sealed class TimeTrackedEntityFeatureSetting : FeatureSetting
     {
-        public override int Position => 2;
+        public override int Position => 3;
     }
 }

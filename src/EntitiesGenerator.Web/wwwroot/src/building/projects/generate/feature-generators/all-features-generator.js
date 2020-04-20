@@ -1,41 +1,31 @@
-﻿import EntityFeatureGenerator from './entity-feature-generator';
+﻿import ContentHelper, { StringHelper } from '../content-helper';
+import FeatureGenerator from './feature-generator';
+import EntityFeatureGenerator from './entity-feature-generator';
+import ReadableIdEntityFeatureGenerator from './readable-id-entity-feature-generator';
 import TimeTrackedEntityFeatureGenerator from './time-tracked-entity-feature-generator';
+import OnOffEntityFeatureGenerator from './on-off-entity-feature-generator';
 import CodeBasedEntityFeatureGenerator from './code-based-entity-feature-generator';
 import NameBasedEntityFeatureGenerator from './name-based-entity-feature-generator';
 import ScopedNameBasedEntityFeatureGenerator from './scoped-name-based-entity-feature-generator';
-import ReadableIdEntityFeatureGenerator from './readable-id-entity-feature-generator';
-import OnOffEntityFeatureGenerator from './on-off-entity-feature-generator';
 import ChildEntityFeatureGenerator from './child-entity-feature-generator';
 import PreprocessedEntityFeatureGenerator from './preprocessed-entity-feature-generator';
-import FeatureGenerator from './feature-generator';
-import { StringHelper } from '../content-helper';
 
 export default class AllFeaturesGenerator {
     constructor() {
         this.entityFeatureGenerator = new EntityFeatureGenerator();
+        this.readableIdEntityFeatureGenerator = new ReadableIdEntityFeatureGenerator();
         this.timeTrackedEntityFeatureGenerator = new TimeTrackedEntityFeatureGenerator();
+        this.onOffEntityFeatureGenerator = new OnOffEntityFeatureGenerator();
         this.codeBasedEntityFeatureGenerator = new CodeBasedEntityFeatureGenerator();
         this.nameBasedEntityFeatureGenerator = new NameBasedEntityFeatureGenerator();
         this.scopedNameBasedEntityFeatureGenerator = new ScopedNameBasedEntityFeatureGenerator();
-        this.readableIdEntityFeatureGenerator = new ReadableIdEntityFeatureGenerator();
-        this.onOffEntityFeatureGenerator = new OnOffEntityFeatureGenerator();
         this.childEntityFeatureGenerator = new ChildEntityFeatureGenerator();
         this.preprocessedEntityFeatureGenerator = new PreprocessedEntityFeatureGenerator();
 
         /**
          * @type FeatureGenerator[]
          */
-        this.allFeatures = [
-            this.entityFeatureGenerator,
-            this.timeTrackedEntityFeatureGenerator,
-            this.codeBasedEntityFeatureGenerator,
-            this.nameBasedEntityFeatureGenerator,
-            this.scopedNameBasedEntityFeatureGenerator,
-            this.readableIdEntityFeatureGenerator,
-            this.onOffEntityFeatureGenerator,
-            this.childEntityFeatureGenerator,
-            this.preprocessedEntityFeatureGenerator
-        ];
+        this.allFeatures = _.map(ContentHelper.featureSettingTypes, value => this[`${_.lowerFirst(value)}FeatureGenerator`]);
     }
 
     // Validations

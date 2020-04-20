@@ -100,6 +100,39 @@
                         </h4>
                     </section>
 
+                    <!--ReadableIdEntityFeatureSetting-->
+                    <section class="mt-3">
+                        <h4>
+                            <span class="custom-control custom-switch">
+                                <input type="checkbox"
+                                       class="custom-control-input"
+                                       id="readableIdEntityFeatureSetting_Enabled_Switch"
+                                       v-bind:disabled="!newMode && !editMode"
+                                       v-model="entity.readableIdEntityFeatureSetting.enabled"
+                                       @change="dirty()">
+                                <label class="custom-control-label" for="readableIdEntityFeatureSetting_Enabled_Switch">Readable ID Entity</label>
+                            </span>
+                        </h4>
+                        <div class="ml-4 pl-3 border-left" v-if="entity.readableIdEntityFeatureSetting.enabled">
+                            <div>
+                                <strong>{{displayNames['IdSourcePropertyName']}}:</strong>
+                                <template v-if="editMode || newMode">
+                                    <single-line-input :placeholder="displayNames['IdSourcePropertyName']"
+                                                       placeholder-css-class="text-muted"
+                                                       v-model="entity.readableIdEntityFeatureSetting.idSourcePropertyName"
+                                                       @input="dirty()"
+                                                       class="d-inline-block"></single-line-input>
+                                    <div class="small text-danger">
+                                        <div v-for="error in entity.errors.readableIdEntityFeatureSetting.idSourcePropertyName">{{error}}</div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    {{entity.readableIdEntityFeatureSetting.idSourcePropertyName}}
+                                </template>
+                            </div>
+                        </div>
+                    </section>
+
                     <!--TimeTrackedEntityFeatureSetting-->
                     <section class="mt-3">
                         <h4>
@@ -111,6 +144,21 @@
                                        v-model="entity.timeTrackedEntityFeatureSetting.enabled"
                                        @change="dirty()">
                                 <label class="custom-control-label" for="timeTrackedEntityFeatureSetting_Enabled_Switch">Time Tracked Entity</label>
+                            </span>
+                        </h4>
+                    </section>
+
+                    <!--OnOffEntityFeatureSetting-->
+                    <section class="mt-3">
+                        <h4>
+                            <span class="custom-control custom-switch">
+                                <input type="checkbox"
+                                       class="custom-control-input"
+                                       id="onOffEntityFeatureSetting_Enabled_Switch"
+                                       v-bind:disabled="!newMode && !editMode"
+                                       v-model="entity.onOffEntityFeatureSetting.enabled"
+                                       @change="dirty()">
+                                <label class="custom-control-label" for="onOffEntityFeatureSetting_Enabled_Switch">On Off Entity</label>
                             </span>
                         </h4>
                     </section>
@@ -270,54 +318,6 @@
                         </div>
                     </section>
 
-                    <!--ReadableIdEntityFeatureSetting-->
-                    <section class="mt-3">
-                        <h4>
-                            <span class="custom-control custom-switch">
-                                <input type="checkbox"
-                                       class="custom-control-input"
-                                       id="readableIdEntityFeatureSetting_Enabled_Switch"
-                                       v-bind:disabled="!newMode && !editMode"
-                                       v-model="entity.readableIdEntityFeatureSetting.enabled"
-                                       @change="dirty()">
-                                <label class="custom-control-label" for="readableIdEntityFeatureSetting_Enabled_Switch">Readable ID Entity</label>
-                            </span>
-                        </h4>
-                        <div class="ml-4 pl-3 border-left" v-if="entity.readableIdEntityFeatureSetting.enabled">
-                            <div>
-                                <strong>{{displayNames['IdSourcePropertyName']}}:</strong>
-                                <template v-if="editMode || newMode">
-                                    <single-line-input :placeholder="displayNames['IdSourcePropertyName']"
-                                                       placeholder-css-class="text-muted"
-                                                       v-model="entity.readableIdEntityFeatureSetting.idSourcePropertyName"
-                                                       @input="dirty()"
-                                                       class="d-inline-block"></single-line-input>
-                                    <div class="small text-danger">
-                                        <div v-for="error in entity.errors.readableIdEntityFeatureSetting.idSourcePropertyName">{{error}}</div>
-                                    </div>
-                                </template>
-                                <template v-else>
-                                    {{entity.readableIdEntityFeatureSetting.idSourcePropertyName}}
-                                </template>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!--OnOffEntityFeatureSetting-->
-                    <section class="mt-3">
-                        <h4>
-                            <span class="custom-control custom-switch">
-                                <input type="checkbox"
-                                       class="custom-control-input"
-                                       id="onOffEntityFeatureSetting_Enabled_Switch"
-                                       v-bind:disabled="!newMode && !editMode"
-                                       v-model="entity.onOffEntityFeatureSetting.enabled"
-                                       @change="dirty()">
-                                <label class="custom-control-label" for="onOffEntityFeatureSetting_Enabled_Switch">On Off Entity</label>
-                            </span>
-                        </h4>
-                    </section>
-
                     <!--ChildEntityFeatureSetting-->
                     <section class="mt-3">
                         <h4>
@@ -471,6 +471,9 @@
                 position: [],
                 name: [],
                 displayName: [],
+                readableIdEntityFeatureSetting: {
+                    idSourcePropertyName: []
+                },
                 scopedNameBasedEntityFeatureSetting: {
                     scopeName: [],
                     sortedChildrenInScopeCriteriaPropertyName: []
@@ -478,9 +481,6 @@
                 childEntityFeatureSetting: {
                     parentName: [],
                     sortedChildrenInParentCriteriaPropertyName: []
-                },
-                readableIdEntityFeatureSetting: {
-                    idSourcePropertyName: []
                 }
             }
         }
@@ -492,7 +492,22 @@
             };
         }
 
+        get emptyReadableIdEntityFeatureSetting() {
+            return {
+                itemId: '_',
+                enabled: false,
+                IdSourcePropertyName: null
+            };
+        }
+
         get emptyTimeTrackedEntityFeatureSetting() {
+            return {
+                itemId: '_',
+                enabled: false
+            };
+        }
+
+        get emptyOnOffEntityFeatureSetting() {
             return {
                 itemId: '_',
                 enabled: false
@@ -525,21 +540,6 @@
                 deleteRestrict: false,
                 hasSortedChildrenInScope: false,
                 sortedChildrenInScopeCriteriaPropertyName: null
-            };
-        }
-
-        get emptyReadableIdEntityFeatureSetting() {
-            return {
-                itemId: '_',
-                enabled: false,
-                IdSourcePropertyName: null
-            };
-        }
-
-        get emptyOnOffEntityFeatureSetting() {
-            return {
-                itemId: '_',
-                enabled: false
             };
         }
 
@@ -628,6 +628,9 @@
             !editableItem.displayName &&
                 editableItem.errors.displayName.push('Display Name is required.');
 
+            editableItem.readableIdEntityFeatureSetting.enabled === true && !editableItem.readableIdEntityFeatureSetting.idSourcePropertyName &&
+                editableItem.errors.readableIdEntityFeatureSetting.idSourcePropertyName.push('ID Source Property Name is required.');
+
             editableItem.scopedNameBasedEntityFeatureSetting.enabled === true && !editableItem.scopedNameBasedEntityFeatureSetting.scopeName &&
                 editableItem.errors.scopedNameBasedEntityFeatureSetting.scopeName.push('Scope Name is required.');
 
@@ -640,13 +643,10 @@
             editableItem.childEntityFeatureSetting.enabled === true && editableItem.childEntityFeatureSetting.hasSortedChildrenInParent && !editableItem.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName &&
                 editableItem.errors.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName.push('Sorted Children in Parent Property Name is required.');
 
-            editableItem.readableIdEntityFeatureSetting.enabled === true && !editableItem.readableIdEntityFeatureSetting.idSourcePropertyName &&
-                editableItem.errors.readableIdEntityFeatureSetting.idSourcePropertyName.push('ID Source Property Name is required.');
-
             return !this.hasError(editableItem.errors) &&
+                !this.hasError(editableItem.errors.readableIdEntityFeatureSetting) &&
                 !this.hasError(editableItem.errors.scopedNameBasedEntityFeatureSetting) &&
-                !this.hasError(editableItem.errors.childEntityFeatureSetting) &&
-                !this.hasError(editableItem.errors.readableIdEntityFeatureSetting);
+                !this.hasError(editableItem.errors.childEntityFeatureSetting);
         }
 
         fillMissingFeatureSettings(item) {

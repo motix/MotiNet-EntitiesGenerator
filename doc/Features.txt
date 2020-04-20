@@ -1,12 +1,12 @@
 1  Entity
-2  TimeTrackedEntity
-3  CodeBasedEntity
-4  NameBasedEntity
-		5  GroupedEntity
-6  ScopedNameBasedEntity
-7  ReadableIdEntity
-8  OnOffEntity
-		9  DeleteMarkEntity
+2  ReadableIdEntity
+3  TimeTrackedEntity
+		4  DeleteMarkEntity
+5  OnOffEntity
+6  CodeBasedEntity
+7  NameBasedEntity
+		8  GroupedEntity
+9  ScopedNameBasedEntity
 		10 TaggedEntity
 11 ChildEntity
 		12 MasterDetailsEntity

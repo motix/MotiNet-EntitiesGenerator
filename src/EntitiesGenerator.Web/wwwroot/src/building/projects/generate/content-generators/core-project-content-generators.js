@@ -375,7 +375,7 @@ export class CoreProject_ErrorDescriberResourcesResxGenerator extends ModuleSpec
             }
         }
 
-        const items = StringHelper.joinLines(_.uniq(_.map(_.sortBy(itemsData, 'key'), 'content')), .5, '', { start: 1 });
+        const items = StringHelper.joinLines(_.uniq(_.map(_.sortBy(itemsData, value => _.toLower(value.key)), 'content')), .5, '', { start: 1 });
 
         var content = ContentHelper.generateResourceFileContent(items);
 
