@@ -6,5 +6,7 @@
         public int Position { get; set; }
 
         public bool HasOwnNamespace { get; set; }
+
+        public bool HasOptions { get; set; }
     }
 }

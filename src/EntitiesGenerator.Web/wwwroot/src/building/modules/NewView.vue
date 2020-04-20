@@ -55,6 +55,17 @@
                     <label class="custom-control-label" for="hasOwnNamespaceSwitch">{{displayNames['HasOwnNamespace']}}</label>
                 </div>
             </div>
+            <div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox"
+                           class="custom-control-input"
+                           id="hasOptionsSwitch"
+                           v-bind:disabled="!newMode && !editMode"
+                           v-model="entity.hasOptions"
+                           @change="dirty()">
+                    <label class="custom-control-label" for="hasOptionsSwitch">{{displayNames['HasOptions']}}</label>
+                </div>
+            </div>
             <section class="mt-4" v-if="!newMode">
                 <div class="row">
                     <div class="col-lg-8 col-xl-9">
@@ -111,7 +122,6 @@
                                     <font-awesome-icon :icon="['fal', 'square']" fixed-width v-if="!item.abstractModel"></font-awesome-icon>
                                 </td>
                                 <td>
-
                                 </td>
                             </tr>
                         </tbody>

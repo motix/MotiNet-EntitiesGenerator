@@ -133,6 +133,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HasOptions.
+        /// </summary>
+        public static string HasOptions {
+            get {
+                return ResourceManager.GetString("HasOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Has Own Namespace.
         /// </summary>
         public static string HasOwnNamespace {

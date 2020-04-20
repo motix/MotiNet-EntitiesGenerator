@@ -141,6 +141,9 @@
   <data name="HasCodeGenerator" xml:space="preserve">
     <value>Has Code Generator</value>
   </data>
+  <data name="HasOptions" xml:space="preserve">
+    <value>HasOptions</value>
+  </data>
   <data name="HasOwnNamespace" xml:space="preserve">
     <value>Has Own Namespace</value>
   </data>

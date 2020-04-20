@@ -11,6 +11,7 @@
     displayNameCollector.Collect(x => emptyModule.Position, Html)
                         .Collect(x => emptyModule.Name, Html)
                         .Collect(x => emptyModule.HasOwnNamespace, Html)
+                        .Collect(x => emptyModule.HasOptions, Html)
                         .Collect(x => emptyModule.Project, Html);
 }
 

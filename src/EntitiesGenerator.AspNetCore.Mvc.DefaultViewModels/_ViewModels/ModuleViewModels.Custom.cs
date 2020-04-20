@@ -11,6 +11,9 @@ namespace EntitiesGenerator.Mvc
 
         [Display(Name = nameof(HasOwnNamespace), ResourceType = typeof(DisplayNames_Custom))]
         public bool HasOwnNamespace { get; set; }
+
+        [Display(Name = nameof(HasOptions), ResourceType = typeof(DisplayNames_Custom))]
+        public bool HasOptions { get; set; }
     }
 
     // Full
