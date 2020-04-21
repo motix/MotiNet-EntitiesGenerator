@@ -35,7 +35,7 @@ export class SmProjectSG {
                 {
                     type: 'file',
                     fileType: 'projectFile',
-                    name: projectName + '.csproj',
+                    name: `${projectName}.csproj`,
                     generator: new CG.SmProject_ProjectFileGenerator(features, module)
                 }
             ]
@@ -44,8 +44,13 @@ export class SmProjectSG {
         if (module.items.length > 0) {
             const entitiesFolder = this.generateEntitiesFolderStructure(features, module);
             const accessorsFolder = this.generateAccessorsFolderStructure(features, module);
+            const specificationsFolder = this.generateSpecificationFolderStructure(features, module);
 
             projectFolder.children.push(entitiesFolder, accessorsFolder);
+
+            if (specificationsFolder.children.length > 0) {
+                projectFolder.children.push(specificationsFolder);
+            }
         }
 
         projectFolder.children.push({
@@ -54,7 +59,7 @@ export class SmProjectSG {
             children: [
                 {
                     type: 'file',
-                    name: 'SealedModels' + moduleCommonName + 'BuilderExtensions.cs',
+                    name: `SealedModels${moduleCommonName}BuilderExtensions.cs`,
                     generator: new CG.SmProject_DependencyInjectionClassGenerator(features, module)
                 }
             ]
@@ -103,9 +108,31 @@ export class SmProjectSG {
         for (const item of module.items) {
             folder.children.push({
                 type: 'file',
-                name: item.name + 'Accessor.cs',
+                name: `${item.name}Accessor.cs`,
                 generator: new CG.SmProject_EntityAccessorClassGenerator(features, item)
             });
+        }
+
+        return folder;
+    }
+
+    /**
+     * @param {AllFeaturesGenerator} features
+     * @param {Module} module
+     */
+    generateSpecificationFolderStructure(features, module) {
+        const folder = {
+            type: 'folder',
+            name: '_Specifications',
+            children: []
+        };
+
+        for (const item of module.items) {
+            for (const feature of features.allFeatures) {
+                if (feature.itemHasFeature(item)) {
+                    feature.sm_SpecificationsFolder_GenerateSpecification(item, folder);
+                }
+            }
         }
 
         return folder;

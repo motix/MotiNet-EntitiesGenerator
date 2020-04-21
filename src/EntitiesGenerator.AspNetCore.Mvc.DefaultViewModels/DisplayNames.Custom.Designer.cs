@@ -124,6 +124,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Has AspNetCore Options.
+        /// </summary>
+        public static string HasAspNetCoreOptions {
+            get {
+                return ResourceManager.GetString("HasAspNetCoreOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Has Code Generator.
         /// </summary>
         public static string HasCodeGenerator {
@@ -133,11 +142,20 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HasOptions.
+        ///   Looks up a localized string similar to Has Core Options.
         /// </summary>
-        public static string HasOptions {
+        public static string HasCoreOptions {
             get {
-                return ResourceManager.GetString("HasOptions", resourceCulture);
+                return ResourceManager.GetString("HasCoreOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Has EntityFrameworkCore.SealedModels Options.
+        /// </summary>
+        public static string HasEntityFrameworkCoreSealedModelsOptions {
+            get {
+                return ResourceManager.GetString("HasEntityFrameworkCoreSealedModelsOptions", resourceCulture);
             }
         }
         
@@ -327,6 +345,15 @@ namespace EntitiesGenerator.Mvc {
         public static string SortedChildrenInScopeCriteriaPropertyName {
             get {
                 return ResourceManager.GetString("SortedChildrenInScopeCriteriaPropertyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Active Field.
+        /// </summary>
+        public static string UseActiveField {
+            get {
+                return ResourceManager.GetString("UseActiveField", resourceCulture);
             }
         }
         

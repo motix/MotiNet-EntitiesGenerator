@@ -36,7 +36,7 @@ export class CoreProjectSG {
                 {
                     type: 'file',
                     fileType: 'projectFile',
-                    name: projectName + '.csproj',
+                    name: `${projectName}.csproj`,
                     generator: new CG.CoreProject_ProjectFileGenerator(features, module)
                 }
             ]
@@ -51,7 +51,7 @@ export class CoreProjectSG {
             projectFolder.children.push(
                 {
                     type: 'file',
-                    name: moduleCommonName + 'ErrorDescriber.cs',
+                    name: `${moduleCommonName}ErrorDescriber.cs`,
                     generator: new CG.CoreProject_ErrorDescriberClassGenerator(features, module)
                 },
                 {
@@ -60,12 +60,12 @@ export class CoreProjectSG {
                     children: [
                         {
                             type: 'file',
-                            name: moduleCommonName + 'ErrorDescriberResources.cs',
+                            name: `${moduleCommonName}ErrorDescriberResources.cs`,
                             generator: new CG.CoreProject_ErrorDescriberResourcesClassGenerator(features, module)
                         },
                         {
                             type: 'file',
-                            name: moduleCommonName + 'ErrorDescriberResources.resx',
+                            name: `${moduleCommonName}ErrorDescriberResources.resx`,
                             generator: new CG.CoreProject_ErrorDescriberResourcesResxGenerator(features, module)
                         }
                     ]
@@ -75,16 +75,27 @@ export class CoreProjectSG {
         projectFolder.children.push(
             {
                 type: 'file',
-                name: moduleCommonName + 'Builder.cs',
+                name: `${moduleCommonName}Builder.cs`,
                 generator: new CG.CoreProject_BuilderClassGenerator(features, module)
-            },
+            });
+
+        if (module.hasCoreOptions === true) {
+            projectFolder.children.push(
+                {
+                    type: 'file',
+                    name: `${moduleCommonName}Options.cs`,
+                    generator: new CG.CoreProject_OptionsClassGenerator(features, module)
+                });
+        }
+
+        projectFolder.children.push(
             {
                 type: 'folder',
                 name: 'DependencyInjection',
                 children: [
                     {
                         type: 'file',
-                        name: moduleCommonName + 'ServiceCollectionExtensions.cs',
+                        name: `${moduleCommonName}ServiceCollectionExtensions.cs`,
                         generator: new CG.CoreProject_DependencyInjectionClassGenerator(features, module)
                     }
                 ]
@@ -113,22 +124,22 @@ export class CoreProjectSG {
                 children: [
                     {
                         type: 'file',
-                        name: 'I' + item.name + 'Manager.cs',
+                        name: `I${item.name}Manager.cs`,
                         generator: new CG.CoreProject_EntityManagerInterfaceGenerator(features, item)
                     },
                     {
                         type: 'file',
-                        name: 'I' + item.name + 'Store.cs',
+                        name: `I${item.name}Store.cs`,
                         generator: new CG.CoreProject_EntityStoreInterfaceGenerator(features, item)
                     },
                     {
                         type: 'file',
-                        name: 'I' + item.name + 'Accessor.cs',
+                        name: `I${item.name}Accessor.cs`,
                         generator: new CG.CoreProject_EntityAccessorInterfaceGenerator(features, item)
                     },
                     {
                         type: 'file',
-                        name: item.name + 'Manager.cs',
+                        name: `${item.name}Manager.cs`,
                         generator: new CG.CoreProject_EntityManagerClassGenerator(features, item)
                     }
                 ]
@@ -137,7 +148,7 @@ export class CoreProjectSG {
             if (validationRequired) {
                 entityFolder.children.push({
                     type: 'file',
-                    name: item.name + 'Validator.cs',
+                    name: `${item.name}Validator.cs`,
                     generator: new CG.CoreProject_EntityValidatorClassGenerator(features, item)
                 });
             }

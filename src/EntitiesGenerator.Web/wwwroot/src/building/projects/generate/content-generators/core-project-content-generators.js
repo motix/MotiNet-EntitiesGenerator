@@ -445,13 +445,29 @@ namespace ${namespace}
     }
 }
 
+export class CoreProject_OptionsClassGenerator extends CSharpModuleSpecificContentGenerator {
+    generate() {
+        const namespace = CoreProjectSG.getDefaultNamespace(this.module);
+        const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
+
+        const content = `namespace ${namespace}
+{
+    public partial class ${moduleCommonName}Options
+    { }
+}
+`;
+
+        return content;
+    }
+}
+
 export class CoreProject_DependencyInjectionClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
         const namespace = CoreProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
         const moduleGenericTypeParameters = this.features.moduleGenericTypeParameters(this.module,
-            `public static ${moduleCommonName}Builder Add${moduleCommonName}`.length / 4 + 2);
-        const moduleGenericTypeConstraints = this.features.moduleGenericTypeConstraints(this.module, 3, false, { start: 1 });
+            `public static ${moduleCommonName}Builder Add${moduleCommonName}`.length / 4);
+        const moduleGenericTypeConstraints = this.features.moduleGenericTypeConstraints(this.module, 1, false, { start: 1 });
         const entityServiceRegistrationsData = [];
         const moduleServiceRegistrationsData = [];
         const builderConstructorParametersData = _.map(this.features.moduleEntityNames(this.module),
@@ -482,24 +498,73 @@ export class CoreProject_DependencyInjectionClassGenerator extends CSharpModuleS
             moduleServiceRegistrationsData.push(`services.TryAddScoped<${moduleCommonName}ErrorDescriber, ${moduleCommonName}ErrorDescriber>();`);
         }
 
-        const entityServiceRegistrations = StringHelper.joinLines(_.uniq(entityServiceRegistrationsData), 3, '', { start: 1 });
-        const moduleServiceRegistrations = StringHelper.joinLines(_.uniq(moduleServiceRegistrationsData), 3, '', { start: 1, end: 1 });
-        const builderConstructorParameters = StringHelper.joinParameters(_.uniq(builderConstructorParametersData), 4, { startComma: true, start: 1 });
+        const entityServiceRegistrations = StringHelper.joinLines(_.uniq(entityServiceRegistrationsData), 1, '', { start: 1 });
+        const moduleServiceRegistrations = StringHelper.joinLines(_.uniq(moduleServiceRegistrationsData), 1, '', { start: 1, end: 1 });
+        const makeGenericMethodParameters = StringHelper.joinParameters(_.uniq(builderConstructorParametersData),
+            'internalMethod = internalMethod.MakeGenericMethod('.length / 4 + 2).trim();
+        const builderConstructorParameters = StringHelper.joinParameters(_.uniq(builderConstructorParametersData), 2, { startComma: true, start: 1 });
+
+        var body;
+
+        if (this.module.hasCoreOptions === true) {
+            const gapLength = `public static ${moduleCommonName}Builder `.length - '=> services.'.length - 4;
+            const callingModuleGenericTypeParameters = StringHelper.indent(moduleGenericTypeParameters, -gapLength / 4);
+
+            body = `public static ${moduleCommonName}Builder Add${moduleCommonName}${moduleGenericTypeParameters}(
+    this IServiceCollection services)${moduleGenericTypeConstraints}
+    => services.Add${moduleCommonName}${callingModuleGenericTypeParameters}(
+        setupAction: null);
+
+public static ${moduleCommonName}Builder Add${moduleCommonName}${moduleGenericTypeParameters}(
+    this IServiceCollection services, Action<${moduleCommonName}Options> setupAction)${moduleGenericTypeConstraints}
+{${entityServiceRegistrations}${moduleServiceRegistrations}
+    if (setupAction != null)
+    {
+        services.Configure(setupAction);
+    }
+
+    var internalMethod = typeof(${moduleCommonName}ServiceCollectionExtensions).GetMethod("Add${moduleCommonName}Internal",
+        System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+
+    if (internalMethod != null)
+    {
+        internalMethod = internalMethod.MakeGenericMethod(${makeGenericMethodParameters});
+        internalMethod.Invoke(null, new object[] { services, setupAction });
+    }
+
+    return new ${moduleCommonName}Builder(
+        services${builderConstructorParameters});
+}`;
+        } else {
+            body = `public static ${moduleCommonName}Builder Add${moduleCommonName}${moduleGenericTypeParameters}(
+    this IServiceCollection services)${moduleGenericTypeConstraints}
+{${entityServiceRegistrations}${moduleServiceRegistrations}
+    var internalMethod = typeof(${moduleCommonName}ServiceCollectionExtensions).GetMethod("Add${moduleCommonName}Internal",
+        System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+
+    if (internalMethod != null)
+    {
+        internalMethod = internalMethod.MakeGenericMethod(${makeGenericMethodParameters});
+        internalMethod.Invoke(null, new object[] { services });
+    }
+
+    return new ${moduleCommonName}Builder(
+        services${builderConstructorParameters});
+}`;
+        }
+
+        body = StringHelper.indent(body, 2);
 
         const content = `using Microsoft.Extensions.DependencyInjection.Extensions;
 using MotiNet.Entities;
+using System;
 using ${namespace};
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class ${moduleCommonName}ServiceCollectionExtensions
+    public static partial class ${moduleCommonName}ServiceCollectionExtensions
     {
-        public static ${moduleCommonName}Builder Add${moduleCommonName}${moduleGenericTypeParameters}(
-            this IServiceCollection services)${moduleGenericTypeConstraints}
-        {${entityServiceRegistrations}${moduleServiceRegistrations}
-            return new ${moduleCommonName}Builder(
-                services${builderConstructorParameters});
-        }
+${body}
     }
 }
 `;

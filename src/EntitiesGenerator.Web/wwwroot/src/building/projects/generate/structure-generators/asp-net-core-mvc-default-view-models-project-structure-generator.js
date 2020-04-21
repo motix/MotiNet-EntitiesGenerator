@@ -35,7 +35,7 @@ export class AspDvProjectSG {
                 {
                     type: 'file',
                     fileType: 'projectFile',
-                    name: projectName + '.csproj',
+                    name: `${projectName}.csproj`,
                     generator: new CG.AspDvProject_ProjectFileGenerator(features, module)
                 }
             ]
@@ -59,7 +59,7 @@ export class AspDvProjectSG {
             },
             {
                 type: 'file',
-                name: moduleCommonName + 'Profile.cs',
+                name: `${moduleCommonName}Profile.cs`,
                 generator: new CG.AspDvProject_ProfileClassGenerator(features, module)
             },
             {
@@ -68,7 +68,7 @@ export class AspDvProjectSG {
                 children: [
                     {
                         type: 'file',
-                        name: 'DefaultViewModels' + moduleCommonName + 'BuilderExtensions.cs',
+                        name: `DefaultViewModels${moduleCommonName}BuilderExtensions.cs`,
                         generator: new CG.AspDvProject_DependencyInjectionClassGenerator(features, module)
                     }
                 ]

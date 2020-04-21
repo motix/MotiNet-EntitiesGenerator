@@ -244,6 +244,14 @@ export default class FeatureGenerator {
 
     /**
      * @param {Item} item
+     * @param {Folder} folder
+     */
+    sm_SpecificationsFolder_GenerateSpecification(item, folder) {
+        this.throwIfItemNotHaveFeature(item);
+    }
+
+    /**
+     * @param {Item} item
      * @param {string[]} data
      */
     sm_EntityClass_EntityInterfacesData(item, data) {
@@ -341,6 +349,14 @@ export default class FeatureGenerator {
     sm_EntityAccessorClass_AccessorMethodsData_FromOthers(item, data) {
     }
 
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_DependencyInjectionClass_ServiceRegistrationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+    }
+
     // EntityFrameworkCore
 
     /**
@@ -397,6 +413,22 @@ export default class FeatureGenerator {
      * @param {string[]} data
      */
     efSm_EntityStoreClass_StoreInterfacesData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {ParameterListItem[]} data
+     */
+    efSm_EntityStoreClass_ConstructorParametersData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    efSm_EntityStoreClass_ConstructorBodyData(item, data) {
         this.throwIfItemNotHaveFeature(item);
     }
 

@@ -12,8 +12,14 @@ namespace EntitiesGenerator.Mvc
         [Display(Name = nameof(HasOwnNamespace), ResourceType = typeof(DisplayNames_Custom))]
         public bool HasOwnNamespace { get; set; }
 
-        [Display(Name = nameof(HasOptions), ResourceType = typeof(DisplayNames_Custom))]
-        public bool HasOptions { get; set; }
+        [Display(Name = nameof(HasCoreOptions), ResourceType = typeof(DisplayNames_Custom))]
+        public bool HasCoreOptions { get; set; }
+
+        [Display(Name = nameof(HasEntityFrameworkCoreSealedModelsOptions), ResourceType = typeof(DisplayNames_Custom))]
+        public bool HasEntityFrameworkCoreSealedModelsOptions { get; set; }
+
+        [Display(Name = nameof(HasAspNetCoreOptions), ResourceType = typeof(DisplayNames_Custom))]
+        public bool HasAspNetCoreOptions { get; set; }
     }
 
     // Full

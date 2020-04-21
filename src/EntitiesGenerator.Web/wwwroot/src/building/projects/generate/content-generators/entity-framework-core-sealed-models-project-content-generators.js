@@ -100,6 +100,8 @@ export class EfSmProject_EntityStoreClassGenerator extends CSharpEntitySpecificC
         const storeBaseData = { baseClass: null, constructorCall: null };
         const storeInterfacesData = [];
         const storeBaseAndInterfacesData = [];
+        const constructorParametersData = [];
+        const constructorBodyData = [];
         const storePropertyDeclarationsData = [];
         const storeMethodDeclarationsData = [];
         const storeMemberDeclarationsData = [];
@@ -108,6 +110,8 @@ export class EfSmProject_EntityStoreClassGenerator extends CSharpEntitySpecificC
             if (feature.itemHasFeature(this.item)) {
                 feature.efSm_EntityStoreClass_StoreBaseData(this.item, storeBaseData);
                 feature.efSm_EntityStoreClass_StoreInterfacesData(this.item, storeInterfacesData);
+                feature.efSm_EntityStoreClass_ConstructorParametersData(this.item, constructorParametersData);
+                feature.efSm_EntityStoreClass_ConstructorBodyData(this.item, constructorBodyData);
                 feature.efSm_EntityStoreClass_StorePropertyDeclarationsData(this.item, storePropertyDeclarationsData);
                 feature.efSm_EntityStoreClass_StoreMethodDeclarationsData(this.item, storeMethodDeclarationsData);
             } else {
@@ -124,6 +128,9 @@ export class EfSmProject_EntityStoreClassGenerator extends CSharpEntitySpecificC
 
         const storeBaseAndInterfaces = StringHelper.generateBaseBlock(_.uniq(storeBaseAndInterfacesData), 2, { start: 1 });
         const storeBaseConstructorCall = storeBaseData.constructorCall === null ? '' : ` : ${storeBaseData.constructorCall}`;
+        const constructorParameters = StringHelper.joinParameters(_.uniqBy(constructorParametersData, value => value.text),
+            0, { startComma: true });
+        const constructorBody = StringHelper.joinLines(_.uniq(constructorBodyData), 3, '', {start: 1, end: 1, endIndent: 2, spaceIfEmpty: true})
         const storePropertyDeclarations = StringHelper.joinLines(_.uniq(storePropertyDeclarationsData), 2, '\n', { start: 2 });
         const storeMethodDeclarations = StringHelper.joinLines(_.uniq(storeMethodDeclarationsData), 2, '\n', { start: 2 });
         const storeMemberDeclarations = StringHelper.joinLines(_.uniq(storeMemberDeclarationsData), 2, '\n', { start: 2 });
@@ -139,8 +146,24 @@ namespace ${namespace}
     public partial class ${entityName}Store<TDbContext>${storeBaseAndInterfaces}
         where TDbContext : DbContext
     {
-        public ${entityName}Store(TDbContext dbContext)${storeBaseConstructorCall} { }${storePropertyDeclarations}${storeMethodDeclarations}${storeMemberDeclarations}
+        public ${entityName}Store(TDbContext dbContext${constructorParameters})${storeBaseConstructorCall}${constructorBodyData.length > 0 ? '\n' : ' '}{${constructorBody}}${storePropertyDeclarations}${storeMethodDeclarations}${storeMemberDeclarations}
     }
+}
+`;
+
+        return content;
+    }
+}
+
+export class EfSmProject_OptionsClassGenerator extends CSharpModuleSpecificContentGenerator {
+    generate() {
+        const namespace = EfSmProjectSG.getDefaultNamespace(this.module);
+        const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
+
+        const content = `namespace ${namespace}
+{
+    public partial class EntityFrameworkCore${moduleCommonName}Options
+    { }
 }
 `;
 
@@ -175,7 +198,7 @@ using ${namespace};
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class EntityFrameworkCore${moduleCommonName}BuilderExtensions
+    public static partial class EntityFrameworkCore${moduleCommonName}BuilderExtensions
     {
         public static ${moduleCommonName}Builder AddEntityFrameworkCoreWithSealedModels<TContext>(this ${moduleCommonName}Builder builder)
             where TContext : DbContext
@@ -183,6 +206,15 @@ namespace Microsoft.Extensions.DependencyInjection
             var services = builder.Services;
             var contextType = typeof(TContext);
 ${serviceRegistrations}
+            var internalMethod = typeof(EntityFrameworkCore${moduleCommonName}BuilderExtensions).GetMethod("AddEntityFrameworkCoreWithSealedModelsInternal",
+                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+
+            if (internalMethod != null)
+            {
+                internalMethod = internalMethod.MakeGenericMethod(typeof(TContext));
+                internalMethod.Invoke(null, new object[] { builder });
+            }
+
             return builder;
         }
     }

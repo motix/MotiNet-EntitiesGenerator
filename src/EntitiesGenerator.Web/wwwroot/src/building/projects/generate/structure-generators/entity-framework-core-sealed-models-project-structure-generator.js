@@ -35,12 +35,12 @@ export class EfSmProjectSG {
                 {
                     type: 'file',
                     fileType: 'projectFile',
-                    name: projectName + '.csproj',
+                    name: `${projectName}.csproj`,
                     generator: new CG.EfSmProject_ProjectFileGenerator(features, module)
                 },
                 {
                     type: 'file',
-                    name: moduleCommonName + 'DbContextBase.cs',
+                    name: `${moduleCommonName}DbContextBase.cs`,
                     generator: new CG.EfSmProject_DbContextClassGenerator(features, module)
                 }
             ]
@@ -51,13 +51,22 @@ export class EfSmProjectSG {
             projectFolder.children.push(storesFolder);
         }
 
+        if (module.hasEntityFrameworkCoreSealedModelsOptions === true) {
+            projectFolder.children.push(
+                {
+                    type: 'file',
+                    name: `EntityFrameworkCore${moduleCommonName}Options.cs`,
+                    generator: new CG.EfSmProject_OptionsClassGenerator(features, module)
+                });
+        }
+
         projectFolder.children.push({
             type: 'folder',
             name: 'DependencyInjection',
             children: [
                 {
                     type: 'file',
-                    name: 'EntityFrameworkCore' + moduleCommonName + 'BuilderExtensions.cs',
+                    name: `EntityFrameworkCore${moduleCommonName}BuilderExtensions.cs`,
                     generator: new CG.EfSmProject_DependencyInjectionClassGenerator(features, module)
                 }
             ]
@@ -80,7 +89,7 @@ export class EfSmProjectSG {
         for (const item of module.items) {
             folder.children.push({
                 type: 'file',
-                name: item.name + 'Store.cs',
+                name: `${item.name}Store.cs`,
                 generator: new CG.EfSmProject_EntityStoreClassGenerator(features, item)
             });
         }

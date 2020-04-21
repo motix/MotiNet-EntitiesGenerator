@@ -138,11 +138,17 @@
   <data name="GenerateLocation" xml:space="preserve">
     <value>Generate Location</value>
   </data>
+  <data name="HasAspNetCoreOptions" xml:space="preserve">
+    <value>Has AspNetCore Options</value>
+  </data>
   <data name="HasCodeGenerator" xml:space="preserve">
     <value>Has Code Generator</value>
   </data>
-  <data name="HasOptions" xml:space="preserve">
-    <value>HasOptions</value>
+  <data name="HasCoreOptions" xml:space="preserve">
+    <value>Has Core Options</value>
+  </data>
+  <data name="HasEntityFrameworkCoreSealedModelsOptions" xml:space="preserve">
+    <value>Has EntityFrameworkCore.SealedModels Options</value>
   </data>
   <data name="HasOwnNamespace" xml:space="preserve">
     <value>Has Own Namespace</value>
@@ -206,6 +212,9 @@
   </data>
   <data name="SortedChildrenInScopeCriteriaPropertyName" xml:space="preserve">
     <value>Sorted Children in Scope Criteria Property Name</value>
+  </data>
+  <data name="UseActiveField" xml:space="preserve">
+    <value>Use Active Field</value>
   </data>
   <data name="WorkingLocation" xml:space="preserve">
     <value>Working Location</value>

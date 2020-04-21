@@ -297,7 +297,17 @@ export class StringHelper {
      */
     static indent(text, indent) {
         var lines = text.split('\n');
-        lines = _.map(lines, value => _.repeat(' ', 4 * indent) + value);
+        if (indent > 0) {
+            lines = _.map(lines, value => _.repeat(' ', 4 * indent) + value);
+        } else if (indent < 0) {
+            lines = _.map(lines, value => {
+                var length = 4 * -indent;
+                while (length > 0 && _.some(value.substr(0, length), char => char !== ' ')) {
+                    length--;
+                }
+                return value.substr(length);
+            });
+        }
 
         text = lines.join('\n');
         text = StringHelper.clearEmptyLines(text);

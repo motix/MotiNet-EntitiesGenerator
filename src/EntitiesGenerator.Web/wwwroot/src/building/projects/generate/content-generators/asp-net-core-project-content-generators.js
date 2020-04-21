@@ -91,6 +91,22 @@ ${entityGenericTypeConstraints}
     }
 }
 
+export class AspProject_OptionsClassGenerator extends CSharpModuleSpecificContentGenerator {
+    generate() {
+        const namespace = AspProjectSG.getDefaultNamespace(this.module);
+        const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
+
+        const content = `namespace ${namespace}
+{
+    public partial class AspNet${moduleCommonName}Options
+    { }
+}
+`;
+
+        return content;
+    }
+}
+
 export class AspProject_DependencyInjectionClassGenerator extends CSharpModuleSpecificContentGenerator {
     generate() {
         const namespace = AspProjectSG.getDefaultNamespace(this.module);
@@ -103,28 +119,72 @@ export class AspProject_DependencyInjectionClassGenerator extends CSharpModuleSp
             const entityMakeGenericTypeParameters = this.features.itemMakeGenericTypeParameters(item);
 
             serviceRegistrationsData.push(
-                `builder.Services.AddScoped(
+                `services.AddScoped(
     typeof(I${entityName}Manager${entityEmptyGenericTypeParameters}).MakeGenericType(${entityMakeGenericTypeParameters}),
     typeof(AspNet${entityName}Manager${entityEmptyGenericTypeParameters}).MakeGenericType(${entityMakeGenericTypeParameters}));`);
         }
 
-        const serviceRegistrations = StringHelper.joinLines(_.uniq(serviceRegistrationsData), 3, '\n', { start: 1, end: 1 });
+        const serviceRegistrations = StringHelper.joinLines(_.uniq(serviceRegistrationsData), 1, '\n', { start: 1, end: 1 });
+
+        var body;
+
+        if (this.module.hasAspNetCoreOptions === true) {
+            body = `public static ${moduleCommonName}Builder AddAspNetCore(this ${moduleCommonName}Builder builder) => builder.AddAspNetCore(setupAction: null);
+
+public static ${moduleCommonName}Builder AddAspNetCore(this ${moduleCommonName}Builder builder, Action<AspNet${moduleCommonName}Options> setupAction)
+{
+    var services = builder.Services;
+
+    // Hosting doesn't add IHttpContextAccessor by default
+    services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+${serviceRegistrations}
+    if (setupAction != null)
+    {
+        services.Configure(setupAction);
+    }
+
+    var internalMethod = typeof(AspNet${moduleCommonName}BuilderExtensions).GetMethod("AddAspNetCoreInternal",
+        System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+
+    if (internalMethod != null)
+    {
+        internalMethod.Invoke(null, new object[] { builder, setupAction });
+    }
+
+    return builder;
+}`;
+        } else {
+            body = `public static ${moduleCommonName}Builder AddAspNetCore(this ${moduleCommonName}Builder builder)
+{
+    var services = builder.Services;
+
+    // Hosting doesn't add IHttpContextAccessor by default
+    services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+${serviceRegistrations}
+    var internalMethod = typeof(AspNet${moduleCommonName}BuilderExtensions).GetMethod("AddAspNetCoreInternal",
+        System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+
+    if (internalMethod != null)
+    {
+        internalMethod.Invoke(null, new object[] { builder });
+    }
+
+    return builder;
+}`;
+        }
+
+        body = StringHelper.indent(body, 2);
 
         const content = `using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
 using ${namespace};
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class AspNet${moduleCommonName}BuilderExtensions
     {
-        public static ${moduleCommonName}Builder AddAspNetCore(this ${moduleCommonName}Builder builder)
-        {
-            // Hosting doesn't add IHttpContextAccessor by default
-            builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-${serviceRegistrations}
-            return builder;
-        }
+${body}
     }
 }
 `;

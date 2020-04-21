@@ -59,11 +59,33 @@
                 <div class="custom-control custom-switch">
                     <input type="checkbox"
                            class="custom-control-input"
-                           id="hasOptionsSwitch"
+                           id="hasCoreOptionsSwitch"
                            v-bind:disabled="!newMode && !editMode"
-                           v-model="entity.hasOptions"
+                           v-model="entity.hasCoreOptions"
                            @change="dirty()">
-                    <label class="custom-control-label" for="hasOptionsSwitch">{{displayNames['HasOptions']}}</label>
+                    <label class="custom-control-label" for="hasCoreOptionsSwitch">{{displayNames['HasCoreOptions']}}</label>
+                </div>
+            </div>
+            <div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox"
+                           class="custom-control-input"
+                           id="hasEntityFrameworkCoreSealedModelsOptionsSwitch"
+                           v-bind:disabled="!newMode && !editMode"
+                           v-model="entity.hasEntityFrameworkCoreSealedModelsOptions"
+                           @change="dirty()">
+                    <label class="custom-control-label" for="hasEntityFrameworkCoreSealedModelsOptionsSwitch">{{displayNames['HasEntityFrameworkCoreSealedModelsOptions']}}</label>
+                </div>
+            </div>
+            <div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox"
+                           class="custom-control-input"
+                           id="hasAspNetCoreOptionsSwitch"
+                           v-bind:disabled="!newMode && !editMode"
+                           v-model="entity.hasAspNetCoreOptions"
+                           @change="dirty()">
+                    <label class="custom-control-label" for="hasAspNetCoreOptionsSwitch">{{displayNames['HasAspNetCoreOptions']}}</label>
                 </div>
             </div>
             <section class="mt-4" v-if="!newMode">

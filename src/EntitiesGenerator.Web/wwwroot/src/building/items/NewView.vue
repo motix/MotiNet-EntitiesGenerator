@@ -161,6 +161,19 @@
                                 <label class="custom-control-label" for="onOffEntityFeatureSetting_Enabled_Switch">On Off Entity</label>
                             </span>
                         </h4>
+                        <div class="ml-4 pl-3 border-left" v-if="entity.onOffEntityFeatureSetting.enabled">
+                            <div>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox"
+                                           class="custom-control-input"
+                                           id="onOffEntityFeatureSetting_UseActiveField_Switch"
+                                           v-bind:disabled="!newMode && !editMode"
+                                           v-model="entity.onOffEntityFeatureSetting.useActiveField"
+                                           @change="dirty()">
+                                    <label class="custom-control-label" for="onOffEntityFeatureSetting_UseActiveField_Switch">{{displayNames['UseActiveField']}}</label>
+                                </div>
+                            </div>
+                        </div>
                     </section>
 
                     <!--CodeBasedEntityFeatureSetting-->
@@ -496,7 +509,7 @@
             return {
                 itemId: '_',
                 enabled: false,
-                IdSourcePropertyName: null
+                idSourcePropertyName: null
             };
         }
 
@@ -510,7 +523,8 @@
         get emptyOnOffEntityFeatureSetting() {
             return {
                 itemId: '_',
-                enabled: false
+                enabled: false,
+                useActiveField: true
             };
         }
 

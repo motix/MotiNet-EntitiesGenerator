@@ -353,11 +353,12 @@ builder.HasIndex(x => x.${codePropertyName}).IsUnique();`);
         this.throwIfItemNotHaveFeature(item);
 
         const codePropertyName = this.codePropertyName(item);
+        const codeRequired = this.hasCodeGenerator(item) ? `// No need to require ${codePropertyName} in view model as there is a generator in place` : '[LocalizedRequired]';
 
         data.push(
             `protected ${item.name}ViewModelBase() => Id = Guid.NewGuid().ToString();`,
             'public string Id { get; set; }',
-            `[LocalizedRequired]
+            `${codeRequired}
 [Display(Name = nameof(${codePropertyName}), ResourceType = typeof(DisplayNames))]
 public string ${codePropertyName} { get; set; }`);
     }

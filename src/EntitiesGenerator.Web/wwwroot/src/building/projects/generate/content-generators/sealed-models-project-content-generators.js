@@ -195,20 +195,42 @@ export class SmProject_DependencyInjectionClassGenerator extends CSharpModuleSpe
                 `services.TryAddScoped(
     typeof(I${entityName}Accessor${entityEmptyGenericTypeParameters}).MakeGenericType(${entityMakeGenericTypeParameters}),
     typeof(${entityName}Accessor));`);
+
+            for (const feature of this.features.allFeatures) {
+                if (feature.itemHasFeature(item)) {
+                    feature.sm_DependencyInjectionClass_ServiceRegistrationsData(item, serviceRegistrationsData);
+                }
+            }
         }
 
         const serviceRegistrations = StringHelper.joinLines(_.uniq(serviceRegistrationsData), 3, '\n', { start: 1, end: 1 });
 
+        var body;
+
+        if (this.module.hasCoreOptions === true) {
+            body = `public static ${moduleCommonName}Builder Add${moduleCommonName}WithSealedModels(this IServiceCollection services)
+    => services.Add${moduleCommonName}WithSealedModels(setupAction: null);
+
+public static ${moduleCommonName}Builder Add${moduleCommonName}WithSealedModels(this IServiceCollection services, Action<${moduleCommonName}Options> setupAction)
+    => services.Add${moduleCommonName}${moduleSpecificTypeParameters}(setupAction)
+                .AddSealedModels();`;
+        } else {
+            body = `public static ${moduleCommonName}Builder Add${moduleCommonName}WithSealedModels(this IServiceCollection services)
+    => services.Add${moduleCommonName}${moduleSpecificTypeParameters}()
+                .AddSealedModels();`;
+        }
+
+        body = StringHelper.indent(body, 2);
+
         const content = `using ${namespace};
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static partial class SealedModels${moduleCommonName}BuilderExtensions
     {
-        public static ${moduleCommonName}Builder Add${moduleCommonName}WithSealedModels(this IServiceCollection services)
-            => services.Add${moduleCommonName}${moduleSpecificTypeParameters}()
-                       .AddSealedModels();
+${body}
 
         public static ${moduleCommonName}Builder AddSealedModels(this ${moduleCommonName}Builder builder)
         {

@@ -35,7 +35,7 @@ export class AspProjectSG {
                 {
                     type: 'file',
                     fileType: 'projectFile',
-                    name: projectName + '.csproj',
+                    name: `${projectName}.csproj`,
                     generator: new CG.AspProject_ProjectFileGenerator(features, module)
                 }
             ]
@@ -46,13 +46,22 @@ export class AspProjectSG {
             projectFolder.children.push(managersFolder);
         }
 
+        if (module.hasAspNetCoreOptions === true) {
+            projectFolder.children.push(
+                {
+                    type: 'file',
+                    name: `AspNet${moduleCommonName}Options.cs`,
+                    generator: new CG.AspProject_OptionsClassGenerator(features, module)
+                });
+        }
+
         projectFolder.children.push({
             type: 'folder',
             name: 'DependencyInjection',
             children: [
                 {
                     type: 'file',
-                    name: 'AspNet' + moduleCommonName + 'BuilderExtensions.cs',
+                    name: `AspNet${moduleCommonName}BuilderExtensions.cs`,
                     generator: new CG.AspProject_DependencyInjectionClassGenerator(features, module)
                 }
             ]
@@ -75,7 +84,7 @@ export class AspProjectSG {
         for (const item of module.items) {
             folder.children.push({
                 type: 'file',
-                name: 'AspNet' + item.name + 'Manager.cs',
+                name: `AspNet${item.name}Manager.cs`,
                 generator: new CG.AspProject_EntityManagerClassGenerator(features, item)
             });
         }

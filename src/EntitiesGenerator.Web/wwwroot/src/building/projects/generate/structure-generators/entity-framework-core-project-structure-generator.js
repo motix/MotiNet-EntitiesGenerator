@@ -35,12 +35,12 @@ export class EfProjectSG {
                 {
                     type: 'file',
                     fileType: 'projectFile',
-                    name: projectName + '.csproj',
+                    name: `${projectName}.csproj`,
                     generator: new CG.EfProject_ProjectFileGenerator(features, module)
                 },
                 {
                     type: 'file',
-                    name: moduleCommonName + 'DbContextBase.cs',
+                    name: `${moduleCommonName}DbContextBase.cs`,
                     generator: new CG.EfProject_DbContextClassGenerator(features, module)
                 }
             ]

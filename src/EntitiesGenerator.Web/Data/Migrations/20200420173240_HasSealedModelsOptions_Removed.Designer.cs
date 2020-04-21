@@ -3,14 +3,16 @@ using EntitiesGenerator.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EntitiesGenerator.Web.Data.Migrations
 {
     [DbContext(typeof(EntitiesGeneratorDbContext))]
-    partial class EntitiesGeneratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200420173240_HasSealedModelsOptions_Removed")]
+    partial class HasSealedModelsOptions_Removed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,9 +262,6 @@ namespace EntitiesGenerator.Web.Data.Migrations
             modelBuilder.Entity("EntitiesGenerator.OnOffEntityFeatureSetting", b =>
                 {
                     b.HasBaseType("EntitiesGenerator.FeatureSetting");
-
-                    b.Property<bool>("UseActiveField")
-                        .HasColumnType("bit");
 
                     b.HasDiscriminator().HasValue("OnOffEntityFeatureSetting");
                 });

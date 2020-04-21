@@ -1,4 +1,14 @@
 ﻿/**
+ * @typedef {Object} Folder
+ * @property {string} type
+ * @property {string} folderType
+ * @property {string} fileType
+ * @property {string} name
+ * @property {Folder[]} children
+ * @property {Object} generator
+ */
+
+/**
  * @typedef {Object} NewLineIfNotEmptyConfig
  * @property {boolean} startComma
  * @property {boolean} start
@@ -34,6 +44,9 @@
  * @typedef {Object} Module
  * @property {string} name
  * @property {boolean} hasOwnNamespace
+ * @property {boolean} hasCoreOptions
+ * @property {boolean} hasEntityFrameworkCoreSealedModelsOptions
+ * @property {boolean} hasAspNetCoreOptions
  * @property {Project} project
  * @property {Item[]} items
  */
@@ -74,7 +87,7 @@
  */
 
 /**
- * @typedef {FeatureSetting} OnOffEntityFeatureSetting
+ * @typedef {FeatureSetting & {useActiveField: boolean}} OnOffEntityFeatureSetting
  */
 
 /**

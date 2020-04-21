@@ -7,6 +7,10 @@
 
         public bool HasOwnNamespace { get; set; }
 
-        public bool HasOptions { get; set; }
+        public bool HasCoreOptions { get; set; }
+
+        public bool HasEntityFrameworkCoreSealedModelsOptions { get; set; }
+
+        public bool HasAspNetCoreOptions { get; set; }
     }
 }
