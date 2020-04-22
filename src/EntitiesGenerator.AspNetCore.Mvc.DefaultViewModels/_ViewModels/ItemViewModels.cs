@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace EntitiesGenerator.Mvc
@@ -22,6 +23,9 @@ namespace EntitiesGenerator.Mvc
     {
         [Display(Name = nameof(Module), ResourceType = typeof(DisplayNames))]
         public ModuleLiteViewModel Module { get; set; }
+
+        [Display(Name = nameof(FeatureSettings), ResourceType = typeof(DisplayNames))]
+        public ICollection<FeatureSettingLiteViewModel> FeatureSettings { get; set; }
     }
 
     // Lite

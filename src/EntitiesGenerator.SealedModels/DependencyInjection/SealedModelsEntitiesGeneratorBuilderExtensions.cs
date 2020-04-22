@@ -28,7 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 typeof(ItemAccessor));
 
             services.TryAddScoped(
-                typeof(IFeatureSettingAccessor<>).MakeGenericType(builder.FeatureSettingType),
+                typeof(IFeatureSettingAccessor<,>).MakeGenericType(builder.FeatureSettingType, builder.ItemType),
                 typeof(FeatureSettingAccessor));
 
             services.TryAddScoped(

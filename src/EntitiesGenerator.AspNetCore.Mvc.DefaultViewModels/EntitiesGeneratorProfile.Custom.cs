@@ -6,10 +6,7 @@ namespace EntitiesGenerator.Mvc
     {
         protected virtual void ConstructorInternal(EntitiesGeneratorBuilder builder)
         {
-            CreateMap(builder.ItemType, typeof(ItemViewModel))
-                .SwapMemberWithOrderedMember(nameof(ItemViewModel.FeatureSettings));
-
-            CreateMap(builder.FeatureSettingType, typeof(FeatureSettingViewModel))
+            CreateMap(builder.FeatureSettingType, typeof(FeatureSettingLiteViewModel))
                 .IncludeAllDerived()
                 .ReverseMap()
                 .IncludeAllDerived();

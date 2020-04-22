@@ -28,7 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IValidator<TItem, TModule>, ItemValidator<TItem, TModule>>();
             services.TryAddScoped<ILookupNormalizer<TItem>, LowerInvariantLookupNormalizer<TItem>>();
 
-            services.TryAddScoped<IFeatureSettingManager<TFeatureSetting>, FeatureSettingManager<TFeatureSetting>>();
+            services.TryAddScoped<IFeatureSettingManager<TFeatureSetting, TItem>, FeatureSettingManager<TFeatureSetting, TItem>>();
 
             services.TryAddScoped<IItemsRelationshipManager<TItemsRelationship, TModule>, ItemsRelationshipManager<TItemsRelationship, TModule>>();
 

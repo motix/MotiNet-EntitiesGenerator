@@ -1,9 +1,11 @@
-using MotiNet.Entities;
+﻿using MotiNet.Entities;
 
 namespace EntitiesGenerator
 {
-    public interface IFeatureSettingStore<TFeatureSetting>
-        : IEntityStore<TFeatureSetting>
+    public interface IFeatureSettingStore<TFeatureSetting, TItem>
+        : IEntityStore<TFeatureSetting>,
+          IChildEntityStore<TFeatureSetting, TItem>
         where TFeatureSetting : class
+        where TItem : class
     { }
 }

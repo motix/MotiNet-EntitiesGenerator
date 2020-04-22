@@ -29,17 +29,10 @@ namespace EntitiesGenerator.EntityFrameworkCore
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Item>(ConfigureItemInternal);
             modelBuilder.Entity<NameBasedEntityFeatureSetting>(ConfigureNameBasedEntityFeatureSetting);
             modelBuilder.Entity<ScopedNameBasedEntityFeatureSetting>(ConfigureScopedNameBasedEntityFeatureSetting);
             modelBuilder.Entity<ChildEntityFeatureSetting>(ConfigureChildEntityFeatureSetting);
             modelBuilder.Entity<ItemsRelationship>(ConfigureItemsRelationshipInternal);
-        }
-
-        protected virtual void ConfigureItemInternal(EntityTypeBuilder<Item> builder)
-        {
-            // Customization
-            builder.Ignore(x => x.OrderedFeatureSettings);
         }
 
         protected override void ConfigureFeatureSetting(EntityTypeBuilder<FeatureSetting> builder)

@@ -106,15 +106,6 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Feature Settings.
-        /// </summary>
-        public static string FeatureSettings {
-            get {
-                return ResourceManager.GetString("FeatureSettings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Generate Location.
         /// </summary>
         public static string GenerateLocation {
@@ -196,15 +187,6 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Item.
-        /// </summary>
-        public static string Item {
-            get {
-                return ResourceManager.GetString("Item", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Item 1.
         /// </summary>
         public static string Item1 {
@@ -223,47 +205,11 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Items.
-        /// </summary>
-        public static string Items {
-            get {
-                return ResourceManager.GetString("Items", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Lookup Normalizer.
         /// </summary>
         public static string LookupNormalizer {
             get {
                 return ResourceManager.GetString("LookupNormalizer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Module.
-        /// </summary>
-        public static string Module {
-            get {
-                return ResourceManager.GetString("Module", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Modules.
-        /// </summary>
-        public static string Modules {
-            get {
-                return ResourceManager.GetString("Modules", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Name.
-        /// </summary>
-        public static string Name {
-            get {
-                return ResourceManager.GetString("Name", resourceCulture);
             }
         }
         
@@ -309,15 +255,6 @@ namespace EntitiesGenerator.Mvc {
         public static string Position {
             get {
                 return ResourceManager.GetString("Position", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Project.
-        /// </summary>
-        public static string Project {
-            get {
-                return ResourceManager.GetString("Project", resourceCulture);
             }
         }
         

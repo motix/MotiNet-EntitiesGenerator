@@ -2,7 +2,7 @@
 
 namespace EntitiesGenerator.Mvc
 {
-    public class ReadableIdEntityFeatureSettingViewModel : FeatureSettingViewModel
+    public class ReadableIdEntityFeatureSettingViewModel : FeatureSettingLiteViewModel
     {
         [LocalizedRequired]
         [Display(Name = nameof(IdSourcePropertyName), ResourceType = typeof(DisplayNames_Custom))]

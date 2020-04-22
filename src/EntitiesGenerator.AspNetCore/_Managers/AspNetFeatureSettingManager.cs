@@ -6,16 +6,17 @@ using System.Threading;
 
 namespace EntitiesGenerator
 {
-    public class AspNetFeatureSettingManager<TFeatureSetting> : FeatureSettingManager<TFeatureSetting>
+    public class AspNetFeatureSettingManager<TFeatureSetting, TItem> : FeatureSettingManager<TFeatureSetting, TItem>
         where TFeatureSetting : class
+        where TItem : class
     {
         private readonly CancellationToken _cancel;
 
         public AspNetFeatureSettingManager(
-            IFeatureSettingStore<TFeatureSetting> store,
-            IFeatureSettingAccessor<TFeatureSetting> accessor,
-            IEnumerable<IValidator<TFeatureSetting>> validators,
-            ILogger<FeatureSettingManager<TFeatureSetting>> logger,
+            IFeatureSettingStore<TFeatureSetting, TItem> store,
+            IFeatureSettingAccessor<TFeatureSetting, TItem> accessor,
+            IEnumerable<IValidator<TFeatureSetting, TItem>> validators,
+            ILogger<FeatureSettingManager<TFeatureSetting, TItem>> logger,
             IHttpContextAccessor contextAccessor)
             : base(store, accessor, validators, logger)
             => _cancel = contextAccessor?.HttpContext?.RequestAborted ?? CancellationToken.None;

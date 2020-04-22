@@ -105,10 +105,6 @@ namespace EntitiesGenerator.Web.Controllers
                 {
                     itemViewModel.Module = null;
                     itemViewModel.DistributeFeatureSettings();
-                    foreach (var setting in itemViewModel.FeatureSettings)
-                    {
-                        setting.Item = null;
-                    }
                     itemViewModel.FeatureSettings = null;
                 }
             }

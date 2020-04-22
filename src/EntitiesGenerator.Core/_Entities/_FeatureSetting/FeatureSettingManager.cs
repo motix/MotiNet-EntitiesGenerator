@@ -1,17 +1,18 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using MotiNet.Entities;
 using System.Collections.Generic;
 
 namespace EntitiesGenerator
 {
-    public class FeatureSettingManager<TFeatureSetting> : ManagerBase<TFeatureSetting>, IFeatureSettingManager<TFeatureSetting>
+    public class FeatureSettingManager<TFeatureSetting, TItem> : ManagerBase<TFeatureSetting, TItem>, IFeatureSettingManager<TFeatureSetting, TItem>
         where TFeatureSetting : class
+        where TItem : class
     {
         public FeatureSettingManager(
-            IFeatureSettingStore<TFeatureSetting> store,
-            IFeatureSettingAccessor<TFeatureSetting> accessor,
-            IEnumerable<IValidator<TFeatureSetting>> validators,
-            ILogger<FeatureSettingManager<TFeatureSetting>> logger)
+            IFeatureSettingStore<TFeatureSetting, TItem> store,
+            IFeatureSettingAccessor<TFeatureSetting, TItem> accessor,
+            IEnumerable<IValidator<TFeatureSetting, TItem>> validators,
+            ILogger<FeatureSettingManager<TFeatureSetting, TItem>> logger)
             : base(store, accessor, validators, logger)
         { }
 
@@ -19,8 +20,12 @@ namespace EntitiesGenerator
 
         public IEntityAccessor<TFeatureSetting> EntityAccessor => Accessor as IEntityAccessor<TFeatureSetting>;
 
-        public IFeatureSettingStore<TFeatureSetting> FeatureSettingStore => Store as IFeatureSettingStore<TFeatureSetting>;
+        public IChildEntityStore<TFeatureSetting, TItem> ChildEntityStore => Store as IChildEntityStore<TFeatureSetting, TItem>;
 
-        public IFeatureSettingAccessor<TFeatureSetting> FeatureSettingAccessor => Accessor as IFeatureSettingAccessor<TFeatureSetting>;
+        public IChildEntityAccessor<TFeatureSetting, TItem> ChildEntityAccessor => Accessor as IChildEntityAccessor<TFeatureSetting, TItem>;
+
+        public IFeatureSettingStore<TFeatureSetting, TItem> FeatureSettingStore => Store as IFeatureSettingStore<TFeatureSetting, TItem>;
+
+        public IFeatureSettingAccessor<TFeatureSetting, TItem> FeatureSettingAccessor => Accessor as IFeatureSettingAccessor<TFeatureSetting, TItem>;
     }
 }

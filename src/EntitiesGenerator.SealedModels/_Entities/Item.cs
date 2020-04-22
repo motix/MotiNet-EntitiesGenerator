@@ -1,12 +1,15 @@
 ﻿using MotiNet.Entities;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace EntitiesGenerator
 {
     // Entity
     public sealed partial class Item
-        : INameWiseEntity
+        : INameWiseEntity,
+          IIdWiseEntity<string>
     {
         [StringLength(StringLengths.Guid)]
         public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -28,5 +31,13 @@ namespace EntitiesGenerator
     partial class Item
     {
         public Module Module { get; set; }
+
+        public ICollection<FeatureSetting> FeatureSettings { get; set; }
+    }
+
+    // Customization
+    partial class Item
+    {
+        public IEnumerable<FeatureSetting> OrderedFeatureSettings => FeatureSettings?.OrderBy(x => x.Position);
     }
 }

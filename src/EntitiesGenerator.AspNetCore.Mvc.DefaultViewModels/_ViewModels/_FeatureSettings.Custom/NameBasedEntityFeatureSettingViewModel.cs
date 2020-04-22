@@ -2,7 +2,7 @@
 
 namespace EntitiesGenerator.Mvc
 {
-    public class NameBasedEntityFeatureSettingViewModel : FeatureSettingViewModel
+    public class NameBasedEntityFeatureSettingViewModel : FeatureSettingLiteViewModel
     {
         [Display(Name = nameof(NamePropertyName), ResourceType = typeof(DisplayNames_Custom))]
         public string NamePropertyName { get; set; }

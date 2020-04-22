@@ -132,9 +132,6 @@
   <data name="DisplayName" xml:space="preserve">
     <value>Display Name</value>
   </data>
-  <data name="FeatureSettings" xml:space="preserve">
-    <value>Feature Settings</value>
-  </data>
   <data name="GenerateLocation" xml:space="preserve">
     <value>Generate Location</value>
   </data>
@@ -162,29 +159,14 @@
   <data name="IdSourcePropertyName" xml:space="preserve">
     <value>ID Source Property Name</value>
   </data>
-  <data name="Item" xml:space="preserve">
-    <value>Item</value>
-  </data>
   <data name="Item1" xml:space="preserve">
     <value>Item 1</value>
   </data>
   <data name="Item2" xml:space="preserve">
     <value>Item 2</value>
   </data>
-  <data name="Items" xml:space="preserve">
-    <value>Items</value>
-  </data>
   <data name="LookupNormalizer" xml:space="preserve">
     <value>Lookup Normalizer</value>
-  </data>
-  <data name="Module" xml:space="preserve">
-    <value>Module</value>
-  </data>
-  <data name="Modules" xml:space="preserve">
-    <value>Modules</value>
-  </data>
-  <data name="Name" xml:space="preserve">
-    <value>Name</value>
   </data>
   <data name="NamePropertyName" xml:space="preserve">
     <value>Name Property Name</value>
@@ -200,9 +182,6 @@
   </data>
   <data name="Position" xml:space="preserve">
     <value>Position</value>
-  </data>
-  <data name="Project" xml:space="preserve">
-    <value>Project</value>
   </data>
   <data name="Relationships" xml:space="preserve">
     <value>Relationships</value>

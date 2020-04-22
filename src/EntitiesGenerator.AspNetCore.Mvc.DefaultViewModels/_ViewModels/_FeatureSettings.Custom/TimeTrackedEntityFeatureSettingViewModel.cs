@@ -1,4 +1,4 @@
 ﻿namespace EntitiesGenerator.Mvc
 {
-    public class TimeTrackedEntityFeatureSettingViewModel : FeatureSettingViewModel { }
+    public class TimeTrackedEntityFeatureSettingViewModel : FeatureSettingLiteViewModel { }
 }

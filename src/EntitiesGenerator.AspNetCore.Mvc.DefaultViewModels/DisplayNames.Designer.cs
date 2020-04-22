@@ -61,6 +61,24 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FeatureSettings.
+        /// </summary>
+        public static string FeatureSettings {
+            get {
+                return ResourceManager.GetString("FeatureSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item.
+        /// </summary>
+        public static string Item {
+            get {
+                return ResourceManager.GetString("Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Items.
         /// </summary>
         public static string Items {

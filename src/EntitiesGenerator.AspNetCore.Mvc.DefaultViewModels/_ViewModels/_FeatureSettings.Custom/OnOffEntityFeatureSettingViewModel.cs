@@ -2,7 +2,7 @@
 
 namespace EntitiesGenerator.Mvc
 {
-    public class OnOffEntityFeatureSettingViewModel : FeatureSettingViewModel
+    public class OnOffEntityFeatureSettingViewModel : FeatureSettingLiteViewModel
     {
         [Display(Name = nameof(UseActiveField), ResourceType = typeof(DisplayNames_Custom))]
         public bool UseActiveField { get; set; }

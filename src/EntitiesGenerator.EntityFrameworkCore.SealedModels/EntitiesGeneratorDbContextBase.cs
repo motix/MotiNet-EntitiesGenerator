@@ -51,6 +51,9 @@ namespace EntitiesGenerator.EntityFrameworkCore
             builder.HasOne(x => x.Module)
                    .WithMany(x => x.Items)
                    .OnDelete(DeleteBehavior.Restrict);
+
+            // Ignore ordered children
+            builder.Ignore(x => x.OrderedFeatureSettings);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 typeof(ItemStore<>).MakeGenericType(contextType));
 
             services.TryAddScoped(
-                typeof(IFeatureSettingStore<>).MakeGenericType(builder.FeatureSettingType),
+                typeof(IFeatureSettingStore<,>).MakeGenericType(builder.FeatureSettingType, builder.ItemType),
                 typeof(FeatureSettingStore<>).MakeGenericType(contextType));
 
             services.TryAddScoped(

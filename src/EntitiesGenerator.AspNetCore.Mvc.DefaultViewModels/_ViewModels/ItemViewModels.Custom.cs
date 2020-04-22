@@ -25,9 +25,6 @@ namespace EntitiesGenerator.Mvc
     // Full
     partial class ItemViewModel
     {
-        [Display(Name = nameof(FeatureSettings), ResourceType = typeof(DisplayNames_Custom))]
-        public ICollection<FeatureSettingViewModel> FeatureSettings { get; set; }
-
         // Customization
 
         public ModuleViewModel FullModule { get; set; }
@@ -52,7 +49,7 @@ namespace EntitiesGenerator.Mvc
 
         public void CollectFeatureSettings()
         {
-            FeatureSettings = new List<FeatureSettingViewModel>
+            FeatureSettings = new List<FeatureSettingLiteViewModel>
             {
                 EntityFeatureSetting,
                 TimeTrackedEntityFeatureSetting,
