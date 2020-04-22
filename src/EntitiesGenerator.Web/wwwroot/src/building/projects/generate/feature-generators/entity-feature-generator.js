@@ -73,10 +73,8 @@ export default class EntityFeatureGenerator extends FeatureGenerator {
 
         const constructorModifier = item.abstractModel ? 'protected' : 'public';
 
-        data.push(
-            `${constructorModifier} ${item.name}() => Id = Guid.NewGuid().ToString();`,
-            `[StringLength(StringLengths.Guid)]
-public string Id { get; set; }`);
+        data.push(`[StringLength(StringLengths.Guid)]
+public string Id { get; set; } = Guid.NewGuid().ToString();`);
     }
 
     /**
@@ -121,8 +119,6 @@ public string Id { get; set; }`);
     aspDv_EntityViewModelsClass_BasePropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(
-            `protected ${item.name}ViewModelBase() => Id = Guid.NewGuid().ToString();`,
-            'public string Id { get; set; }');
+        data.push('public string Id { get; set; } = Guid.NewGuid().ToString();');
     }
 }

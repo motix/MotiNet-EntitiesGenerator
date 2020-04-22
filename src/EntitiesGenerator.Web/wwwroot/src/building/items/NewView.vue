@@ -320,9 +320,9 @@
                                                        v-model="entity.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName"
                                                        @input="dirty()"
                                                        class="d-inline-block"></single-line-input>
-                                    <div class="small text-danger">
-                                        <div v-for="error in entity.errors.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName">{{error}}</div>
-                                    </div>
+                                </template>
+                                <template v-else-if="entity.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName === null">
+                                    <i class="text-muted">None</i>
                                 </template>
                                 <template v-else>
                                     {{entity.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName}}
@@ -488,8 +488,7 @@
                     idSourcePropertyName: []
                 },
                 scopedNameBasedEntityFeatureSetting: {
-                    scopeName: [],
-                    sortedChildrenInScopeCriteriaPropertyName: []
+                    scopeName: []
                 },
                 childEntityFeatureSetting: {
                     parentName: [],
@@ -608,14 +607,9 @@
 
             if (serializableItem.scopedNameBasedEntityFeatureSetting) {
                 this.normalizeNullableStrings(serializableItem.scopedNameBasedEntityFeatureSetting, [
-                    'namePropertyName'
+                    'namePropertyName',
+                    'sortedChildrenInScopeCriteriaPropertyName'
                 ]);
-
-                if (!serializableItem.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope) {
-                    this.normalizeNullableStrings(serializableItem.scopedNameBasedEntityFeatureSetting, [
-                        'sortedChildrenInScopeCriteriaPropertyName'
-                    ]);
-                }
             }
 
             if (serializableItem.childEntityFeatureSetting && !serializableItem.childEntityFeatureSetting.hasSortedChildrenInParent) {
@@ -647,9 +641,6 @@
 
             editableItem.scopedNameBasedEntityFeatureSetting.enabled === true && !editableItem.scopedNameBasedEntityFeatureSetting.scopeName &&
                 editableItem.errors.scopedNameBasedEntityFeatureSetting.scopeName.push('Scope Name is required.');
-
-            editableItem.scopedNameBasedEntityFeatureSetting.enabled === true && editableItem.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope && !editableItem.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName &&
-                editableItem.errors.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName.push('Sorted Children in Scope Property Name is required.');
 
             editableItem.childEntityFeatureSetting.enabled === true && !editableItem.childEntityFeatureSetting.parentName &&
                 editableItem.errors.childEntityFeatureSetting.parentName.push('Parent Name is required.');

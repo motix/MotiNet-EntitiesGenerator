@@ -237,9 +237,8 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
         const codePropertyName = this.codePropertyName(item);
 
         data.push(
-            `${constructorModifier} ${item.name}() => Id = Guid.NewGuid().ToString();`,
             `[StringLength(StringLengths.Guid)]
-public string Id { get; set; }`,
+public string Id { get; set; } = Guid.NewGuid().ToString();`,
             `[Required]
 [StringLength(StringLengths.TitleContent)]
 public string ${codePropertyName} { get; set; }`);
@@ -356,8 +355,7 @@ builder.HasIndex(x => x.${codePropertyName}).IsUnique();`);
         const codeRequired = this.hasCodeGenerator(item) ? `// No need to require ${codePropertyName} in view model as there is a generator in place` : '[LocalizedRequired]';
 
         data.push(
-            `protected ${item.name}ViewModelBase() => Id = Guid.NewGuid().ToString();`,
-            'public string Id { get; set; }',
+            'public string Id { get; set; } = Guid.NewGuid().ToString();',
             `${codeRequired}
 [Display(Name = nameof(${codePropertyName}), ResourceType = typeof(DisplayNames))]
 public string ${codePropertyName} { get; set; }`);

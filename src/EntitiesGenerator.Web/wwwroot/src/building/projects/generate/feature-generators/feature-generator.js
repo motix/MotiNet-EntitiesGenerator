@@ -299,6 +299,21 @@ export default class FeatureGenerator {
      * @param {Item} item
      * @param {string[]} data
      */
+    sm_EntityClass_CustomizationFieldDeclarationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_EntityClass_CustomizationFieldDeclarationsData_FromOthers(item, data) {
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
     sm_EntityClass_CustomizationPropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
     }

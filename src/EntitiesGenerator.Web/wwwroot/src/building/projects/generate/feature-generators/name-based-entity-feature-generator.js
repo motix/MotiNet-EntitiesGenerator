@@ -216,9 +216,8 @@ public virtual GenericError Duplicate${entityName}${namePropertyName}(string ${l
         const namePropertyName = this.namePropertyName(item);
 
         data.push(
-            `${constructorModifier} ${item.name}() => Id = Guid.NewGuid().ToString();`,
             `[StringLength(StringLengths.Guid)]
-public string Id { get; set; }`,
+public string Id { get; set; } = Guid.NewGuid().ToString();`,
             `[Required]
 [StringLength(StringLengths.TitleContent)]
 public string ${namePropertyName} { get; set; }`,
@@ -331,8 +330,7 @@ builder.HasIndex(x => x.Normalized${namePropertyName}).IsUnique();`);
         const namePropertyName = this.namePropertyName(item);
 
         data.push(
-            `protected ${item.name}ViewModelBase() => Id = Guid.NewGuid().ToString();`,
-            'public string Id { get; set; }',
+            'public string Id { get; set; } = Guid.NewGuid().ToString();',
             `[LocalizedRequired]
 [Display(Name = nameof(${namePropertyName}), ResourceType = typeof(DisplayNames))]
 public string ${namePropertyName} { get; set; }`);

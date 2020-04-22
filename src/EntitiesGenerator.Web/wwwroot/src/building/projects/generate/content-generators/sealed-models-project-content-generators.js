@@ -45,6 +45,7 @@ export class SmProject_EntityClassGenerator extends CSharpEntitySpecificContentG
         const entityInterfacesData = [];
         const entityPropertyDeclarationsData = [];
         const relationshipsPropertyDeclarationsData = [];
+        const customizationFieldDeclarationsData = [];
         const customizationPropertyDeclarationsData = [];
 
         for (const feature of this.features.allFeatures) {
@@ -52,19 +53,22 @@ export class SmProject_EntityClassGenerator extends CSharpEntitySpecificContentG
                 feature.sm_EntityClass_EntityInterfacesData(this.item, entityInterfacesData);
                 feature.sm_EntityClass_EntityPropertyDeclarationsData(this.item, entityPropertyDeclarationsData);
                 feature.sm_EntityClass_RelationshipsPropertyDeclarationsData(this.item, relationshipsPropertyDeclarationsData);
+                feature.sm_EntityClass_CustomizationFieldDeclarationsData(this.item, customizationFieldDeclarationsData);
                 feature.sm_EntityClass_CustomizationPropertyDeclarationsData(this.item, customizationPropertyDeclarationsData);
             }
 
             feature.sm_EntityClass_EntityInterfacesData_FromOthers(this.item, entityInterfacesData);
             feature.sm_EntityClass_EntityPropertyDeclarationsData_FromOthers(this.item, entityPropertyDeclarationsData);
             feature.sm_EntityClass_RelationshipsPropertyDeclarationsData_FromOthers(this.item, relationshipsPropertyDeclarationsData);
+            feature.sm_EntityClass_CustomizationFieldDeclarationsData_FromOthers(this.item, customizationFieldDeclarationsData);
             feature.sm_EntityClass_CustomizationPropertyDeclarationsData_FromOthers(this.item, customizationPropertyDeclarationsData);
         }
 
         const entityInterfaces = StringHelper.generateBaseBlock(_.uniq(entityInterfacesData), 2, { start: 1 });
         const entityPropertyDeclarations = StringHelper.joinLines(_.uniq(entityPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
         const relationshipsPropertyDeclarations = StringHelper.joinLines(_.uniq(relationshipsPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
-        const customizationPropertyDeclarations = StringHelper.joinLines(_.uniq(customizationPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
+        const customizationBodyDeclarations = StringHelper.joinLines(_.uniq(customizationFieldDeclarationsData).concat(_.uniq(customizationPropertyDeclarationsData)),
+            2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
 
         const relationshipsPartial = relationshipsPropertyDeclarationsData.length === 0 ? '' : `
 
@@ -76,7 +80,7 @@ export class SmProject_EntityClassGenerator extends CSharpEntitySpecificContentG
 
     // Customization
     partial class ${entityName}
-    {${customizationPropertyDeclarations}}`;
+    {${customizationBodyDeclarations}}`;
 
         const content = `using MotiNet.Entities;
 using System;
