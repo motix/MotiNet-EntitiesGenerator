@@ -30,6 +30,8 @@ namespace EntitiesGenerator.Mvc
 
         // Customization
 
+        public ModuleViewModel FullModule { get; set; }
+
         public EntityFeatureSettingViewModel EntityFeatureSetting { get; set; }
 
         public TimeTrackedEntityFeatureSettingViewModel TimeTrackedEntityFeatureSetting { get; set; }

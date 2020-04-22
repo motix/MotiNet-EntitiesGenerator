@@ -91,15 +91,15 @@
  */
 
 /**
- * @typedef {FeatureSetting & {codePropertyName: string, hasCodeGenerator: boolean}} CodeBasedEntityFeatureSetting
+ * @typedef {FeatureSetting & {codePropertyName: string, lookupNormalizer: string, hasCodeGenerator: boolean}} CodeBasedEntityFeatureSetting
  */
 
 /**
- * @typedef {FeatureSetting & {namePropertyName: string}} NameBasedEntityFeatureSetting
+ * @typedef {FeatureSetting & {namePropertyName: string, lookupNormalizer: string}} NameBasedEntityFeatureSetting
  */
 
 /**
- * @typedef {FeatureSetting & {scopeName: string, namePropertyName: string, deleteRestrict: boolean, hasSortedChildrenInScope: boolean, sortedChildrenInScopeCriteriaPropertyName: string}} ScopedNameBasedEntityFeatureSetting
+ * @typedef {FeatureSetting & {scopeName: string, namePropertyName: string, lookupNormalizer: string, deleteRestrict: boolean, hasSortedChildrenInScope: boolean, sortedChildrenInScopeCriteriaPropertyName: string}} ScopedNameBasedEntityFeatureSetting
  */
 
 /**

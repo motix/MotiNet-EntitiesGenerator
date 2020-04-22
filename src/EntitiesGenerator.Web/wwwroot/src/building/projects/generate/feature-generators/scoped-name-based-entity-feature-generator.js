@@ -64,6 +64,13 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
     /**
      * @param {Item} item
      */
+    lookupNormalizer(item) {
+        return this.itemFeatureSetting(item).lookupNormalizer;
+    }
+
+    /**
+     * @param {Item} item
+     */
     deleteRestrict(item) {
         return this.itemFeatureSetting(item).deleteRestrict;
     }
@@ -286,7 +293,7 @@ public virtual GenericError Duplicate${entityName}${namePropertyName}(string ${l
     core_DependencyInjectionClass_EntityServiceRegistrationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`services.TryAddScoped<ILookupNormalizer<T${item.name}>, LowerInvariantLookupNormalizer<T${item.name}>>();`);
+        data.push(`services.TryAddScoped<ILookupNormalizer<T${item.name}>, ${this.lookupNormalizer(item)}<T${item.name}>>();`);
     }
 
     // SealedModels

@@ -35,6 +35,13 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
     /**
      * @param {Item} item
      */
+    lookupNormalizer(item) {
+        return this.itemFeatureSetting(item).lookupNormalizer;
+    }
+
+    /**
+     * @param {Item} item
+     */
     hasCodeGenerator(item) {
         return this.itemFeatureSetting(item).hasCodeGenerator;
     }
@@ -207,7 +214,7 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
     core_DependencyInjectionClass_EntityServiceRegistrationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`services.TryAddScoped<ILookupNormalizer<T${item.name}>, LowerInvariantLookupNormalizer<T${item.name}>>();`);
+        data.push(`services.TryAddScoped<ILookupNormalizer<T${item.name}>, ${this.lookupNormalizer(item)}<T${item.name}>>();`);
     }
 
     // SealedModels

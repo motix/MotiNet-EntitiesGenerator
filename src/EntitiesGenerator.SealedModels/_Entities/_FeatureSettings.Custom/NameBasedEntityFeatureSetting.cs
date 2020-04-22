@@ -8,5 +8,9 @@ namespace EntitiesGenerator
 
         [StringLength(StringLengths.TitleContent)]
         public string NamePropertyName { get; set; }
+
+        [Required]
+        [StringLength(StringLengths.TinyContent)]
+        public string LookupNormalizer { get; set; }
     }
 }

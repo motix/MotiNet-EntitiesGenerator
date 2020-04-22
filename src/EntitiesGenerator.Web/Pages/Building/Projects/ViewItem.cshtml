@@ -22,6 +22,7 @@
                         .Collect(x => emptyReadableIdEntityFeatureSetting.IdSourcePropertyName, Html)
                         .Collect(x => emptyOnOffEntityFeatureSetting.UseActiveField, Html)
                         .Collect(x => emptyCodeBasedEntityFeatureSetting.CodePropertyName, Html)
+                        .Collect(x => emptyCodeBasedEntityFeatureSetting.LookupNormalizer, Html)
                         .Collect(x => emptyCodeBasedEntityFeatureSetting.HasCodeGenerator, Html)
                         .Collect(x => emptyNameBasedEntityFeatureSetting.NamePropertyName, Html)
                         .Collect(x => emptyScopedNameBasedEntityFeatureSetting.ScopeName, Html)
@@ -46,6 +47,7 @@
     <edit-page api-url="@Url.Action("Get", "Items")"
                id="@Model.Entity.Id"
                :display-names='@displayNameCollector.ToJson()'
+               view-project-url="@Url.Page("ViewProject", new { id = "_id_" }).Replace("/_id_", string.Empty)"
                return-url="@Url.Page("ViewModule", new { id = Model.Entity.ModuleId })"></edit-page>
 </section>
 

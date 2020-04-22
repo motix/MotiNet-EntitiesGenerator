@@ -32,6 +32,13 @@ export default class NameBasedEntityFeatureGenerator extends FeatureGenerator {
         return this.itemFeatureSetting(item).namePropertyName || 'Name';
     }
 
+    /**
+     * @param {Item} item
+     */
+    lookupNormalizer(item) {
+        return this.itemFeatureSetting(item).lookupNormalizer;
+    }
+
     // Project specific content
 
     // Core
@@ -186,7 +193,7 @@ public virtual GenericError Duplicate${entityName}${namePropertyName}(string ${l
     core_DependencyInjectionClass_EntityServiceRegistrationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        data.push(`services.TryAddScoped<ILookupNormalizer<T${item.name}>, LowerInvariantLookupNormalizer<T${item.name}>>();`);
+        data.push(`services.TryAddScoped<ILookupNormalizer<T${item.name}>, ${this.lookupNormalizer(item)}<T${item.name}>>();`);
     }
 
     // SealedModels

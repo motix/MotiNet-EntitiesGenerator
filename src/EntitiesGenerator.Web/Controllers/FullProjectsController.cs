@@ -68,7 +68,10 @@ namespace EntitiesGenerator.Web.Controllers
                 var folders = Directory.GetDirectories(project.GenerateLocation);
                 foreach (var folder in folders)
                 {
-                    Directory.Delete(folder, true);
+                    if (Path.GetFileName(folder) != ".git")
+                    {
+                        Directory.Delete(folder, true);
+                    }
                 }
 
                 var files = Directory.GetFiles(project.GenerateLocation);

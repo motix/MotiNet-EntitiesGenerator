@@ -36,7 +36,7 @@ namespace EntitiesGenerator.Web.Controllers
 
         protected override void EntitySpecificationAction(IFindSpecification<Item> specification)
         {
-            specification.AddInclude(x => x.Module);
+            specification.AddInclude(x => x.Module.Project);
             specification.AddInclude(x => x.FeatureSettings);
         }
 
@@ -45,7 +45,11 @@ namespace EntitiesGenerator.Web.Controllers
                        .ThenBy(x => x.Name);
 
         protected override void ProcessViewModelForGet(ItemViewModel viewModel, Item model)
-            => ProcessViewModelForGetInternal(viewModel, model);
+        {
+            ProcessViewModelForGetInternal(viewModel, model);
+
+            viewModel.FullModule = Mapper.Map<ModuleViewModel>(model.Module);
+        }
 
         protected override void ProcessViewModelsForGet(IEnumerable<ItemViewModel> viewModels, IEnumerable<Item> models)
         {

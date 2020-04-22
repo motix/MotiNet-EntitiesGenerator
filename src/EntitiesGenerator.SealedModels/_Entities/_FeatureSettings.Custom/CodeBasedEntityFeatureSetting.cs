@@ -9,6 +9,10 @@ namespace EntitiesGenerator
         [StringLength(StringLengths.TitleContent)]
         public string CodePropertyName { get; set; }
 
+        [Required]
+        [StringLength(StringLengths.TinyContent)]
+        public string LookupNormalizer { get; set; }
+
         public bool HasCodeGenerator { get; set; }
     }
 }

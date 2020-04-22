@@ -232,6 +232,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lookup Normalizer.
+        /// </summary>
+        public static string LookupNormalizer {
+            get {
+                return ResourceManager.GetString("LookupNormalizer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Module.
         /// </summary>
         public static string Module {

@@ -1,6 +1,9 @@
 ﻿<template extends="../../shared/components/pages/EditPage.vue">
     <extensions>
         <extension point="breadcrumb">
+            <template v-if="!newMode">
+                <a :href="viewProjectUrl + '/' + entity.module.projectId">{{entity.module.project.name}}</a> /
+            </template>
             <a :href="returnUrl">
                 <template v-if="newMode">
                     {{moduleName}}
@@ -199,8 +202,41 @@
                                                        @input="dirty()"
                                                        class="d-inline-block"></single-line-input>
                                 </template>
+                                <template v-else-if="entity.codeBasedEntityFeatureSetting.codePropertyName === null">
+                                    <i class="text-muted">None</i>
+                                </template>
                                 <template v-else>
                                     {{entity.codeBasedEntityFeatureSetting.codePropertyName}}
+                                </template>
+                            </div>
+                            <div>
+                                <strong>{{displayNames['LookupNormalizer']}}:</strong>
+                                <template v-if="editMode || newMode">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio"
+                                               id="codeBasedEntityFeatureSetting_LookupNormalizer_Lower_Radio"
+                                               name="codeBasedEntityFeatureSetting.lookupNormalizer"
+                                               class="custom-control-input"
+                                               value="LowerInvariantLookupNormalizer"
+                                               v-model="entity.codeBasedEntityFeatureSetting.lookupNormalizer"
+                                               @change="dirty()">
+                                        <label class="custom-control-label"
+                                               for="codeBasedEntityFeatureSetting_LookupNormalizer_Lower_Radio">LowerInvariantLookupNormalizer</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio"
+                                               id="codeBasedEntityFeatureSetting_LookupNormalizer_Upper_Radio"
+                                               name="codeBasedEntityFeatureSetting.lookupNormalizer"
+                                               class="custom-control-input"
+                                               value="UpperInvariantLookupNormalizer"
+                                               v-model="entity.codeBasedEntityFeatureSetting.lookupNormalizer"
+                                               @change="dirty()">
+                                        <label class="custom-control-label"
+                                               for="codeBasedEntityFeatureSetting_LookupNormalizer_Upper_Radio">UpperInvariantLookupNormalizer</label>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    {{entity.codeBasedEntityFeatureSetting.lookupNormalizer}}
                                 </template>
                             </div>
                             <div>
@@ -240,8 +276,41 @@
                                                        @input="dirty()"
                                                        class="d-inline-block"></single-line-input>
                                 </template>
+                                <template v-else-if="entity.nameBasedEntityFeatureSetting.namePropertyName === null">
+                                    <i class="text-muted">None</i>
+                                </template>
                                 <template v-else>
                                     {{entity.nameBasedEntityFeatureSetting.namePropertyName}}
+                                </template>
+                            </div>
+                            <div>
+                                <strong>{{displayNames['LookupNormalizer']}}:</strong>
+                                <template v-if="editMode || newMode">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio"
+                                               id="nameBasedEntityFeatureSetting_LookupNormalizer_Lower_Radio"
+                                               name="nameBasedEntityFeatureSetting.lookupNormalizer"
+                                               class="custom-control-input"
+                                               value="LowerInvariantLookupNormalizer"
+                                               v-model="entity.nameBasedEntityFeatureSetting.lookupNormalizer"
+                                               @change="dirty()">
+                                        <label class="custom-control-label"
+                                               for="nameBasedEntityFeatureSetting_LookupNormalizer_Lower_Radio">LowerInvariantLookupNormalizer</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio"
+                                               id="nameBasedEntityFeatureSetting_LookupNormalizer_Upper_Radio"
+                                               name="nameBasedEntityFeatureSetting.lookupNormalizer"
+                                               class="custom-control-input"
+                                               value="UpperInvariantLookupNormalizer"
+                                               v-model="entity.nameBasedEntityFeatureSetting.lookupNormalizer"
+                                               @change="dirty()">
+                                        <label class="custom-control-label"
+                                               for="nameBasedEntityFeatureSetting_LookupNormalizer_Upper_Radio">UpperInvariantLookupNormalizer</label>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    {{entity.nameBasedEntityFeatureSetting.lookupNormalizer}}
                                 </template>
                             </div>
                         </div>
@@ -286,8 +355,41 @@
                                                        @input="dirty()"
                                                        class="d-inline-block"></single-line-input>
                                 </template>
+                                <template v-else-if="entity.scopedNameBasedEntityFeatureSetting.namePropertyName === null">
+                                    <i class="text-muted">None</i>
+                                </template>
                                 <template v-else>
                                     {{entity.scopedNameBasedEntityFeatureSetting.namePropertyName}}
+                                </template>
+                            </div>
+                            <div>
+                                <strong>{{displayNames['LookupNormalizer']}}:</strong>
+                                <template v-if="editMode || newMode">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio"
+                                               id="scopedNameBasedEntityFeatureSetting_LookupNormalizer_Lower_Radio"
+                                               name="scopedNameBasedEntityFeatureSetting.lookupNormalizer"
+                                               class="custom-control-input"
+                                               value="LowerInvariantLookupNormalizer"
+                                               v-model="entity.scopedNameBasedEntityFeatureSetting.lookupNormalizer"
+                                               @change="dirty()">
+                                        <label class="custom-control-label"
+                                               for="scopedNameBasedEntityFeatureSetting_LookupNormalizer_Lower_Radio">LowerInvariantLookupNormalizer</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio"
+                                               id="scopedNameBasedEntityFeatureSetting_LookupNormalizer_Upper_Radio"
+                                               name="scopedNameBasedEntityFeatureSetting.lookupNormalizer"
+                                               class="custom-control-input"
+                                               value="UpperInvariantLookupNormalizer"
+                                               v-model="entity.scopedNameBasedEntityFeatureSetting.lookupNormalizer"
+                                               @change="dirty()">
+                                        <label class="custom-control-label"
+                                               for="scopedNameBasedEntityFeatureSetting_LookupNormalizer_Upper_Radio">UpperInvariantLookupNormalizer</label>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    {{entity.scopedNameBasedEntityFeatureSetting.lookupNormalizer}}
                                 </template>
                             </div>
                             <div>
@@ -395,6 +497,9 @@
                                         <div v-for="error in entity.errors.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName">{{error}}</div>
                                     </div>
                                 </template>
+                                <template v-else-if="entity.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName === null">
+                                    <i class="text-muted">None</i>
+                                </template>
                                 <template v-else>
                                     {{entity.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName}}
                                 </template>
@@ -442,6 +547,10 @@
                     type: String
                     // required: newMode
                 },
+                viewProjectUrl: {
+                    type: String
+                    // required: !newMode
+                }
             };
         }
 
@@ -455,6 +564,7 @@
             const newMode = vm.$options.propsData.newMode === '' || vm.$options.propsData.newMode === true;
             vm.$options.props.moduleId.required = newMode;
             vm.$options.props.moduleName.required = newMode;
+            vm.$options.props.viewProjectUrl.required = !newMode;
         }
 
         // Constructor
@@ -532,6 +642,7 @@
                 itemId: '_',
                 enabled: false,
                 codePropertyName: null,
+                lookupNormalizer: 'LowerInvariantLookupNormalizer',
                 hasCodeGenerator: false
             };
         }
@@ -540,7 +651,8 @@
             return {
                 itemId: '_',
                 enabled: false,
-                namePropertyName: null
+                namePropertyName: null,
+                lookupNormalizer: 'LowerInvariantLookupNormalizer'
             };
         }
 
@@ -550,6 +662,7 @@
                 enabled: false,
                 scopeName: null,
                 namePropertyName: null,
+                lookupNormalizer: 'LowerInvariantLookupNormalizer',
                 deleteRestrict: false,
                 hasSortedChildrenInScope: false,
                 sortedChildrenInScopeCriteriaPropertyName: null
@@ -576,6 +689,9 @@
 
         convertToWorkEntity(loadedItem) {
             const editableItem = super.convertToWorkEntity(loadedItem);
+
+            editableItem.module = editableItem.fullModule;
+            delete editableItem.fullModule;
 
             for (const settingName of ContentHelper.featureSettingPropertyNames) {
                 if (editableItem[settingName]) {
