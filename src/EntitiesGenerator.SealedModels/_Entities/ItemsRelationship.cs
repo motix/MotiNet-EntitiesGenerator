@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace EntitiesGenerator
 {
     // Entity
-    public sealed partial class ItemsRelationship
+    public abstract partial class ItemsRelationship
     {
         [StringLength(StringLengths.Guid)]
         public string Id { get; set; } = Guid.NewGuid().ToString();

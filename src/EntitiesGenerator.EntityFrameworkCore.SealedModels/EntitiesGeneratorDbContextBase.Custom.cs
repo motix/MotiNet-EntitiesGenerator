@@ -23,6 +23,8 @@ namespace EntitiesGenerator.EntityFrameworkCore
 
         public DbSet<PreprocessedEntityFeatureSetting> PreprocessedEntityFeatureSettings { get; set; }
 
+        public DbSet<ManyToManyItemsRelationship> ManyToManyItemsRelationships { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
