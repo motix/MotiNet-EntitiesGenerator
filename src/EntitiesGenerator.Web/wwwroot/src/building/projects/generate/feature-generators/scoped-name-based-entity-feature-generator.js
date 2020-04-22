@@ -331,7 +331,6 @@ public virtual GenericError Duplicate${entityName}${namePropertyName}(string ${l
     sm_EntityClass_EntityPropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        const constructorModifier = item.abstractModel ? 'protected' : 'public';
         const namePropertyName = this.namePropertyName(item);
 
         data.push(
@@ -355,8 +354,6 @@ public string Normalized${namePropertyName} { get; set; }`);
     sm_EntityClass_EntityPropertyDeclarationsData_FromOthers(item, data) {
         for (const otherItem of item.module.items) {
             if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name) {
-
-                const constructorModifier = item.abstractModel ? 'protected' : 'public';
 
                 data.push(`[StringLength(StringLengths.Guid)]
 public string Id { get; set; } = Guid.NewGuid().ToString();`);
@@ -396,8 +393,11 @@ public string Id { get; set; } = Guid.NewGuid().ToString();`);
                 this.hasSortedChildrenInScope(otherItem)) {
                 const entityName = otherItem.name;
                 const pluralEntityName = pluralize(entityName);
+                const criteriaPropertyName = this.sortedChildrenInScopeCriteriaPropertyName(otherItem);
 
-                data.push(`private readonly Func<IEnumerable<${entityName}>, IEnumerable<${entityName}>> _ordered${pluralEntityName}Method;`);
+                if (criteriaPropertyName === null) {
+                    data.push(`private readonly Func<IEnumerable<${entityName}>, IEnumerable<${entityName}>> _ordered${pluralEntityName}Method;`);
+                }
             }
         }
     }
@@ -413,11 +413,12 @@ public string Id { get; set; } = Guid.NewGuid().ToString();`);
                 const entityName = otherItem.name;
                 const pluralEntityName = pluralize(entityName);
                 const criteriaPropertyName = this.sortedChildrenInScopeCriteriaPropertyName(otherItem);
-                const orderOrThrowExpression = criteriaPropertyName === null ?
-                    'throw new NotImplementedException()' :
-                    `${pluralEntityName}?.OrderBy(x => x.${criteriaPropertyName})`;
 
-                data.push(`public IEnumerable<${entityName}> Ordered${pluralEntityName} => _ordered${pluralEntityName}Method?.Invoke(${pluralEntityName}) ?? ${orderOrThrowExpression};`);
+                if (criteriaPropertyName === null) {
+                    data.push(`public IEnumerable<${entityName}> Ordered${pluralEntityName} => _ordered${pluralEntityName}Method?.Invoke(${pluralEntityName}) ?? throw new NotImplementedException();`);
+                } else {
+                    data.push(`public IEnumerable<${entityName}> Ordered${pluralEntityName} => ${pluralEntityName}?.OrderBy(x => x.${criteriaPropertyName});`);
+                }
             }
         }
     }
@@ -427,7 +428,13 @@ public string Id { get; set; } = Guid.NewGuid().ToString();`);
      * @param {string} subEntityName
      * @param {string[]} data
      */
-    sm_SubEntityClass_EntityInterfacesData_FromOthers(item, subEntityName, data) {
+    sm_SubEntityClass_EntityInterfacesData(item, subEntityName, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        if (this.scopeName(item) !== subEntityName) {
+            return;
+        }
+
         data.push('IIdWiseEntity<string>');
     }
 
@@ -436,9 +443,12 @@ public string Id { get; set; } = Guid.NewGuid().ToString();`);
      * @param {string} subEntityName
      * @param {string[]} data
      */
-    sm_SubEntityClass_EntityPropertyDeclarationsData_FromOthers(item, subEntityName, data) {
+    sm_SubEntityClass_EntityPropertyDeclarationsData(item, subEntityName, data) {
+        this.throwIfItemNotHaveFeature(item);
 
-        const constructorModifier = item.abstractModel ? 'protected' : 'public';
+        if (this.scopeName(item) !== subEntityName) {
+            return;
+        }
 
         data.push(`[StringLength(StringLengths.Guid)]
 public string Id { get; set; } = Guid.NewGuid().ToString();`);
@@ -449,8 +459,62 @@ public string Id { get; set; } = Guid.NewGuid().ToString();`);
      * @param {string} subEntityName
      * @param {string[]} data
      */
-    sm_SubEntityClass_RelationshipsPropertyDeclarationsData_FromOthers(item, subEntityName, data) {
+    sm_SubEntityClass_RelationshipsPropertyDeclarationsData(item, subEntityName, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        if (this.scopeName(item) !== subEntityName) {
+            return;
+        }
+
         data.push(`public ICollection<${item.name}> ${pluralize(item.name)} { get; set; }`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string} subEntityName
+     * @param {string[]} data
+     */
+    sm_SubEntityClass_CustomizationFieldDeclarationsData(item, subEntityName, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        if (this.scopeName(item) !== subEntityName) {
+            return;
+        }
+
+        if (this.hasSortedChildrenInScope(item)) {
+            const entityName = item.name;
+            const pluralEntityName = pluralize(entityName);
+            const criteriaPropertyName = this.sortedChildrenInScopeCriteriaPropertyName(item);
+
+            if (criteriaPropertyName === null) {
+                data.push(`private readonly Func<IEnumerable<${entityName}>, IEnumerable<${entityName}>> _ordered${pluralEntityName}Method;`);
+            }
+        }
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string} subEntityName
+     * @param {string[]} data
+     */
+    sm_SubEntityClass_CustomizationPropertyDeclarationsData(item, subEntityName, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        if (this.scopeName(item) !== subEntityName) {
+            return;
+        }
+
+        if (this.hasSortedChildrenInScope(item)) {
+            const entityName = item.name;
+            const pluralEntityName = pluralize(entityName);
+            const criteriaPropertyName = this.sortedChildrenInScopeCriteriaPropertyName(item);
+
+            if (criteriaPropertyName === null) {
+                data.push(`public IEnumerable<${entityName}> Ordered${pluralEntityName} => _ordered${pluralEntityName}Method?.Invoke(${pluralEntityName}) ?? throw new NotImplementedException();`);
+            } else {
+                data.push(`public IEnumerable<${entityName}> Ordered${pluralEntityName} => ${pluralEntityName}?.OrderBy(x => x.${criteriaPropertyName});`);
+            }
+        }
     }
 
     /**
@@ -696,17 +760,31 @@ public ICollection<${otherItem.name}LiteViewModel> ${pluralize(otherItem.name)} 
 
     /**
      * @param {Item} item
+     * @param {string} subEntityName
      * @param {string[]} data
      */
-    aspDv_SubEntityViewModelsClass_BasePropertyDeclarationsData_FromOthers(item, data) {
+    aspDv_SubEntityViewModelsClass_BasePropertyDeclarationsData(item, subEntityName, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        if (this.scopeName(item) !== subEntityName) {
+            return;
+        }
+
         data.push('public string Id { get; set; } = Guid.NewGuid().ToString();');
     }
 
     /**
      * @param {Item} item
+     * @param {string} subEntityName
      * @param {string[]} data
      */
-    aspDv_SubEntityViewModelsClass_FullPropertyDeclarationsData_FromOthers(item, data) {
+    aspDv_SubEntityViewModelsClass_FullPropertyDeclarationsData(item, subEntityName, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        if (this.scopeName(item) !== subEntityName) {
+            return;
+        }
+
         data.push(`[Display(Name = nameof(${pluralize(item.name)}), ResourceType = typeof(DisplayNames))]
 public ICollection<${item.name}LiteViewModel> ${pluralize(item.name)} { get; set; }`);
     }

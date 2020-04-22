@@ -117,8 +117,10 @@ export class AspDvProject_SubEntityViewModelsClassGenerator extends CSharpEntity
         const fullPropertyDeclarationsData = [];
 
         for (const feature of this.features.allFeatures) {
-            feature.aspDv_SubEntityViewModelsClass_BasePropertyDeclarationsData_FromOthers(this.item, basePropertyDeclarationsData);
-            feature.aspDv_SubEntityViewModelsClass_FullPropertyDeclarationsData_FromOthers(this.item, fullPropertyDeclarationsData);
+            if (feature.itemHasFeature(this.item)) {
+                feature.aspDv_SubEntityViewModelsClass_BasePropertyDeclarationsData(this.item, subEntityName, basePropertyDeclarationsData);
+                feature.aspDv_SubEntityViewModelsClass_FullPropertyDeclarationsData(this.item, subEntityName, fullPropertyDeclarationsData);
+            }
         }
 
         const basePropertyDeclarations = StringHelper.joinLines(_.uniq(basePropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });

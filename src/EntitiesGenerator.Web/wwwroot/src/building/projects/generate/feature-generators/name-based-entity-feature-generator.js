@@ -219,7 +219,6 @@ public virtual GenericError Duplicate${entityName}${namePropertyName}(string ${l
     sm_EntityClass_EntityPropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        const constructorModifier = item.abstractModel ? 'protected' : 'public';
         const namePropertyName = this.namePropertyName(item);
 
         data.push(

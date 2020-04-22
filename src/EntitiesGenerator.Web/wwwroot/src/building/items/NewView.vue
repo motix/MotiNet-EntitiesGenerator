@@ -493,9 +493,6 @@
                                                        v-model="entity.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName"
                                                        @input="dirty()"
                                                        class="d-inline-block"></single-line-input>
-                                    <div class="small text-danger">
-                                        <div v-for="error in entity.errors.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName">{{error}}</div>
-                                    </div>
                                 </template>
                                 <template v-else-if="entity.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName === null">
                                     <i class="text-muted">None</i>
@@ -601,8 +598,7 @@
                     scopeName: []
                 },
                 childEntityFeatureSetting: {
-                    parentName: [],
-                    sortedChildrenInParentCriteriaPropertyName: []
+                    parentName: []
                 }
             }
         }
@@ -728,7 +724,7 @@
                 ]);
             }
 
-            if (serializableItem.childEntityFeatureSetting && !serializableItem.childEntityFeatureSetting.hasSortedChildrenInParent) {
+            if (serializableItem.childEntityFeatureSetting) {
                 this.normalizeNullableStrings(serializableItem.childEntityFeatureSetting, [
                     'sortedChildrenInParentCriteriaPropertyName'
                 ]);
@@ -760,9 +756,6 @@
 
             editableItem.childEntityFeatureSetting.enabled === true && !editableItem.childEntityFeatureSetting.parentName &&
                 editableItem.errors.childEntityFeatureSetting.parentName.push('Parent Name is required.');
-
-            editableItem.childEntityFeatureSetting.enabled === true && editableItem.childEntityFeatureSetting.hasSortedChildrenInParent && !editableItem.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName &&
-                editableItem.errors.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName.push('Sorted Children in Parent Property Name is required.');
 
             return !this.hasError(editableItem.errors) &&
                 !this.hasError(editableItem.errors.readableIdEntityFeatureSetting) &&

@@ -240,7 +240,6 @@ export default class CodeBasedEntityFeatureGenerator extends FeatureGenerator {
     sm_EntityClass_EntityPropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        const constructorModifier = item.abstractModel ? 'protected' : 'public';
         const codePropertyName = this.codePropertyName(item);
 
         data.push(

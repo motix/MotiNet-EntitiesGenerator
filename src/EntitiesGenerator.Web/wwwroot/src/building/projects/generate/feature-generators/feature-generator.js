@@ -330,7 +330,8 @@ export default class FeatureGenerator {
      * @param {string} subEntityName
      * @param {string[]} data
      */
-    sm_SubEntityClass_EntityInterfacesData_FromOthers(item, subEntityName, data) {
+    sm_SubEntityClass_EntityInterfacesData(item, subEntityName, data) {
+        this.throwIfItemNotHaveFeature(item);
     }
 
     /**
@@ -338,7 +339,8 @@ export default class FeatureGenerator {
      * @param {string} subEntityName
      * @param {string[]} data
      */
-    sm_SubEntityClass_EntityPropertyDeclarationsData_FromOthers(item, subEntityName, data) {
+    sm_SubEntityClass_EntityPropertyDeclarationsData(item, subEntityName, data) {
+        this.throwIfItemNotHaveFeature(item);
     }
 
     /**
@@ -346,7 +348,26 @@ export default class FeatureGenerator {
      * @param {string} subEntityName
      * @param {string[]} data
      */
-    sm_SubEntityClass_RelationshipsPropertyDeclarationsData_FromOthers(item, subEntityName, data) {
+    sm_SubEntityClass_RelationshipsPropertyDeclarationsData(item, subEntityName, data) {
+        this.throwIfItemNotHaveFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string} subEntityName
+     * @param {string[]} data
+     */
+    sm_SubEntityClass_CustomizationFieldDeclarationsData(item, subEntityName, data) {
+        this.throwIfItemNotHaveFeature(item);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string} subEntityName
+     * @param {string[]} data
+     */
+    sm_SubEntityClass_CustomizationPropertyDeclarationsData(item, subEntityName, data) {
+        this.throwIfItemNotHaveFeature(item);
     }
 
     /**
@@ -523,16 +544,20 @@ export default class FeatureGenerator {
 
     /**
      * @param {Item} item
+     * @param {string} subEntityName
      * @param {string[]} data
      */
-    aspDv_SubEntityViewModelsClass_BasePropertyDeclarationsData_FromOthers(item, data) {
+    aspDv_SubEntityViewModelsClass_BasePropertyDeclarationsData(item, subEntityName, data) {
+        this.throwIfItemNotHaveFeature(item);
     }
 
     /**
      * @param {Item} item
+     * @param {string} subEntityName
      * @param {string[]} data
      */
-    aspDv_SubEntityViewModelsClass_FullPropertyDeclarationsData_FromOthers(item, data) {
+    aspDv_SubEntityViewModelsClass_FullPropertyDeclarationsData(item, subEntityName, data) {
+        this.throwIfItemNotHaveFeature(item);
     }
 
     /**

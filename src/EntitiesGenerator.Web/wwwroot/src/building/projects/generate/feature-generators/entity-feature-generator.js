@@ -71,8 +71,6 @@ export default class EntityFeatureGenerator extends FeatureGenerator {
     sm_EntityClass_EntityPropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
 
-        const constructorModifier = item.abstractModel ? 'protected' : 'public';
-
         data.push(`[StringLength(StringLengths.Guid)]
 public string Id { get; set; } = Guid.NewGuid().ToString();`);
     }
