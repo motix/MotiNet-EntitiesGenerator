@@ -31,8 +31,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IFeatureSettingManager<TFeatureSetting>, FeatureSettingManager<TFeatureSetting>>();
 
             services.TryAddScoped<IItemsRelationshipManager<TItemsRelationship, TModule>, ItemsRelationshipManager<TItemsRelationship, TModule>>();
-            services.TryAddScoped<IValidator<TItemsRelationship, TModule>, ItemsRelationshipValidator<TItemsRelationship, TModule>>();
-            services.TryAddScoped<ILookupNormalizer<TItemsRelationship>, LowerInvariantLookupNormalizer<TItemsRelationship>>();
 
             services.TryAddScoped<EntitiesGeneratorErrorDescriber, EntitiesGeneratorErrorDescriber>();
 

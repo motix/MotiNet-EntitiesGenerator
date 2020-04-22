@@ -1,12 +1,10 @@
-﻿using MotiNet.Entities;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace EntitiesGenerator
 {
     // Entity
     public sealed partial class ItemsRelationship
-        : INameWiseEntity
     {
         [StringLength(StringLengths.Guid)]
         public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -14,14 +12,6 @@ namespace EntitiesGenerator
         [Required]
         [StringLength(StringLengths.Guid)]
         public string ModuleId { get; set; }
-
-        [Required]
-        [StringLength(StringLengths.TitleContent)]
-        public string Name { get; set; }
-
-        [Required]
-        [StringLength(StringLengths.TitleContent)]
-        public string NormalizedName { get; set; }
     }
 
     // Relationships

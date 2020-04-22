@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using MotiNet.Entities;
-using System;
 using System.Collections.Generic;
 
 namespace EntitiesGenerator
@@ -13,25 +12,20 @@ namespace EntitiesGenerator
             IItemsRelationshipStore<TItemsRelationship, TModule> store,
             IItemsRelationshipAccessor<TItemsRelationship, TModule> accessor,
             IEnumerable<IValidator<TItemsRelationship, TModule>> validators,
-            ILogger<ItemsRelationshipManager<TItemsRelationship, TModule>> logger,
-            ILookupNormalizer<TItemsRelationship> nameNormalizer)
+            ILogger<ItemsRelationshipManager<TItemsRelationship, TModule>> logger)
             : base(store, accessor, validators, logger)
-        {
-            NameNormalizer = nameNormalizer ?? throw new ArgumentNullException(nameof(nameNormalizer));
-        }
+        { }
 
         public IEntityStore<TItemsRelationship> EntityStore => Store as IEntityStore<TItemsRelationship>;
 
         public IEntityAccessor<TItemsRelationship> EntityAccessor => Accessor as IEntityAccessor<TItemsRelationship>;
 
-        public IScopedNameBasedEntityStore<TItemsRelationship, TModule> ScopedNameBasedEntityStore => Store as IScopedNameBasedEntityStore<TItemsRelationship, TModule>;
+        public IChildEntityStore<TItemsRelationship, TModule> ChildEntityStore => Store as IChildEntityStore<TItemsRelationship, TModule>;
 
-        public IScopedNameBasedEntityAccessor<TItemsRelationship, TModule> ScopedNameBasedEntityAccessor => Accessor as IScopedNameBasedEntityAccessor<TItemsRelationship, TModule>;
+        public IChildEntityAccessor<TItemsRelationship, TModule> ChildEntityAccessor => Accessor as IChildEntityAccessor<TItemsRelationship, TModule>;
 
         public IItemsRelationshipStore<TItemsRelationship, TModule> ItemsRelationshipStore => Store as IItemsRelationshipStore<TItemsRelationship, TModule>;
 
         public IItemsRelationshipAccessor<TItemsRelationship, TModule> ItemsRelationshipAccessor => Accessor as IItemsRelationshipAccessor<TItemsRelationship, TModule>;
-
-        public ILookupNormalizer NameNormalizer { get; }
     }
 }

@@ -40,12 +40,10 @@ namespace EntitiesGenerator
     // Customization
     partial class Module
     {
-        private readonly Func<IEnumerable<Item>, IEnumerable<Item>> _orderedItemsMethod;
-
         private readonly Func<IEnumerable<ItemsRelationship>, IEnumerable<ItemsRelationship>> _orderedItemsRelationshipsMethod;
 
-        public IEnumerable<Item> OrderedItems => _orderedItemsMethod?.Invoke(Items) ?? Items?.OrderBy(x => x.Position);
+        public IEnumerable<Item> OrderedItems => Items?.OrderBy(x => x.Position);
 
-        public IEnumerable<ItemsRelationship> OrderedItemsRelationships => _orderedItemsRelationshipsMethod?.Invoke(ItemsRelationships) ?? ItemsRelationships?.OrderBy(x => x.Name);
+        public IEnumerable<ItemsRelationship> OrderedItemsRelationships => _orderedItemsRelationshipsMethod?.Invoke(ItemsRelationships) ?? throw new NotImplementedException();
     }
 }

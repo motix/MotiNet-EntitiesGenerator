@@ -17,9 +17,8 @@ namespace EntitiesGenerator
             IItemsRelationshipAccessor<TItemsRelationship, TModule> accessor,
             IEnumerable<IValidator<TItemsRelationship, TModule>> validators,
             ILogger<ItemsRelationshipManager<TItemsRelationship, TModule>> logger,
-            ILookupNormalizer<TItemsRelationship> nameNormalizer,
             IHttpContextAccessor contextAccessor)
-            : base(store, accessor, validators, logger, nameNormalizer)
+            : base(store, accessor, validators, logger)
             => _cancel = contextAccessor?.HttpContext?.RequestAborted ?? CancellationToken.None;
 
         public override CancellationToken CancellationToken => _cancel;

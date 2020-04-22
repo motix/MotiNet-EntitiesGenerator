@@ -32,8 +32,6 @@ namespace EntitiesGenerator
     // Customization
     partial class Project
     {
-        private readonly Func<IEnumerable<Module>, IEnumerable<Module>> _orderedModulesMethod;
-
-        public IEnumerable<Module> OrderedModules => _orderedModulesMethod?.Invoke(Modules) ?? Modules?.OrderBy(x => x.Position);
+        public IEnumerable<Module> OrderedModules => Modules?.OrderBy(x => x.Position);
     }
 }

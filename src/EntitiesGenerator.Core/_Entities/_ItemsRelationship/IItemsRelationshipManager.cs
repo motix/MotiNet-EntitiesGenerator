@@ -4,11 +4,11 @@ namespace EntitiesGenerator
 {
     // Entity Features:
     // - Entity
-    // - ScopedNameBasedEntity
+    // - ChildEntity
 
     public interface IItemsRelationshipManager<TItemsRelationship, TModule>
         : IEntityManager<TItemsRelationship>,
-          IScopedNameBasedEntityManager<TItemsRelationship, TModule>
+          IChildEntityManager<TItemsRelationship, TModule>
         where TItemsRelationship : class
         where TModule : class
     { }

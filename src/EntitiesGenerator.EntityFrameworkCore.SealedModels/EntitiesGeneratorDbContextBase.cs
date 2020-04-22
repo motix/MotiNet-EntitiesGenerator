@@ -52,12 +52,5 @@ namespace EntitiesGenerator.EntityFrameworkCore
                    .WithMany(x => x.Items)
                    .OnDelete(DeleteBehavior.Restrict);
         }
-
-        protected override void ConfigureItemsRelationship(EntityTypeBuilder<ItemsRelationship> builder)
-        {
-            // Unique name in scope
-            builder.HasIndex(nameof(ItemsRelationship.ModuleId), nameof(ItemsRelationship.Name)).IsUnique();
-            builder.HasIndex(nameof(ItemsRelationship.ModuleId), nameof(ItemsRelationship.NormalizedName)).IsUnique();
-        }
     }
 }

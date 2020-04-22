@@ -11,10 +11,6 @@ namespace EntitiesGenerator.Mvc
         [LocalizedRequired]
         [Display(Name = "Module", ResourceType = typeof(DisplayNames))]
         public string ModuleId { get; set; }
-
-        [LocalizedRequired]
-        [Display(Name = nameof(Name), ResourceType = typeof(DisplayNames))]
-        public string Name { get; set; }
     }
 
     // Full
