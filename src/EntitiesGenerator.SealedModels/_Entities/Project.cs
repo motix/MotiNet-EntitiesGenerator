@@ -11,10 +11,8 @@ namespace EntitiesGenerator
         : INameWiseEntity,
           IIdWiseEntity<string>
     {
-        public Project() => Id = Guid.NewGuid().ToString();
-
         [StringLength(StringLengths.Guid)]
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
         [StringLength(StringLengths.TitleContent)]
@@ -34,6 +32,8 @@ namespace EntitiesGenerator
     // Customization
     partial class Project
     {
-        public IEnumerable<Module> OrderedModules => Modules?.OrderBy(x => x.Position);
+        private readonly Func<IEnumerable<Module>, IEnumerable<Module>> _orderedModulesMethod;
+
+        public IEnumerable<Module> OrderedModules => _orderedModulesMethod?.Invoke(Modules) ?? Modules?.OrderBy(x => x.Position);
     }
 }

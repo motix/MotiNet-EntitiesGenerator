@@ -187,7 +187,7 @@ export class SmProject_DependencyInjectionClassGenerator extends CSharpModuleSpe
         const namespace = SmProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
         const moduleSpecificTypeParameters = this.features.moduleSpecificTypeParameters(this.module,
-            `=> services.Add${moduleCommonName}`.length / 4 + 3);
+            `=> services.Add${moduleCommonName}`.length / 4 + 1);
         const serviceRegistrationsData = [];
 
         for (const item of this.module.items) {
@@ -217,11 +217,11 @@ export class SmProject_DependencyInjectionClassGenerator extends CSharpModuleSpe
 
 public static ${moduleCommonName}Builder Add${moduleCommonName}WithSealedModels(this IServiceCollection services, Action<${moduleCommonName}Options> setupAction)
     => services.Add${moduleCommonName}${moduleSpecificTypeParameters}(setupAction)
-                .AddSealedModels();`;
+               .AddSealedModels();`;
         } else {
             body = `public static ${moduleCommonName}Builder Add${moduleCommonName}WithSealedModels(this IServiceCollection services)
     => services.Add${moduleCommonName}${moduleSpecificTypeParameters}()
-                .AddSealedModels();`;
+               .AddSealedModels();`;
         }
 
         body = StringHelper.indent(body, 2);

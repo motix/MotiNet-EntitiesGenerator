@@ -36,6 +36,9 @@ namespace EntitiesGenerator.EntityFrameworkCore
 
             // Ignore ordered children
             builder.Ignore(x => x.OrderedItems);
+
+            // Ignore ordered children
+            builder.Ignore(x => x.OrderedItemsRelationships);
         }
 
         protected override void ConfigureItem(EntityTypeBuilder<Item> builder)
@@ -48,6 +51,13 @@ namespace EntitiesGenerator.EntityFrameworkCore
             builder.HasOne(x => x.Module)
                    .WithMany(x => x.Items)
                    .OnDelete(DeleteBehavior.Restrict);
+        }
+
+        protected override void ConfigureItemsRelationship(EntityTypeBuilder<ItemsRelationship> builder)
+        {
+            // Unique name in scope
+            builder.HasIndex(nameof(ItemsRelationship.ModuleId), nameof(ItemsRelationship.Name)).IsUnique();
+            builder.HasIndex(nameof(ItemsRelationship.ModuleId), nameof(ItemsRelationship.NormalizedName)).IsUnique();
         }
     }
 }

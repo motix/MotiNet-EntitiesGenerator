@@ -8,28 +8,38 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static EntitiesGeneratorBuilder AddAspNetCore(this EntitiesGeneratorBuilder builder)
         {
-            // Hosting doesn't add IHttpContextAccessor by default
-            builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            var services = builder.Services;
 
-            builder.Services.AddScoped(
+            // Hosting doesn't add IHttpContextAccessor by default
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddScoped(
                 typeof(IProjectManager<>).MakeGenericType(builder.ProjectType),
                 typeof(AspNetProjectManager<>).MakeGenericType(builder.ProjectType));
 
-            builder.Services.AddScoped(
+            services.AddScoped(
                 typeof(IModuleManager<,>).MakeGenericType(builder.ModuleType, builder.ProjectType),
                 typeof(AspNetModuleManager<,>).MakeGenericType(builder.ModuleType, builder.ProjectType));
 
-            builder.Services.AddScoped(
+            services.AddScoped(
                 typeof(IItemManager<,>).MakeGenericType(builder.ItemType, builder.ModuleType),
                 typeof(AspNetItemManager<,>).MakeGenericType(builder.ItemType, builder.ModuleType));
 
-            builder.Services.AddScoped(
+            services.AddScoped(
                 typeof(IFeatureSettingManager<>).MakeGenericType(builder.FeatureSettingType),
                 typeof(AspNetFeatureSettingManager<>).MakeGenericType(builder.FeatureSettingType));
 
-            builder.Services.AddScoped(
-                typeof(IItemsRelationshipManager<>).MakeGenericType(builder.ItemsRelationshipType),
-                typeof(AspNetItemsRelationshipManager<>).MakeGenericType(builder.ItemsRelationshipType));
+            services.AddScoped(
+                typeof(IItemsRelationshipManager<,>).MakeGenericType(builder.ItemsRelationshipType, builder.ModuleType),
+                typeof(AspNetItemsRelationshipManager<,>).MakeGenericType(builder.ItemsRelationshipType, builder.ModuleType));
+
+            var internalMethod = typeof(AspNetEntitiesGeneratorBuilderExtensions).GetMethod("AddAspNetCoreInternal",
+                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+
+            if (internalMethod != null)
+            {
+                internalMethod.Invoke(null, new object[] { builder });
+            }
 
             return builder;
         }

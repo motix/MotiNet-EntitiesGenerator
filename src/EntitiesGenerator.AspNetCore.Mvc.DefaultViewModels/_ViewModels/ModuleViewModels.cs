@@ -7,9 +7,7 @@ namespace EntitiesGenerator.Mvc
     // Base
     public abstract partial class ModuleViewModelBase
     {
-        protected ModuleViewModelBase() => Id = Guid.NewGuid().ToString();
-
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [LocalizedRequired]
         [Display(Name = "Project", ResourceType = typeof(DisplayNames))]
@@ -28,6 +26,9 @@ namespace EntitiesGenerator.Mvc
 
         [Display(Name = nameof(Items), ResourceType = typeof(DisplayNames))]
         public ICollection<ItemLiteViewModel> Items { get; set; }
+
+        [Display(Name = nameof(ItemsRelationships), ResourceType = typeof(DisplayNames))]
+        public ICollection<ItemsRelationshipLiteViewModel> ItemsRelationships { get; set; }
     }
 
     // Lite

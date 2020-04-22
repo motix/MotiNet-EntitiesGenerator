@@ -6,9 +6,7 @@ namespace EntitiesGenerator
     // Entity
     public abstract partial class FeatureSetting
     {
-        protected FeatureSetting() => Id = Guid.NewGuid().ToString();
-
         [StringLength(StringLengths.Guid)]
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
     }
 }

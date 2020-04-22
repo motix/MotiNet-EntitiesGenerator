@@ -4,10 +4,10 @@ using System;
 
 namespace EntitiesGenerator.EntityFrameworkCore
 {
-    public abstract class EntitiesGeneratorDbContextBase<TProject, TModule, TItem,
-                                                         TFeatureSetting,
-                                                         TItemsRelationship,
-                                                         TKey>
+    public abstract partial class EntitiesGeneratorDbContextBase<TProject, TModule, TItem,
+                                                                 TFeatureSetting,
+                                                                 TItemsRelationship,
+                                                                 TKey>
         : DbContext
         where TProject : class
         where TModule : class
@@ -37,6 +37,14 @@ namespace EntitiesGenerator.EntityFrameworkCore
             modelBuilder.Entity<TItem>(ConfigureItem);
             modelBuilder.Entity<TFeatureSetting>(ConfigureFeatureSetting);
             modelBuilder.Entity<TItemsRelationship>(ConfigureItemsRelationship);
+
+            var internalMethod = GetType().GetMethod("OnModelCreatingInternal",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+            if (internalMethod != null)
+            {
+                internalMethod.Invoke(this, new object[] { modelBuilder });
+            }
         }
 
         protected virtual void ConfigureProject(EntityTypeBuilder<TProject> builder) { }

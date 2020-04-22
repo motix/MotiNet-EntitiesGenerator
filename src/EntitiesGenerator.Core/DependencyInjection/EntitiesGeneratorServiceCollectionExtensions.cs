@@ -4,7 +4,7 @@ using MotiNet.Entities;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class EntitiesGeneratorServiceCollectionExtensions
+    public static partial class EntitiesGeneratorServiceCollectionExtensions
     {
         public static EntitiesGeneratorBuilder AddEntitiesGenerator<TProject, TModule, TItem,
                                                                     TFeatureSetting,
@@ -30,9 +30,22 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<IFeatureSettingManager<TFeatureSetting>, FeatureSettingManager<TFeatureSetting>>();
 
-            services.TryAddScoped<IItemsRelationshipManager<TItemsRelationship>, ItemsRelationshipManager<TItemsRelationship>>();
+            services.TryAddScoped<IItemsRelationshipManager<TItemsRelationship, TModule>, ItemsRelationshipManager<TItemsRelationship, TModule>>();
+            services.TryAddScoped<IValidator<TItemsRelationship, TModule>, ItemsRelationshipValidator<TItemsRelationship, TModule>>();
+            services.TryAddScoped<ILookupNormalizer<TItemsRelationship>, LowerInvariantLookupNormalizer<TItemsRelationship>>();
 
             services.TryAddScoped<EntitiesGeneratorErrorDescriber, EntitiesGeneratorErrorDescriber>();
+
+            var internalMethod = typeof(EntitiesGeneratorServiceCollectionExtensions).GetMethod("AddEntitiesGeneratorInternal",
+                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+
+            if (internalMethod != null)
+            {
+                internalMethod = internalMethod.MakeGenericMethod(typeof(TProject), typeof(TModule), typeof(TItem),
+                                                                  typeof(TFeatureSetting),
+                                                                  typeof(TItemsRelationship));
+                internalMethod.Invoke(null, new object[] { services });
+            }
 
             return new EntitiesGeneratorBuilder(
                 services,

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EntitiesGenerator
 {
-    public class ItemValidator<TItem, TModule> : IValidator<TItem, TModule>
+    public partial class ItemValidator<TItem, TModule> : IValidator<TItem, TModule>
         where TItem : class
         where TModule : class
     {
@@ -26,6 +26,14 @@ namespace EntitiesGenerator
 
             await this.ValidateNameAsync(theManager, Accessor, item, errors,
                 name => ErrorDescriber.InvalidItemName(name), name => ErrorDescriber.DuplicateItemName(name));
+
+            var internalMethod = GetType().GetMethod("ValidateInternalAsync",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+            if (internalMethod != null)
+            {
+                internalMethod.Invoke(this, new object[] { manager, item, errors });
+            }
 
             return GenericResult.GetResult(errors);
         }

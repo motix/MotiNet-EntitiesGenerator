@@ -70,6 +70,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ItemsRelationships.
+        /// </summary>
+        public static string ItemsRelationships {
+            get {
+                return ResourceManager.GetString("ItemsRelationships", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Module.
         /// </summary>
         public static string Module {

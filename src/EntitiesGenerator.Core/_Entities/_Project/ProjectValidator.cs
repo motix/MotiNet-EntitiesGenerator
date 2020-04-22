@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EntitiesGenerator
 {
-    public class ProjectValidator<TProject> : IValidator<TProject>
+    public partial class ProjectValidator<TProject> : IValidator<TProject>
         where TProject : class
     {
         public ProjectValidator(IProjectAccessor<TProject> accessor, EntitiesGeneratorErrorDescriber errorDescriber)
@@ -25,6 +25,14 @@ namespace EntitiesGenerator
 
             await this.ValidateNameAsync(theManager, Accessor, project, errors,
                 name => ErrorDescriber.InvalidProjectName(name), name => ErrorDescriber.DuplicateProjectName(name));
+
+            var internalMethod = GetType().GetMethod("ValidateInternalAsync",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+            if (internalMethod != null)
+            {
+                internalMethod.Invoke(this, new object[] { manager, project, errors });
+            }
 
             return GenericResult.GetResult(errors);
         }

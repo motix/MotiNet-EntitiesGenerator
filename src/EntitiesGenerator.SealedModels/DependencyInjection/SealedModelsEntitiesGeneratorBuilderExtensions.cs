@@ -32,7 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 typeof(FeatureSettingAccessor));
 
             services.TryAddScoped(
-                typeof(IItemsRelationshipAccessor<>).MakeGenericType(builder.ItemsRelationshipType),
+                typeof(IItemsRelationshipAccessor<,>).MakeGenericType(builder.ItemsRelationshipType, builder.ModuleType),
                 typeof(ItemsRelationshipAccessor));
 
             var internalMethod = typeof(SealedModelsEntitiesGeneratorBuilderExtensions).GetMethod("AddSealedModelsInternal",

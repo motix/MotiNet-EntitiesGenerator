@@ -8,10 +8,8 @@ namespace EntitiesGenerator
     public sealed partial class Item
         : INameWiseEntity
     {
-        public Item() => Id = Guid.NewGuid().ToString();
-
         [StringLength(StringLengths.Guid)]
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
         [StringLength(StringLengths.Guid)]

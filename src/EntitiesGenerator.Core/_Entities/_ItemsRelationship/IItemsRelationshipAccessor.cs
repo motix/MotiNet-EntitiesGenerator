@@ -2,8 +2,10 @@
 
 namespace EntitiesGenerator
 {
-    public interface IItemsRelationshipAccessor<TItemsRelationship>
-        : IEntityAccessor<TItemsRelationship>
+    public interface IItemsRelationshipAccessor<TItemsRelationship, TModule>
+        : IEntityAccessor<TItemsRelationship>,
+          IScopedNameBasedEntityAccessor<TItemsRelationship, TModule>
         where TItemsRelationship : class
+        where TModule : class
     { }
 }

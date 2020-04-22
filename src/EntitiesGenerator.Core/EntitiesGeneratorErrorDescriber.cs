@@ -73,5 +73,23 @@ namespace EntitiesGenerator
             };
 
         #endregion
+
+        #region ItemsRelationship
+
+        public virtual GenericError InvalidItemsRelationshipName(string itemsRelationshipName)
+            => new GenericError
+            {
+                Code = nameof(InvalidItemsRelationshipName),
+                Description = _localizer[nameof(InvalidItemsRelationshipName), itemsRelationshipName]
+            };
+
+        public virtual GenericError DuplicateItemsRelationshipName(string itemsRelationshipName)
+            => new GenericError
+            {
+                Code = nameof(DuplicateItemsRelationshipName),
+                Description = _localizer[nameof(DuplicateItemsRelationshipName), itemsRelationshipName]
+            };
+
+        #endregion
     }
 }

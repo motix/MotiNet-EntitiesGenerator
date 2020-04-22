@@ -58,7 +58,7 @@ export default class ScopedNameBasedEntityFeatureGenerator extends FeatureGenera
      * @param {Item} item
      */
     namePropertyName(item) {
-        return this.itemFeatureSetting(item).namePropertyName;
+        return this.itemFeatureSetting(item).namePropertyName || 'Name';
     }
 
     /**

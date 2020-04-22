@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class EntityFrameworkCoreEntitiesGeneratorBuilderExtensions
+    public static partial class EntityFrameworkCoreEntitiesGeneratorBuilderExtensions
     {
         public static EntitiesGeneratorBuilder AddEntityFrameworkCoreWithSealedModels<TContext>(this EntitiesGeneratorBuilder builder)
             where TContext : DbContext
@@ -30,8 +30,17 @@ namespace Microsoft.Extensions.DependencyInjection
                 typeof(FeatureSettingStore<>).MakeGenericType(contextType));
 
             services.TryAddScoped(
-                typeof(IItemsRelationshipStore<>).MakeGenericType(builder.ItemsRelationshipType),
+                typeof(IItemsRelationshipStore<,>).MakeGenericType(builder.ItemsRelationshipType, builder.ModuleType),
                 typeof(ItemsRelationshipStore<>).MakeGenericType(contextType));
+
+            var internalMethod = typeof(EntityFrameworkCoreEntitiesGeneratorBuilderExtensions).GetMethod("AddEntityFrameworkCoreWithSealedModelsInternal",
+                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+
+            if (internalMethod != null)
+            {
+                internalMethod = internalMethod.MakeGenericMethod(typeof(TContext));
+                internalMethod.Invoke(null, new object[] { builder });
+            }
 
             return builder;
         }

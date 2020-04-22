@@ -7,9 +7,7 @@ namespace EntitiesGenerator.Mvc
     // Base
     public abstract partial class ProjectViewModelBase
     {
-        protected ProjectViewModelBase() => Id = Guid.NewGuid().ToString();
-
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [LocalizedRequired]
         [Display(Name = nameof(Name), ResourceType = typeof(DisplayNames))]

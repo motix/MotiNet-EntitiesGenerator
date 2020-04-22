@@ -6,9 +6,7 @@ namespace EntitiesGenerator.Mvc
     // Base
     public abstract partial class ItemViewModelBase
     {
-        protected ItemViewModelBase() => Id = Guid.NewGuid().ToString();
-
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [LocalizedRequired]
         [Display(Name = "Module", ResourceType = typeof(DisplayNames))]

@@ -120,6 +120,9 @@
   <data name="DuplicateItemName" xml:space="preserve">
     <value>Item name '{0}' has already been used.</value>
   </data>
+  <data name="DuplicateItemsRelationshipName" xml:space="preserve">
+    <value>Items Relationship name '{0}' has already been used.</value>
+  </data>
   <data name="DuplicateModuleName" xml:space="preserve">
     <value>Module name '{0}' has already been used.</value>
   </data>
@@ -128,6 +131,9 @@
   </data>
   <data name="InvalidItemName" xml:space="preserve">
     <value>Item name '{0}' is invalid.</value>
+  </data>
+  <data name="InvalidItemsRelationshipName" xml:space="preserve">
+    <value>Items Relationship name '{0}' is invalid.</value>
   </data>
   <data name="InvalidModuleName" xml:space="preserve">
     <value>Module name '{0}' is invalid.</value>

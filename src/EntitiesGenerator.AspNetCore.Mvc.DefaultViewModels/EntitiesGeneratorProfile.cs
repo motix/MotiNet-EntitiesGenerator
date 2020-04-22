@@ -14,6 +14,7 @@ namespace EntitiesGenerator.Mvc
 
             CreateMap(builder.ModuleType, typeof(ModuleViewModel))
                 .SwapMemberWithOrderedMember(nameof(ModuleViewModel.Items))
+                .SwapMemberWithOrderedMember(nameof(ModuleViewModel.ItemsRelationships))
                 .ReverseMap();
             CreateMap(builder.ModuleType, typeof(ModuleLiteViewModel));
 

@@ -6,18 +6,20 @@ using System.Threading;
 
 namespace EntitiesGenerator
 {
-    public class AspNetItemsRelationshipManager<TItemsRelationship> : ItemsRelationshipManager<TItemsRelationship>
+    public class AspNetItemsRelationshipManager<TItemsRelationship, TModule> : ItemsRelationshipManager<TItemsRelationship, TModule>
         where TItemsRelationship : class
+        where TModule : class
     {
         private readonly CancellationToken _cancel;
 
         public AspNetItemsRelationshipManager(
-            IItemsRelationshipStore<TItemsRelationship> store,
-            IItemsRelationshipAccessor<TItemsRelationship> accessor,
-            IEnumerable<IValidator<TItemsRelationship>> validators,
-            ILogger<ItemsRelationshipManager<TItemsRelationship>> logger,
+            IItemsRelationshipStore<TItemsRelationship, TModule> store,
+            IItemsRelationshipAccessor<TItemsRelationship, TModule> accessor,
+            IEnumerable<IValidator<TItemsRelationship, TModule>> validators,
+            ILogger<ItemsRelationshipManager<TItemsRelationship, TModule>> logger,
+            ILookupNormalizer<TItemsRelationship> nameNormalizer,
             IHttpContextAccessor contextAccessor)
-            : base(store, accessor, validators, logger)
+            : base(store, accessor, validators, logger, nameNormalizer)
             => _cancel = contextAccessor?.HttpContext?.RequestAborted ?? CancellationToken.None;
 
         public override CancellationToken CancellationToken => _cancel;
