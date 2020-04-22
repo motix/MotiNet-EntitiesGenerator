@@ -44,6 +44,9 @@ namespace EntitiesGenerator
 
         public IEnumerable<Item> OrderedItems => Items?.OrderBy(x => x.Position);
 
-        public IEnumerable<ItemsRelationship> OrderedItemsRelationships => _orderedItemsRelationshipsMethod?.Invoke(ItemsRelationships) ?? throw new NotImplementedException();
+        public IEnumerable<ItemsRelationship> OrderedItemsRelationships
+            => _orderedItemsRelationshipsMethod == null ?
+            throw new NotImplementedException() :
+            _orderedItemsRelationshipsMethod.Invoke(ItemsRelationships);
     }
 }

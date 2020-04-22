@@ -242,7 +242,10 @@ public string Id { get; set; } = Guid.NewGuid().ToString();`);
                 const criteriaPropertyName = this.sortedChildrenInParentCriteriaPropertyName(otherItem);
 
                 if (criteriaPropertyName === null) {
-                    data.push(`public IEnumerable<${entityName}> Ordered${pluralEntityName} => _ordered${pluralEntityName}Method?.Invoke(${pluralEntityName}) ?? throw new NotImplementedException();`);
+                    data.push(`public IEnumerable<${entityName}> Ordered${pluralEntityName}
+    => _ordered${pluralEntityName}Method == null ?
+    throw new NotImplementedException() :
+    _ordered${pluralEntityName}Method.Invoke(${pluralEntityName});`);
                 } else {
                     data.push(`public IEnumerable<${entityName}> Ordered${pluralEntityName} => ${pluralEntityName}?.OrderBy(x => x.${criteriaPropertyName});`);
                 }
@@ -337,7 +340,10 @@ public string Id { get; set; } = Guid.NewGuid().ToString();`);
             const criteriaPropertyName = this.sortedChildrenInParentCriteriaPropertyName(item);
 
             if (criteriaPropertyName === null) {
-                data.push(`public IEnumerable<${entityName}> Ordered${pluralEntityName} => _ordered${pluralEntityName}Method?.Invoke(${pluralEntityName}) ?? throw new NotImplementedException();`);
+                data.push(`public IEnumerable<${entityName}> Ordered${pluralEntityName}
+    => _ordered${pluralEntityName}Method == null ?
+    throw new NotImplementedException() :
+    _ordered${pluralEntityName}Method.Invoke(${pluralEntityName});`);
             } else {
                 data.push(`public IEnumerable<${entityName}> Ordered${pluralEntityName} => ${pluralEntityName}?.OrderBy(x => x.${criteriaPropertyName});`);
             }

@@ -31,6 +31,7 @@ namespace EntitiesGenerator.EntityFrameworkCore
             modelBuilder.Entity<NameBasedEntityFeatureSetting>(ConfigureNameBasedEntityFeatureSetting);
             modelBuilder.Entity<ScopedNameBasedEntityFeatureSetting>(ConfigureScopedNameBasedEntityFeatureSetting);
             modelBuilder.Entity<ChildEntityFeatureSetting>(ConfigureChildEntityFeatureSetting);
+            modelBuilder.Entity<ItemsRelationship>(ConfigureItemsRelationshipInternal);
         }
 
         protected virtual void ConfigureItemInternal(EntityTypeBuilder<Item> builder)
@@ -64,7 +65,7 @@ namespace EntitiesGenerator.EntityFrameworkCore
                    .HasColumnName(nameof(ChildEntityFeatureSetting.DeleteRestrict));
         }
 
-        protected override void ConfigureItemsRelationship(EntityTypeBuilder<ItemsRelationship> builder)
+        protected virtual void ConfigureItemsRelationshipInternal(EntityTypeBuilder<ItemsRelationship> builder)
         {
             // Unique
             builder.HasIndex(nameof(ItemsRelationship.Item1Id), nameof(ItemsRelationship.Item2Id)).IsUnique();
