@@ -1,8 +1,9 @@
 ﻿// EntityFrameworkCore.SealedModels
 
 import { IdentifierHelper } from '../content-helper';
-import AllFeaturesGenerator from '../feature-generators/all-features-generator';
 import * as CG from '../content-generators/content-generators';
+import AllFeaturesGenerator from '../feature-generators/all-features-generator';
+import AllRelationshipsGenerator from '../relationship-generators/all-relationships-generator';
 
 export class EfSmProjectSG {
     /**
@@ -21,9 +22,10 @@ export class EfSmProjectSG {
 
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      * @param {Module} module
      */
-    generateProjectStructure(features, module) {
+    generateProjectStructure(features, relationships, module) {
         const projectName = EfSmProjectSG.getProjectName(module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(module);
 
@@ -36,18 +38,24 @@ export class EfSmProjectSG {
                     type: 'file',
                     fileType: 'projectFile',
                     name: `${projectName}.csproj`,
-                    generator: new CG.EfSmProject_ProjectFileGenerator(features, module)
-                },
-                {
-                    type: 'file',
-                    name: `${moduleCommonName}DbContextBase.cs`,
-                    generator: new CG.EfSmProject_DbContextClassGenerator(features, module)
+                    generator: new CG.EfSmProject_ProjectFileGenerator(features, relationships, module)
                 }
             ]
         }
 
+        for (const relationship of module.itemsRelationships) {
+            const generator = relationships.getGenerator(relationship);
+            generator.efSm_ProjectFolder(relationship, projectFolder);
+        }
+
+        projectFolder.children.push({
+            type: 'file',
+            name: `${moduleCommonName}DbContextBase.cs`,
+            generator: new CG.EfSmProject_DbContextClassGenerator(features, relationships, module)
+        });
+
         if (module.items.length > 0) {
-            const storesFolder = this.generateStoresFolderStructure(features, module);
+            const storesFolder = this.generateStoresFolderStructure(features, relationships, module);
             projectFolder.children.push(storesFolder);
         }
 
@@ -56,7 +64,7 @@ export class EfSmProjectSG {
                 {
                     type: 'file',
                     name: `EntityFrameworkCore${moduleCommonName}Options.cs`,
-                    generator: new CG.EfSmProject_OptionsClassGenerator(features, module)
+                    generator: new CG.EfSmProject_OptionsClassGenerator(features, relationships, module)
                 });
         }
 
@@ -67,7 +75,7 @@ export class EfSmProjectSG {
                 {
                     type: 'file',
                     name: `EntityFrameworkCore${moduleCommonName}BuilderExtensions.cs`,
-                    generator: new CG.EfSmProject_DependencyInjectionClassGenerator(features, module)
+                    generator: new CG.EfSmProject_DependencyInjectionClassGenerator(features, relationships, module)
                 }
             ]
         });
@@ -77,9 +85,10 @@ export class EfSmProjectSG {
 
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      * @param {Module} module
      */
-    generateStoresFolderStructure(features, module) {
+    generateStoresFolderStructure(features, relationships, module) {
         const folder = {
             type: 'folder',
             name: '_Stores',
@@ -90,7 +99,7 @@ export class EfSmProjectSG {
             folder.children.push({
                 type: 'file',
                 name: `${item.name}Store.cs`,
-                generator: new CG.EfSmProject_EntityStoreClassGenerator(features, item)
+                generator: new CG.EfSmProject_EntityStoreClassGenerator(features, relationships, item)
             });
         }
 

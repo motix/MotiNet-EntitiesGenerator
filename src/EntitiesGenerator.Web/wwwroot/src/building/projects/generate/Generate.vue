@@ -323,21 +323,40 @@
         }
 
         convertToWorkEntity(loadedProject) {
-            super.convertToWorkEntity(loadedProject);
-            const editableProject = loadedProject;
+            const project = loadedProject;
 
-            editableProject.modules = editableProject.fullModules;
-            delete editableProject.fullModules;
-            for (const editableModule of editableProject.modules) {
-                editableModule.project = editableProject;
-                editableModule.items = editableModule.fullItems;
-                delete editableModule.fullItems;
-                for (const editableItem of editableModule.items) {
-                    editableItem.module = editableModule;
+            project.modules = project.fullModules;
+            delete project.fullModules;
+
+            for (const module of project.modules) {
+                module.project = project;
+                module.items = module.fullItems;
+                delete module.fullItems;
+
+                for (const item of module.items) {
+                    item.module = module;
+                }
+
+                module.itemsRelationships = [
+                    ...module.oneToManyItemsRelationships,
+                    ...module.manyToManyItemsRelationships
+                ];
+                delete module.oneToManyItemsRelationships;
+                delete module.manyToManyItemsRelationships;
+
+                for (const relationship of module.itemsRelationships) {
+                    relationship.module = module;
+                    delete relationship.moduleId;
+
+                    relationship.item1 = this.findById(relationship.item1Id, module.items);
+                    delete relationship.item1Id;
+
+                    relationship.item2 = this.findById(relationship.item2Id, module.items);
+                    delete relationship.item2Id;
                 }
             }
 
-            return editableProject;
+            return project;
         }
     }
 

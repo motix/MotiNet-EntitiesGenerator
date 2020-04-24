@@ -1,6 +1,4 @@
-﻿using MotiNet.AutoMapper;
-
-namespace EntitiesGenerator.Mvc
+﻿namespace EntitiesGenerator.Mvc
 {
     partial class EntitiesGeneratorProfile
     {
@@ -37,6 +35,18 @@ namespace EntitiesGenerator.Mvc
                 .ReverseMap();
             CreateMap(builder.DomainSpecificTypes[nameof(PreprocessedEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
                       typeof(PreprocessedEntityFeatureSettingViewModel))
+                .ReverseMap();
+
+            CreateMap(builder.ItemsRelationshipType, typeof(ItemsRelationshipLiteViewModel))
+                .IncludeAllDerived()
+                .ReverseMap()
+                .IncludeAllDerived();
+
+            CreateMap(builder.DomainSpecificTypes[nameof(OneToManyItemsRelationshipViewModel).Replace("ViewModel", string.Empty)],
+                      typeof(OneToManyItemsRelationshipViewModel))
+                .ReverseMap();
+            CreateMap(builder.DomainSpecificTypes[nameof(ManyToManyItemsRelationshipViewModel).Replace("ViewModel", string.Empty)],
+                      typeof(ManyToManyItemsRelationshipViewModel))
                 .ReverseMap();
         }
     }

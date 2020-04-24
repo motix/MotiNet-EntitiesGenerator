@@ -1,8 +1,9 @@
 ﻿// SealedModels
 
 import { IdentifierHelper } from '../content-helper';
-import AllFeaturesGenerator from '../feature-generators/all-features-generator';
 import * as CG from '../content-generators/content-generators';
+import AllFeaturesGenerator from '../feature-generators/all-features-generator';
+import AllRelationshipsGenerator from '../relationship-generators/all-relationships-generator';
 
 export class SmProjectSG {
     /**
@@ -21,9 +22,10 @@ export class SmProjectSG {
 
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      * @param {Module} module
      */
-    generateProjectStructure(features, module) {
+    generateProjectStructure(features, relationships, module) {
         const projectName = SmProjectSG.getProjectName(module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(module);
 
@@ -36,15 +38,15 @@ export class SmProjectSG {
                     type: 'file',
                     fileType: 'projectFile',
                     name: `${projectName}.csproj`,
-                    generator: new CG.SmProject_ProjectFileGenerator(features, module)
+                    generator: new CG.SmProject_ProjectFileGenerator(features, relationships, module)
                 }
             ]
         }
 
         if (module.items.length > 0) {
-            const entitiesFolder = this.generateEntitiesFolderStructure(features, module);
-            const accessorsFolder = this.generateAccessorsFolderStructure(features, module);
-            const specificationsFolder = this.generateSpecificationFolderStructure(features, module);
+            const entitiesFolder = this.generateEntitiesFolderStructure(features, relationships, module);
+            const accessorsFolder = this.generateAccessorsFolderStructure(features, relationships, module);
+            const specificationsFolder = this.generateSpecificationFolderStructure(features, relationships, module);
 
             projectFolder.children.push(entitiesFolder, accessorsFolder);
 
@@ -60,7 +62,7 @@ export class SmProjectSG {
                 {
                     type: 'file',
                     name: `SealedModels${moduleCommonName}BuilderExtensions.cs`,
-                    generator: new CG.SmProject_DependencyInjectionClassGenerator(features, module)
+                    generator: new CG.SmProject_DependencyInjectionClassGenerator(features, relationships, module)
                 }
             ]
         });
@@ -70,9 +72,10 @@ export class SmProjectSG {
 
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      * @param {Module} module
      */
-    generateEntitiesFolderStructure(features, module) {
+    generateEntitiesFolderStructure(features, relationships, module) {
         const folder = {
             type: 'folder',
             name: '_Entities',
@@ -86,8 +89,8 @@ export class SmProjectSG {
                 type: 'file',
                 name: `${entity.name}.cs`,
                 generator: entity.isUnmanagedSubEntity === true ?
-                    new CG.SmProject_SubEntityClassGenerator(features, entity.item, entity.name) :
-                    new CG.SmProject_EntityClassGenerator(features, entity.item)
+                    new CG.SmProject_SubEntityClassGenerator(features, relationships, entity.item, entity.name) :
+                    new CG.SmProject_EntityClassGenerator(features, relationships, entity.item)
             });
         }
 
@@ -96,9 +99,10 @@ export class SmProjectSG {
 
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      * @param {Module} module
      */
-    generateAccessorsFolderStructure(features, module) {
+    generateAccessorsFolderStructure(features, relationships, module) {
         const folder = {
             type: 'folder',
             name: '_Accessors',
@@ -109,7 +113,7 @@ export class SmProjectSG {
             folder.children.push({
                 type: 'file',
                 name: `${item.name}Accessor.cs`,
-                generator: new CG.SmProject_EntityAccessorClassGenerator(features, item)
+                generator: new CG.SmProject_EntityAccessorClassGenerator(features, relationships, item)
             });
         }
 
@@ -118,9 +122,10 @@ export class SmProjectSG {
 
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      * @param {Module} module
      */
-    generateSpecificationFolderStructure(features, module) {
+    generateSpecificationFolderStructure(features, relationships, module) {
         const folder = {
             type: 'folder',
             name: '_Specifications',
@@ -130,7 +135,7 @@ export class SmProjectSG {
         for (const item of module.items) {
             for (const feature of features.allFeatures) {
                 if (feature.itemHasFeature(item)) {
-                    feature.sm_SpecificationsFolder_GenerateSpecification(item, folder);
+                    feature.sm_SpecificationsFolder(item, folder);
                 }
             }
         }

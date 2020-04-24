@@ -1,10 +1,10 @@
 ﻿/**
- * @typedef {Object} Folder
+ * @typedef {Object} StructureNode
  * @property {string} type
  * @property {string} folderType
  * @property {string} fileType
  * @property {string} name
- * @property {Folder[]} children
+ * @property {StructureNode[]} children
  * @property {Object} generator
  */
 
@@ -49,6 +49,7 @@
  * @property {boolean} hasAspNetCoreOptions
  * @property {Project} project
  * @property {Item[]} items
+ * @property {ItemsRelationship[]} itemsRelationships
  */
 
 /**
@@ -108,4 +109,22 @@
 
 /**
  * @typedef {FeatureSetting} PreprocessedEntityFeatureSetting
+ */
+
+/**
+ * @typedef {Object} ItemsRelationship
+ * @property {Module} module
+ * @property {Item} item1
+ * @property {Item} item2
+ * @property {string} item1PropertyName
+ * @property {string} item2PropertyName
+ * @property {string} type
+ */
+
+/**
+ * @typedef {ItemsRelationship & {deleteRestrict: boolean, hasSortedChildrenInParent: boolean, sortedChildrenInParentCriteriaPropertyName: string}} OneToManyItemsRelationship
+ */
+
+/**
+ * @typedef {ItemsRelationship & {hasSortedItem2sInItem1: boolean, sortedItem2sInItem1CriteriaPropertyName: string, hasSortedItem1sInItem2: boolean, sortedItem1sInItem2CriteriaPropertyName: string}} ManyToManyItemsRelationship
  */

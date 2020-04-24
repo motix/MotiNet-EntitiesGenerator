@@ -10,6 +10,7 @@ import {
     ProjectFileGenerator
 } from './content-generator';
 import AllFeaturesGenerator from '../feature-generators/all-features-generator';
+import AllRelationshipsGenerator from '../relationship-generators/all-relationships-generator';
 
 export class SmProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
@@ -64,6 +65,16 @@ export class SmProject_EntityClassGenerator extends CSharpEntitySpecificContentG
             feature.sm_EntityClass_CustomizationPropertyDeclarationsData_FromOthers(this.item, customizationPropertyDeclarationsData);
         }
 
+        for (const relationship of this.item.module.itemsRelationships) {
+            if (this.relationships.itemHasRelationship(this.item, relationship)) {
+                const generator = this.relationships.getGenerator(relationship);
+                generator.sm_EntityClass_EntityPropertyDeclarationsData(this.item, relationship, entityPropertyDeclarationsData);
+                generator.sm_EntityClass_RelationshipsPropertyDeclarationsData(this.item, relationship, relationshipsPropertyDeclarationsData);
+                generator.sm_EntityClass_CustomizationFieldDeclarationsData(this.item, relationship, customizationFieldDeclarationsData);
+                generator.sm_EntityClass_CustomizationPropertyDeclarationsData(this.item, relationship, customizationPropertyDeclarationsData);
+            }
+        }
+
         const entityInterfaces = StringHelper.generateBaseBlock(_.uniq(entityInterfacesData), 2, { start: 1 });
         const entityPropertyDeclarations = StringHelper.joinLines(_.uniq(entityPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
         const relationshipsPropertyDeclarations = StringHelper.joinLines(_.uniq(relationshipsPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
@@ -103,11 +114,12 @@ namespace ${namespace}
 export class SmProject_SubEntityClassGenerator extends CSharpEntitySpecificContentGenerator {
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      * @param {Item} item
      * @param {string} subEntityName
      */
-    constructor(features, item, subEntityName) {
-        super(features, item);
+    constructor(features, relationships, item, subEntityName) {
+        super(features, relationships, item);
 
         this.subEntityName = subEntityName;
     }

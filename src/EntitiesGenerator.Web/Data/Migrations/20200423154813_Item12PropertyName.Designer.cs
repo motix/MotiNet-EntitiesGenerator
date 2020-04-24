@@ -3,14 +3,16 @@ using EntitiesGenerator.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EntitiesGenerator.Web.Data.Migrations
 {
     [DbContext(typeof(EntitiesGeneratorDbContext))]
-    partial class EntitiesGeneratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200423154813_Item12PropertyName")]
+    partial class Item12PropertyName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -363,38 +365,7 @@ namespace EntitiesGenerator.Web.Data.Migrations
                 {
                     b.HasBaseType("EntitiesGenerator.ItemsRelationship");
 
-                    b.Property<bool>("HasSortedItem1sInItem2")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("HasSortedItem2sInItem1")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SortedItem1sInItem2CriteriaPropertyName")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
-
-                    b.Property<string>("SortedItem2sInItem1CriteriaPropertyName")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
-
                     b.HasDiscriminator().HasValue("ManyToManyItemsRelationship");
-                });
-
-            modelBuilder.Entity("EntitiesGenerator.OneToManyItemsRelationship", b =>
-                {
-                    b.HasBaseType("EntitiesGenerator.ItemsRelationship");
-
-                    b.Property<bool>("DeleteRestrict")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("HasSortedChildrenInParent")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SortedChildrenInParentCriteriaPropertyName")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
-
-                    b.HasDiscriminator().HasValue("OneToManyItemsRelationship");
                 });
 
             modelBuilder.Entity("EntitiesGenerator.FeatureSetting", b =>

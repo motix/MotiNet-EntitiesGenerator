@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EntitiesGenerator
+﻿namespace EntitiesGenerator
 {
     // Customization
     partial class FeatureSetting

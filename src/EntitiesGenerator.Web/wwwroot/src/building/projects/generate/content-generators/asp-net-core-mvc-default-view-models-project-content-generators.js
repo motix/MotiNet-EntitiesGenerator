@@ -10,6 +10,8 @@ import {
     CSharpEntitySpecificContentGenerator,
     ProjectFileGenerator
 } from './content-generator';
+import AllFeaturesGenerator from '../feature-generators/all-features-generator';
+import AllRelationshipsGenerator from '../relationship-generators/all-relationships-generator';
 
 export class AspDvProject_ProjectFileGenerator extends ProjectFileGenerator {
     generate() {
@@ -71,6 +73,14 @@ export class AspDvProject_EntityViewModelsClassGenerator extends CSharpEntitySpe
             feature.aspDv_EntityViewModelsClass_FullPropertyDeclarationsData_FromOthers(this.item, fullPropertyDeclarationsData);
         }
 
+        for (const relationship of this.item.module.itemsRelationships) {
+            if (this.relationships.itemHasRelationship(this.item, relationship)) {
+                const generator = this.relationships.getGenerator(relationship);
+                generator.aspDv_EntityViewModelsClass_BasePropertyDeclarationsData(this.item, relationship, basePropertyDeclarationsData);
+                generator.aspDv_EntityViewModelsClass_FullPropertyDeclarationsData(this.item, relationship, fullPropertyDeclarationsData);
+            }
+        }
+
         const basePropertyDeclarations = StringHelper.joinLines(_.uniq(basePropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
         const fullPropertyDeclarations = StringHelper.joinLines(_.uniq(fullPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
 
@@ -101,11 +111,12 @@ namespace ${namespace}
 export class AspDvProject_SubEntityViewModelsClassGenerator extends CSharpEntitySpecificContentGenerator {
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      * @param {Item} item
      * @param {string} subEntityName
      */
-    constructor(features, item, subEntityName) {
-        super(features, item);
+    constructor(features, relationships, item, subEntityName) {
+        super(features, relationships, item);
 
         this.subEntityName = subEntityName;
     }
@@ -162,6 +173,13 @@ export class AspDvProject_DisplayNamesResxGenerator extends ModuleSpecificConten
                     feature.aspDv_DisplayNamesResx_ItemsData(item, itemsData);
                 }
             }
+
+            for (const relationship of this.module.itemsRelationships) {
+                if (this.relationships.itemHasRelationship(item, relationship)) {
+                    const generator = this.relationships.getGenerator(relationship);
+                    generator.aspDv_DisplayNamesResx_ItemsData(item, relationship, itemsData);
+                }
+            }
         }
 
         const items = StringHelper.joinLines(_.uniq(_.map(_.sortBy(itemsData, value => _.toLower(value.key)), 'content')), .5, '', { start: 1 });
@@ -183,6 +201,13 @@ export class AspDvProject_DisplayNamesResxDesignerClassGenerator extends ModuleS
             for (const feature of this.features.allFeatures) {
                 if (feature.itemHasFeature(item)) {
                     feature.aspDv_DisplayNamesResxDesignerClass_ItemsData(item, itemsData);
+                }
+            }
+
+            for (const relationship of this.module.itemsRelationships) {
+                if (this.relationships.itemHasRelationship(item, relationship)) {
+                    const generator = this.relationships.getGenerator(relationship);
+                    generator.aspDv_DisplayNamesResxDesignerClass_ItemsData(item, relationship, itemsData);
                 }
             }
         }
@@ -216,6 +241,13 @@ export class AspDvProject_ProfileClassGenerator extends CSharpModuleSpecificCont
                 }
 
                 feature.aspDv_ProfileClass_CreateEntityMapChainedMethodsData_FromOthers(entity.item, createEntityMapChainedMethodsData);
+            }
+
+            for (const relationship of this.module.itemsRelationships) {
+                if (this.relationships.itemHasRelationship(entity.item, relationship)) {
+                    const generator = this.relationships.getGenerator(relationship);
+                    generator.aspDv_ProfileClass_CreateEntityMapChainedMethodsData(entity.item, relationship, createEntityMapChainedMethodsData);
+                }
             }
 
             const createEntityMapChainedMethods = StringHelper.joinLines(_.uniq(createEntityMapChainedMethodsData), 1, '', { start: 1 });

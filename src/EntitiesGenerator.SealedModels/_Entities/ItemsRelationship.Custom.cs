@@ -12,6 +12,12 @@ namespace EntitiesGenerator
         [Required]
         [StringLength(StringLengths.Guid)]
         public string Item2Id { get; set; }
+
+        [StringLength(StringLengths.TinyContent)]
+        public string Item1PropertyName { get; set; }
+
+        [StringLength(StringLengths.TinyContent)]
+        public string Item2PropertyName { get; set; }
     }
 
     // Relationships

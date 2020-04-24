@@ -1,8 +1,9 @@
 ﻿// Web
 
 import { IdentifierHelper } from '../content-helper';
-import AllFeaturesGenerator from '../feature-generators/all-features-generator';
 import * as CG from '../content-generators/content-generators';
+import AllFeaturesGenerator from '../feature-generators/all-features-generator';
+import AllRelationshipsGenerator from '../relationship-generators/all-relationships-generator';
 
 export class WebProjectSG {
     /**
@@ -21,9 +22,10 @@ export class WebProjectSG {
 
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      * @param {Project} project
      */
-    generateProjectStructure(features, project) {
+    generateProjectStructure(features, relationships, project) {
         const projectName = WebProjectSG.getProjectName(project);
 
         const projectFolder = {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace EntitiesGenerator.Mvc
@@ -28,5 +29,36 @@ namespace EntitiesGenerator.Mvc
         // Customization
 
         public ICollection<ItemViewModel> FullItems { get; set; }
+
+        public ICollection<OneToManyItemsRelationshipViewModel> OneToManyItemsRelationships { get; set; } = new List<OneToManyItemsRelationshipViewModel>();
+
+        public ICollection<ManyToManyItemsRelationshipViewModel> ManyToManyItemsRelationships { get; set; } = new List<ManyToManyItemsRelationshipViewModel>();
+
+        public void CollectItemsRelationship()
+        {
+            var itemsRelationships = new List<ItemsRelationshipLiteViewModel>();
+            itemsRelationships.AddRange(OneToManyItemsRelationships);
+            itemsRelationships.AddRange(ManyToManyItemsRelationships);
+
+            ItemsRelationships = itemsRelationships;
+        }
+
+        public void DistributeItemsRelationships()
+        {
+            foreach (var relationship in ItemsRelationships)
+            {
+                switch (relationship)
+                {
+                    case OneToManyItemsRelationshipViewModel viewModel:
+                        OneToManyItemsRelationships.Add(viewModel);
+                        break;
+                    case ManyToManyItemsRelationshipViewModel viewModel:
+                        ManyToManyItemsRelationships.Add(viewModel);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
     }
 }

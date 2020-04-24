@@ -59,6 +59,16 @@ export class EfProject_DbContextClassGenerator extends CSharpModuleSpecificConte
             }
         }
 
+        for (const item of this.module.items) {
+            for (const relationship of this.module.itemsRelationships) {
+                if (this.relationships.itemHasRelationship(item, relationship)) {
+                    const generator = this.relationships.getGenerator(relationship);
+                    generator.ef_DbContextClass_PropertyDeclarationsData(item, relationship, propertyDeclarationsData);
+                    generator.ef_DbContextClass_ConfigureEntityRegistrationsData(item, relationship, configureEntityRegistrationsData);
+                }
+            }
+        }
+
         const propertyDeclarations = StringHelper.joinLines(_.uniq(propertyDeclarationsData), 2, '\n', { start: 1, end: 1 });
         const configureEntityRegistrations = StringHelper.joinLines(_.uniq(configureEntityRegistrationsData), 3, '', { start: 1, end: 1, spaceIfEmpty: true });
         const configureEntityMethods = StringHelper.joinLines(_.uniq(configureEntityMethodsData), 2, '\n', { start: 2 });

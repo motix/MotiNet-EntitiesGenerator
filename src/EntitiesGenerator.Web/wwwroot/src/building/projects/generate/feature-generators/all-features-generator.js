@@ -1,4 +1,5 @@
-﻿import ContentHelper, { StringHelper } from '../content-helper';
+﻿import TypeLists from '../../../shared/type-lists';
+import { StringHelper } from '../content-helper';
 import FeatureGenerator from './feature-generator';
 import EntityFeatureGenerator from './entity-feature-generator';
 import ReadableIdEntityFeatureGenerator from './readable-id-entity-feature-generator';
@@ -25,7 +26,7 @@ export default class AllFeaturesGenerator {
         /**
          * @type FeatureGenerator[]
          */
-        this.allFeatures = _.map(ContentHelper.featureSettingTypes, value => this[`${_.lowerFirst(value)}FeatureGenerator`]);
+        this.allFeatures = _.map(TypeLists.featureSettingTypes, value => this[`${_.lowerFirst(value)}FeatureGenerator`]);
     }
 
     // Validations

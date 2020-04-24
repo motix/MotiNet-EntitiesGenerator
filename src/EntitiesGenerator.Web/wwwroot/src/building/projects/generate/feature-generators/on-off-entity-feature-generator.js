@@ -26,47 +26,15 @@ export default class OnOffEntityFeatureGenerator extends FeatureGenerator {
         return this.itemFeatureSetting(item).useActiveField;
     }
 
-    // Project specific content
-
-    // Core
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    core_EntityManagerInterface_ManagerInterfacesData(item, data) {
-        this.throwIfItemNotHaveFeature(item);
-
-        data.push(`IOnOffEntityManager${this.itemGenericTypeParameters(item)}`);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    core_EntityStoreInterface_StoreInterfacesData(item, data) {
-        this.throwIfItemNotHaveFeature(item);
-
-        data.push(`IOnOffEntityStore${this.itemGenericTypeParameters(item)}`);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    core_EntityManagerClass_PropertiesDeclarations1Data(item, data) {
-        this.throwIfItemNotHaveFeature(item);
-
-        data.push(`public IOnOffEntityStore${this.itemGenericTypeParameters(item)} OnOffEntityStore => Store as IOnOffEntityStore${this.itemGenericTypeParameters(item)};`);
-    }
+    // Project specific structure
 
     // SealedModels
 
     /**
      * @param {Item} item
-     * @param {Folder} folder
+     * @param {StructureNode} folder
      */
-    sm_SpecificationsFolder_GenerateSpecification(item, folder) {
+    sm_SpecificationsFolder(item, folder) {
         this.throwIfItemNotHaveFeature(item);
 
         const entityName = item.name;
@@ -117,6 +85,42 @@ namespace ${namespace}
             });
         }
     }
+
+    // Project specific content
+
+    // Core
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityManagerInterface_ManagerInterfacesData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`IOnOffEntityManager${this.itemGenericTypeParameters(item)}`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityStoreInterface_StoreInterfacesData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`IOnOffEntityStore${this.itemGenericTypeParameters(item)}`);
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    core_EntityManagerClass_PropertiesDeclarations1Data(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        data.push(`public IOnOffEntityStore${this.itemGenericTypeParameters(item)} OnOffEntityStore => Store as IOnOffEntityStore${this.itemGenericTypeParameters(item)};`);
+    }
+
+    // SealedModels
 
     /**
      * @param {Item} item

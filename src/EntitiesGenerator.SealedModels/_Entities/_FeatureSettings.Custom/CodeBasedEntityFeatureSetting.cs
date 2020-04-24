@@ -6,7 +6,7 @@ namespace EntitiesGenerator
     {
         public override int Position => 6;
 
-        [StringLength(StringLengths.TitleContent)]
+        [StringLength(StringLengths.TinyContent)]
         public string CodePropertyName { get; set; }
 
         [Required]

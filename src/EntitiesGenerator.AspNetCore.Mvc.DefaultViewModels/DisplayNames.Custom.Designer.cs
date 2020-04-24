@@ -178,6 +178,24 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Has Sorted Item 1s in Item 2.
+        /// </summary>
+        public static string HasSortedItem1sInItem2 {
+            get {
+                return ResourceManager.GetString("HasSortedItem1sInItem2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Has Sorted Item 2s in Item 1.
+        /// </summary>
+        public static string HasSortedItem2sInItem1 {
+            get {
+                return ResourceManager.GetString("HasSortedItem2sInItem1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ID Source Property Name.
         /// </summary>
         public static string IdSourcePropertyName {
@@ -196,11 +214,29 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Item 1 Property Name.
+        /// </summary>
+        public static string Item1PropertyName {
+            get {
+                return ResourceManager.GetString("Item1PropertyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Item 2.
         /// </summary>
         public static string Item2 {
             get {
                 return ResourceManager.GetString("Item2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item 2 Property Name.
+        /// </summary>
+        public static string Item2PropertyName {
+            get {
+                return ResourceManager.GetString("Item2PropertyName", resourceCulture);
             }
         }
         
@@ -291,6 +327,33 @@ namespace EntitiesGenerator.Mvc {
         public static string SortedChildrenInScopeCriteriaPropertyName {
             get {
                 return ResourceManager.GetString("SortedChildrenInScopeCriteriaPropertyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorted Item 1s in Item 2 Criteria Property Name.
+        /// </summary>
+        public static string SortedItem1sInItem2CriteriaPropertyName {
+            get {
+                return ResourceManager.GetString("SortedItem1sInItem2CriteriaPropertyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorted Item 2s in Item 1 Criteria Property Name.
+        /// </summary>
+        public static string SortedItem2sInItem1CriteriaPropertyName {
+            get {
+                return ResourceManager.GetString("SortedItem2sInItem1CriteriaPropertyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        public static string Type {
+            get {
+                return ResourceManager.GetString("Type", resourceCulture);
             }
         }
         

@@ -159,6 +159,11 @@ export default class PageController {
             text: message,
             footer: errorData && errorData.toString()
         });
+
+        // Error from promise call
+        if (errorData.response && errorData.response.data) {
+            console.error(errorData.response.data);
+        }
     }
 
     /**

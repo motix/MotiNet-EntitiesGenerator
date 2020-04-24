@@ -7,7 +7,7 @@ namespace EntitiesGenerator
         public override int Position => 2;
 
         [Required]
-        [StringLength(StringLengths.TitleContent)]
+        [StringLength(StringLengths.TinyContent)]
         public string IdSourcePropertyName { get; set; }
     }
 }

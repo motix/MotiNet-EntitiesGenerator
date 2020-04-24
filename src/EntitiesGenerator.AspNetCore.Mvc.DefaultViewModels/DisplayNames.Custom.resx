@@ -156,14 +156,26 @@
   <data name="HasSortedChildrenInScope" xml:space="preserve">
     <value>Has Sorted Children in Scope</value>
   </data>
+  <data name="HasSortedItem1sInItem2" xml:space="preserve">
+    <value>Has Sorted Item 1s in Item 2</value>
+  </data>
+  <data name="HasSortedItem2sInItem1" xml:space="preserve">
+    <value>Has Sorted Item 2s in Item 1</value>
+  </data>
   <data name="IdSourcePropertyName" xml:space="preserve">
     <value>ID Source Property Name</value>
   </data>
   <data name="Item1" xml:space="preserve">
     <value>Item 1</value>
   </data>
+  <data name="Item1PropertyName" xml:space="preserve">
+    <value>Item 1 Property Name</value>
+  </data>
   <data name="Item2" xml:space="preserve">
     <value>Item 2</value>
+  </data>
+  <data name="Item2PropertyName" xml:space="preserve">
+    <value>Item 2 Property Name</value>
   </data>
   <data name="LookupNormalizer" xml:space="preserve">
     <value>Lookup Normalizer</value>
@@ -194,6 +206,15 @@
   </data>
   <data name="SortedChildrenInScopeCriteriaPropertyName" xml:space="preserve">
     <value>Sorted Children in Scope Criteria Property Name</value>
+  </data>
+  <data name="SortedItem1sInItem2CriteriaPropertyName" xml:space="preserve">
+    <value>Sorted Item 1s in Item 2 Criteria Property Name</value>
+  </data>
+  <data name="SortedItem2sInItem1CriteriaPropertyName" xml:space="preserve">
+    <value>Sorted Item 2s in Item 1 Criteria Property Name</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
   </data>
   <data name="UseActiveField" xml:space="preserve">
     <value>Use Active Field</value>

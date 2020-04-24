@@ -7,10 +7,10 @@ namespace EntitiesGenerator
         public override int Position => 9;
 
         [Required]
-        [StringLength(StringLengths.TitleContent)]
+        [StringLength(StringLengths.TinyContent)]
         public string ScopeName { get; set; }
 
-        [StringLength(StringLengths.TitleContent)]
+        [StringLength(StringLengths.TinyContent)]
         public string NamePropertyName { get; set; }
 
         [Required]
@@ -21,7 +21,7 @@ namespace EntitiesGenerator
 
         public bool HasSortedChildrenInScope { get; set; }
 
-        [StringLength(StringLengths.TitleContent)]
+        [StringLength(StringLengths.TinyContent)]
         public string SortedChildrenInScopeCriteriaPropertyName { get; set; }
     }
 }

@@ -1,11 +1,14 @@
 ﻿import AllFeaturesGenerator from "../feature-generators/all-features-generator";
+import AllRelationshipsGenerator from "../relationship-generators/all-relationships-generator";
 
 export class ContentGenerator {
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      */
-    constructor(features) {
+    constructor(features, relationships) {
         this.features = features;
+        this.relationships = relationships;
     }
 
     get language() { return ''; }
@@ -20,10 +23,11 @@ export class CSharpContentGenerator {
 export class ProjectSpecificContentGenerator extends ContentGenerator {
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      * @param {Project} project
      */
-    constructor(features, project) {
-        super(features);
+    constructor(features, relationships, project) {
+        super(features, relationships);
 
         this.project = project;
     }
@@ -36,10 +40,11 @@ export class CSharpProjectSpecificContentGenerator extends ProjectSpecificConten
 export class ModuleSpecificContentGenerator extends ContentGenerator {
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      * @param {Module} module
      */
-    constructor(features, module) {
-        super(features);
+    constructor(features, relationships, module) {
+        super(features, relationships);
 
         this.module = module;
     }
@@ -52,10 +57,11 @@ export class CSharpModuleSpecificContentGenerator extends ModuleSpecificContentG
 export class EntitySpecificContentGenerator extends ContentGenerator {
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      * @param {Item} item
      */
-    constructor(features, item) {
-        super(features);
+    constructor(features, relationships, item) {
+        super(features, relationships);
 
         this.item = item;
     }

@@ -63,8 +63,6 @@ namespace EntitiesGenerator.Web.Controllers
 
         private void ProcessViewModelForGetInternal(ItemViewModel viewModel, Item model)
         {
-            base.ProcessViewModelForGet(viewModel, model);
-
             viewModel.DistributeFeatureSettings();
             viewModel.FeatureSettings = null;
         }

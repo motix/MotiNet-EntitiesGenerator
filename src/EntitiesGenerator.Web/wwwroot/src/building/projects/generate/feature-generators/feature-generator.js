@@ -106,6 +106,18 @@ export default class FeatureGenerator {
         }
     }
 
+    // Project specific structure
+
+    // SealedModels
+
+    /**
+     * @param {Item} item
+     * @param {StructureNode} folder
+     */
+    sm_SpecificationsFolder(item, folder) {
+        this.throwIfItemNotHaveFeature(item);
+    }
+
     // Project specific content
 
     // Core
@@ -241,14 +253,6 @@ export default class FeatureGenerator {
     }
 
     // SealedModels
-
-    /**
-     * @param {Item} item
-     * @param {Folder} folder
-     */
-    sm_SpecificationsFolder_GenerateSpecification(item, folder) {
-        this.throwIfItemNotHaveFeature(item);
-    }
 
     /**
      * @param {Item} item

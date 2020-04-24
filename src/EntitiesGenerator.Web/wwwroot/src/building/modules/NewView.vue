@@ -150,11 +150,238 @@
                     </table>
                 </div>
             </section>
+            <section class="mt-4" v-if="!newMode">
+                <h3>{{displayNames['ItemsRelationships']}}</h3>
+                <div class="table-responsive small">
+                    <table class="table table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">{{displayNames['Item1']}}</th>
+                                <th scope="col">{{displayNames['Item1PropertyName']}}</th>
+                                <th scope="col">{{displayNames['Item2']}}</th>
+                                <th scope="col">{{displayNames['Item2PropertyName']}}</th>
+                                <th scope="col">{{displayNames['Type']}}</th>
+                                <th scope="col">Relationship Settings</th>
+                                <th scope="col" class="w-tight"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-if="entity.itemsRelationships.length === 0">
+                                <td colspan="4">
+                                    There is no items relationship in this module. Please add a new one.
+                                </td>
+                            </tr>
+                            <tr v-for="relationship in entity.itemsRelationships" v-else>
+                                <td>{{relationship.item1.name}}</td>
+                                <td>
+                                    <template v-if="relationship.editMode">
+                                        <single-line-input :placeholder="displayNames['Item1PropertyName']"
+                                                           placeholder-css-class="text-muted"
+                                                           v-model="relationship.item1PropertyName"
+                                                           @input="dirtyItemsRelationship(relationship)"></single-line-input>
+                                    </template>
+                                    <template v-else-if="relationship.item1PropertyName === null">
+                                        <i class="text-muted">None</i>
+                                    </template>
+                                    <template v-else>
+                                        {{relationship.item1PropertyName}}
+                                    </template>
+                                </td>
+                                <td>{{relationship.item2.name}}</td>
+                                <td>
+                                    <template v-if="relationship.editMode">
+                                        <single-line-input :placeholder="displayNames['Item2PropertyName']"
+                                                           placeholder-css-class="text-muted"
+                                                           v-model="relationship.item2PropertyName"
+                                                           @input="dirtyItemsRelationship(relationship)"></single-line-input>
+                                    </template>
+                                    <template v-else-if="relationship.item2PropertyName === null">
+                                        <i class="text-muted">None</i>
+                                    </template>
+                                    <template v-else>
+                                        {{relationship.item2PropertyName}}
+                                    </template>
+                                </td>
+                                <td>{{relationship.type}}</td>
+                                <td>
+                                    <template v-if="relationship.type === 'OneToMany'">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox"
+                                                   class="custom-control-input"
+                                                   :id="`itemsRelationship_${relationship.id}_DeleteRestrict_Switch`"
+                                                   v-bind:disabled="!relationship.editMode"
+                                                   v-model="relationship.deleteRestrict"
+                                                   @change="dirtyItemsRelationship(relationship)">
+                                            <label class="custom-control-label"
+                                                   :for="`itemsRelationship_${relationship.id}_DeleteRestrict_Switch`">{{displayNames['DeleteRestrict']}}</label>
+                                        </div>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox"
+                                                   class="custom-control-input"
+                                                   :id="`itemsRelationship_${relationship.id}_HasSortedChildrenInParent_Switch`"
+                                                   v-bind:disabled="!relationship.editMode"
+                                                   v-model="relationship.hasSortedChildrenInParent"
+                                                   @change="dirtyItemsRelationship(relationship)">
+                                            <label class="custom-control-label"
+                                                   :for="`itemsRelationship_${relationship.id}_HasSortedChildrenInParent_Switch`">{{displayNames['HasSortedChildrenInParent']}}</label>
+                                        </div>
+                                        <div v-if="relationship.hasSortedChildrenInParent">
+                                            <strong>{{displayNames['SortedChildrenInParentCriteriaPropertyName']}}:</strong>
+                                            <template v-if="relationship.editMode">
+                                                <single-line-input :placeholder="displayNames['SortedChildrenInParentCriteriaPropertyName']"
+                                                                   placeholder-css-class="text-muted"
+                                                                   v-model="relationship.sortedChildrenInParentCriteriaPropertyName"
+                                                                   @input="dirtyItemsRelationship(relationship)"></single-line-input>
+                                            </template>
+                                            <template v-else-if="relationship.sortedChildrenInParentCriteriaPropertyName === null">
+                                                <i class="text-muted">None</i>
+                                            </template>
+                                            <template v-else>
+                                                {{relationship.sortedChildrenInParentCriteriaPropertyName}}
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <template v-if="relationship.type === 'ManyToMany'">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox"
+                                                   class="custom-control-input"
+                                                   :id="`itemsRelationship_${relationship.id}_HasSortedItem2sInItem1_Switch`"
+                                                   v-bind:disabled="!relationship.editMode"
+                                                   v-model="relationship.hasSortedItem2sInItem1"
+                                                   @change="dirtyItemsRelationship(relationship)">
+                                            <label class="custom-control-label"
+                                                   :for="`itemsRelationship_${relationship.id}_HasSortedItem2sInItem1_Switch`">{{displayNames['HasSortedItem2sInItem1']}}</label>
+                                        </div>
+                                        <div v-if="relationship.hasSortedItem2sInItem1">
+                                            <strong>{{displayNames['SortedItem2sInItem1CriteriaPropertyName']}}:</strong>
+                                            <template v-if="relationship.editMode">
+                                                <single-line-input :placeholder="displayNames['SortedItem2sInItem1CriteriaPropertyName']"
+                                                                   placeholder-css-class="text-muted"
+                                                                   v-model="relationship.sortedItem2sInItem1CriteriaPropertyName"
+                                                                   @input="dirtyItemsRelationship(relationship)"></single-line-input>
+                                            </template>
+                                            <template v-else-if="relationship.sortedItem2sInItem1CriteriaPropertyName === null">
+                                                <i class="text-muted">None</i>
+                                            </template>
+                                            <template v-else>
+                                                {{relationship.sortedItem2sInItem1CriteriaPropertyName}}
+                                            </template>
+                                        </div>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox"
+                                                   class="custom-control-input"
+                                                   :id="`itemsRelationship_${relationship.id}_HasSortedItem1sInItem2_Switch`"
+                                                   v-bind:disabled="!relationship.editMode"
+                                                   v-model="relationship.hasSortedItem1sInItem2"
+                                                   @change="dirtyItemsRelationship(relationship)">
+                                            <label class="custom-control-label"
+                                                   :for="`itemsRelationship_${relationship.id}_HasSortedItem1sInItem2_Switch`">{{displayNames['HasSortedItem1sInItem2']}}</label>
+                                        </div>
+                                        <div v-if="relationship.hasSortedItem1sInItem2">
+                                            <strong>{{displayNames['SortedItem1sInItem2CriteriaPropertyName']}}:</strong>
+                                            <template v-if="relationship.editMode">
+                                                <single-line-input :placeholder="displayNames['SortedItem1sInItem2CriteriaPropertyName']"
+                                                                   placeholder-css-class="text-muted"
+                                                                   v-model="relationship.sortedItem1sInItem2CriteriaPropertyName"
+                                                                   @input="dirtyItemsRelationship(relationship)"></single-line-input>
+                                            </template>
+                                            <template v-else-if="relationship.sortedItem1sInItem2CriteriaPropertyName === null">
+                                                <i class="text-muted">None</i>
+                                            </template>
+                                            <template v-else>
+                                                {{relationship.sortedItem1sInItem2CriteriaPropertyName}}
+                                            </template>
+                                        </div>
+                                    </template>
+                                </td>
+                                <td class="text-right">
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-outline-primary"
+                                                title="Edit"
+                                                v-bind:disabled="freezed"
+                                                v-if="!relationship.editMode"
+                                                @click="editItemsRelationship(relationship)">
+                                            <font-awesome-icon :icon="['fal', 'edit']" fixed-width></font-awesome-icon>
+                                        </button>
+                                        <button class="btn btn-sm btn-primary"
+                                                title="Save"
+                                                v-bind:disabled="freezed || !relationship.isDirty"
+                                                v-if="relationship.editMode"
+                                                @click="saveItemsRelationship(relationship)">
+                                            <font-awesome-icon :icon="['fal', 'save']" fixed-width></font-awesome-icon>
+                                        </button>
+                                        <button class="btn btn-sm"
+                                                v-bind:class="{ 'btn-warning': relationship.isDirty, 'btn-outline-warning': !relationship.isDirty }"
+                                                title="Discard Changes"
+                                                v-bind:disabled="freezed"
+                                                v-if="relationship.editMode"
+                                                @click="revertItemsRelationship(relationship)">
+                                            <font-awesome-icon :icon="['fal', 'undo']" fixed-width></font-awesome-icon>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger"
+                                                title="Remove"
+                                                v-bind:disabled="freezed"
+                                                @click="removeItemsRelationship(relationship)">
+                                            <font-awesome-icon :icon="['fal', 'trash-alt']" fixed-width></font-awesome-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="custom-select custom-select-sm"
+                                            v-model="newItemsRelationship.item1">
+                                        <option v-for="item in entity.items" v-bind:value="item">{{item.name}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <single-line-input :placeholder="displayNames['Item1PropertyName']"
+                                                       placeholder-css-class="text-muted"
+                                                       v-model="newItemsRelationship.item1PropertyName"></single-line-input>
+                                </td>
+                                <td>
+                                    <select class="custom-select custom-select-sm"
+                                            v-model="newItemsRelationship.item2">
+                                        <option v-for="item in entity.items" v-bind:value="item">{{item.name}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <single-line-input :placeholder="displayNames['Item2PropertyName']"
+                                                       placeholder-css-class="text-muted"
+                                                       v-model="newItemsRelationship.item2PropertyName"></single-line-input>
+                                </td>
+                                <td>
+                                    <select class="custom-select custom-select-sm"
+                                            v-model="newItemsRelationship.type">
+                                        <option v-for="type in itemsRelationshipTypes" v-bind:value="type">{{type}}</option>
+                                    </select>
+                                </td>
+                                <td></td>
+                                <td class="text-right">
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-outline-primary"
+                                                title="Add"
+                                                v-bind:disabled="freezed || !newItemsRelationship.item1 || !newItemsRelationship.item2 || !newItemsRelationship.type"
+                                                @click="addItemsRelationship">
+                                            <font-awesome-icon :icon="['fal', 'plus']" fixed-width></font-awesome-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </extension>
     </extensions>
 </template>
 
 <script>
+    import axios from 'axios';
+    import Swal from 'sweetalert2';
+    import TypeList from '../shared/type-lists';
+    import VueConfigHelper from '../../shared/utilities/VueConfigHelper';
+
     import EditPageController from '../../shared/components/pages/EditPageController';
 
     export class NewViewPageController extends EditPageController {
@@ -162,7 +389,7 @@
         // Static
 
         static get props() {
-            return {
+            const props = {
                 ...super.props,
                 projectId: {
                     type: String
@@ -179,7 +406,38 @@
                 viewItemUrl: {
                     type: String
                     // required: !newMode
+                },
+                addItemsRelationshipUrl: {
+                    type: String
+                    // required: !newMode
+                },
+                removeItemsRelationshipUrl: {
+                    type: String
+                    // required: !newMode
                 }
+            };
+
+            _.each(TypeList.itemsRelationshipTypes,
+                value => props[`update${value}ItemsRelationshipUrl`] = {
+                    type: String
+                    // required: !newMode
+                });
+
+            return props;
+        }
+
+        static get data() {
+            return {
+                ...super.data,
+                itemsRelationshipTypes: [...TypeList.itemsRelationshipTypes],
+                newItemsRelationship: null
+            };
+        }
+
+        static get methods() {
+            return {
+                ...super.methods,
+                ...VueConfigHelper.getMethods(NewViewPageController)
             };
         }
 
@@ -195,6 +453,10 @@
             vm.$options.props.projectName.required = newMode;
             vm.$options.props.newItemUrl.required = !newMode;
             vm.$options.props.viewItemUrl.required = !newMode;
+            vm.$options.props.addItemsRelationshipUrl.required = !newMode;
+            vm.$options.props.removeItemsRelationshipUrl.required = !newMode;
+            _.each(TypeList.itemsRelationshipTypes,
+                value => vm.$options.props[`update${value}ItemsRelationshipUrl`].required = !newMode);
         }
 
         // Constructor
@@ -203,6 +465,168 @@
             super(vm);
 
             this.entityServerValidationErrorHandler = new ModuleServerValidationErrorHandler();
+        }
+
+        // Methods
+
+        $addItemsRelationship() {
+            // Nullable strings
+
+            this.normalizeNullableStrings(this.vm.newItemsRelationship, [
+                'item1PropertyName',
+                'item2PropertyName'
+            ]);
+
+            const data = {
+                item1Id: this.vm.newItemsRelationship.item1.id,
+                item2Id: this.vm.newItemsRelationship.item2.id,
+                item1PropertyName: this.vm.newItemsRelationship.item1PropertyName,
+                item2PropertyName: this.vm.newItemsRelationship.item2PropertyName,
+                type: `${this.vm.newItemsRelationship.type}ItemsRelationship`
+            };
+
+            this.vm.freezed = true;
+            axios
+                .post(this.vm.addItemsRelationshipUrl, data)
+                .then(response => {
+                    response.data.items = this.vm.loadedEntity.items;
+                    this.vm.loadedEntity = response.data;
+                    this.vm.entity = this.convertToWorkEntity(this.vm.loadedEntity);
+                    this.vm.newItemsRelationship = this.emptyItemsRelationship;
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Items Relationship added.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    this.vm.freezed = false;
+                })
+                .catch(error => {
+                    this.showError('There is error adding Items Relationship.', error);
+                    this.vm.freezed = false;
+                });
+        }
+
+        $editItemsRelationship(itemsRelationship) {
+            itemsRelationship.backup = Object.assign({}, itemsRelationship);
+            itemsRelationship.editMode = true;
+        }
+
+        $saveItemsRelationship(itemsRelationship) {
+            // Nullable strings
+
+            this.normalizeNullableStrings(itemsRelationship, [
+                'item1PropertyName',
+                'item2PropertyName'
+            ]);
+
+            if (itemsRelationship.type === 'OneToMany') {
+                this.normalizeNullableStrings(itemsRelationship, [
+                    'sortedChildrenInParentCriteriaPropertyName'
+                ]);
+            } else if (itemsRelationship.type === 'ManyToMany') {
+                this.normalizeNullableStrings(itemsRelationship, [
+                    'sortedItem2sInItem1CriteriaPropertyName',
+                    'sortedItem1sInItem2CriteriaPropertyName'
+                ]);
+            }
+
+            const data = Object.assign({}, itemsRelationship);
+
+            data.moduleId = data.module.id;
+            delete data.module;
+            data.item1Id = data.item1.id;
+            delete data.item1;
+            data.item2Id = data.item2.id;
+            delete data.item2;
+            delete data.type;
+            delete data.editMode;
+            delete data.isDirty;
+            delete data.backup;
+
+            this.vm.freezed = true;
+            axios
+                .post(this.vm[`update${itemsRelationship.type}ItemsRelationshipUrl`], data)
+                .then(response => {
+                    response.data.items = this.vm.loadedEntity.items;
+                    this.vm.loadedEntity = response.data;
+                    this.vm.entity = this.convertToWorkEntity(this.vm.loadedEntity);
+                    this.vm.newItemsRelationship = this.emptyItemsRelationship;
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Items Relationship updated.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    this.vm.freezed = false;
+                })
+                .catch(error => {
+                    this.showError('There is error updating Items Relationship.', error);
+                    this.vm.freezed = false;
+                });
+        }
+
+        $revertItemsRelationship(itemsRelationship) {
+            if (!itemsRelationship.isDirty) {
+                itemsRelationship.editMode = false;
+                return;
+            }
+
+            Swal.fire({
+                icon: 'warning',
+                title: 'Discard Changes',
+                text: "Are you sure want to revert the information to last saved version? All unsaved data will be lost!",
+                showCancelButton: true,
+                reverseButtons: true,
+                focusConfirm: false
+            }).then((result) => {
+                if (result.value) {
+                    const index = itemsRelationship.module.itemsRelationships.indexOf(itemsRelationship);
+                    this.vm.$set(itemsRelationship.module.itemsRelationships, index, itemsRelationship.backup);
+                }
+            });
+        }
+
+        $removeItemsRelationship(itemsRelationship) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Remove',
+                text: "Are you sure want to remove Items Relationship?",
+                showCancelButton: true,
+                reverseButtons: true,
+                focusConfirm: false
+            }).then((result) => {
+                if (result.value) {
+                    const url = this.vm.removeItemsRelationshipUrl + '/' + itemsRelationship.id;
+
+                    this.vm.freezed = true;
+                    axios
+                        .post(url)
+                        .then(response => {
+                            response.data.items = this.vm.loadedEntity.items;
+                            this.vm.loadedEntity = response.data;
+                            this.vm.entity = this.convertToWorkEntity(this.vm.loadedEntity);
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Items Relationship removed.',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            this.vm.freezed = false;
+                        })
+                        .catch(error => {
+                            this.showError('There is error removing Items Relationship.', error);
+                            this.vm.freezed = false;
+                        });
+                }
+            });
+        }
+
+        $dirtyItemsRelationship(itemsRelationship) {
+            itemsRelationship.isDirty = true;
         }
 
         // Internal
@@ -222,8 +646,45 @@
             }
         }
 
+        get emptyItemsRelationship() {
+            return {
+                item1: null,
+                item2: null,
+                item1ProperyName: null,
+                item2ProperyName: null,
+                type: null
+            };
+        }
+
+        doneInitialDataLoading(responses) {
+            super.doneInitialDataLoading(responses);
+
+            this.vm.newItemsRelationship = this.emptyItemsRelationship;
+        }
+
         convertToWorkEntity(loadedModule) {
             const editableModule = super.convertToWorkEntity(loadedModule);
+
+            editableModule.itemsRelationships = [
+                ...editableModule.oneToManyItemsRelationships,
+                ...editableModule.manyToManyItemsRelationships
+            ];
+            delete editableModule.oneToManyItemsRelationships;
+            delete editableModule.manyToManyItemsRelationships;
+
+            for (const relationship of editableModule.itemsRelationships) {
+                this.vm.$set(relationship, 'module', editableModule);
+                delete relationship.moduleId;
+
+                this.vm.$set(relationship, 'item1', this.findById(relationship.item1Id, editableModule.items));
+                delete relationship.item1Id;
+
+                this.vm.$set(relationship, 'item2', this.findById(relationship.item2Id, editableModule.items));
+                delete relationship.item2Id;
+
+                this.vm.$set(relationship, 'editMode', false);
+                this.vm.$set(relationship, 'isDirty', false);
+            }
 
             return editableModule;
         }
@@ -233,6 +694,7 @@
 
             delete serializableModule.project;
             delete serializableModule.items;
+            delete serializableModule.itemsRelationships;
 
             return serializableModule;
         }

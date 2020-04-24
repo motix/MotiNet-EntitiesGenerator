@@ -663,19 +663,6 @@ builder.Ignore(x => x.Ordered${pluralize(otherItem.name)});`);
     => ScopedNameBasedEntityStoreHelper.FindScopeByIdAsync(this, id, cancellationToken);`);
     }
 
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    aspDv_ProfileClass_CreateEntityMapChainedMethodsData_FromOthers(item, data) {
-        for (const otherItem of item.module.items) {
-            if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name &&
-                this.hasSortedChildrenInScope(otherItem)) {
-                data.push(`.SwapMemberWithOrderedMember(nameof(${item.name}ViewModel.${pluralize(otherItem.name)}))`);
-            }
-        }
-    }
-
     // AspNetCore
 
     /**
@@ -872,5 +859,18 @@ public static string ${pluralize(item.name)} {
     }
 }`
             });
+    }
+
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    aspDv_ProfileClass_CreateEntityMapChainedMethodsData_FromOthers(item, data) {
+        for (const otherItem of item.module.items) {
+            if (otherItem !== item && this.itemHasFeature(otherItem) && this.scopeName(otherItem) === item.name &&
+                this.hasSortedChildrenInScope(otherItem)) {
+                data.push(`.SwapMemberWithOrderedMember(nameof(${item.name}ViewModel.${pluralize(otherItem.name)}))`);
+            }
+        }
     }
 }

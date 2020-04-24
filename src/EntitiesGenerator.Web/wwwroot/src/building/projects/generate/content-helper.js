@@ -6,25 +6,6 @@ export default class ContentHelper {
     static get MotiNetCoreVersion() { return '1.1.0-beta-0009' };
     static get MotiNetEntitiesVersion() { return '1.1.0-beta-0018' };
 
-    static get featureSettingTypes() {
-        return [
-            'Entity',
-            'ReadableIdEntity',
-            'TimeTrackedEntity',
-            'OnOffEntity',
-            'CodeBasedEntity',
-            'NameBasedEntity',
-            'ScopedNameBasedEntity',
-            'ChildEntity',
-            'PreprocessedEntity'
-        ];
-    }
-
-    static get featureSettingPropertyNames() {
-        const names = _.map(ContentHelper.featureSettingTypes, value => `${_.lowerFirst(value)}FeatureSetting`);
-        return names;
-    }
-
     // String Generations
 
     static newGuid() {

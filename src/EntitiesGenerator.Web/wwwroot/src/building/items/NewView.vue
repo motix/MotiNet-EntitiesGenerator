@@ -525,7 +525,7 @@
 </template>
 
 <script>
-    import ContentHelper from '../projects/generate/content-helper';
+    import TypeLists from '../shared/type-lists'
 
     import EditPageController from '../../shared/components/pages/EditPageController';
 
@@ -689,7 +689,7 @@
             editableItem.module = editableItem.fullModule;
             delete editableItem.fullModule;
 
-            for (const settingName of ContentHelper.featureSettingPropertyNames) {
+            for (const settingName of TypeLists.featureSettingPropertyNames) {
                 if (editableItem[settingName]) {
                     editableItem[settingName] = Object.assign({}, editableItem[settingName]);
                 }
@@ -764,7 +764,7 @@
         }
 
         fillMissingFeatureSettings(item) {
-            for (const settingName of ContentHelper.featureSettingPropertyNames) {
+            for (const settingName of TypeLists.featureSettingPropertyNames) {
                 if (item[settingName]) {
                     item[settingName].enabled = true;
                     item[settingName].itemId = '_';
@@ -777,7 +777,7 @@
         }
 
         removeDisabledFeatureSettings(item) {
-            for (const settingName of ContentHelper.featureSettingPropertyNames) {
+            for (const settingName of TypeLists.featureSettingPropertyNames) {
                 if (item[settingName].enabled === false) {
                     delete item[settingName];
                 }

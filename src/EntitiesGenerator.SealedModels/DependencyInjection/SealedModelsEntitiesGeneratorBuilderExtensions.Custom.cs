@@ -16,6 +16,9 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.DomainSpecificTypes.Add(nameof(ChildEntityFeatureSetting), typeof(ChildEntityFeatureSetting));
             builder.DomainSpecificTypes.Add(nameof(PreprocessedEntityFeatureSetting), typeof(PreprocessedEntityFeatureSetting));
 
+            builder.DomainSpecificTypes.Add(nameof(OneToManyItemsRelationship), typeof(OneToManyItemsRelationship));
+            builder.DomainSpecificTypes.Add(nameof(ManyToManyItemsRelationship), typeof(ManyToManyItemsRelationship));
+
             return builder;
         }
     }

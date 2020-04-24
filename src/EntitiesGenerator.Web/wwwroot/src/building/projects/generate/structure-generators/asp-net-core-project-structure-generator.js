@@ -1,8 +1,9 @@
 ﻿// AspNetCore
 
 import { IdentifierHelper } from '../content-helper';
-import AllFeaturesGenerator from '../feature-generators/all-features-generator';
 import * as CG from '../content-generators/content-generators';
+import AllFeaturesGenerator from '../feature-generators/all-features-generator';
+import AllRelationshipsGenerator from '../relationship-generators/all-relationships-generator';
 
 export class AspProjectSG {
     /**
@@ -21,9 +22,10 @@ export class AspProjectSG {
 
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      * @param {Module} module
      */
-    generateProjectStructure(features, module) {
+    generateProjectStructure(features, relationships, module) {
         const projectName = AspProjectSG.getProjectName(module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(module);
 
@@ -36,13 +38,13 @@ export class AspProjectSG {
                     type: 'file',
                     fileType: 'projectFile',
                     name: `${projectName}.csproj`,
-                    generator: new CG.AspProject_ProjectFileGenerator(features, module)
+                    generator: new CG.AspProject_ProjectFileGenerator(features, relationships, module)
                 }
             ]
         }
 
         if (module.items.length > 0) {
-            const managersFolder = this.generateManagersFolderStructure(features, module);
+            const managersFolder = this.generateManagersFolderStructure(features, relationships, module);
             projectFolder.children.push(managersFolder);
         }
 
@@ -51,7 +53,7 @@ export class AspProjectSG {
                 {
                     type: 'file',
                     name: `AspNet${moduleCommonName}Options.cs`,
-                    generator: new CG.AspProject_OptionsClassGenerator(features, module)
+                    generator: new CG.AspProject_OptionsClassGenerator(features, relationships, module)
                 });
         }
 
@@ -62,7 +64,7 @@ export class AspProjectSG {
                 {
                     type: 'file',
                     name: `AspNet${moduleCommonName}BuilderExtensions.cs`,
-                    generator: new CG.AspProject_DependencyInjectionClassGenerator(features, module)
+                    generator: new CG.AspProject_DependencyInjectionClassGenerator(features, relationships, module)
                 }
             ]
         });
@@ -72,9 +74,10 @@ export class AspProjectSG {
 
     /**
      * @param {AllFeaturesGenerator} features
+     * @param {AllRelationshipsGenerator} relationships
      * @param {Module} module
      */
-    generateManagersFolderStructure(features, module) {
+    generateManagersFolderStructure(features, relationships, module) {
         const folder = {
             type: 'folder',
             name: '_Managers',
@@ -85,7 +88,7 @@ export class AspProjectSG {
             folder.children.push({
                 type: 'file',
                 name: `AspNet${item.name}Manager.cs`,
-                generator: new CG.AspProject_EntityManagerClassGenerator(features, item)
+                generator: new CG.AspProject_EntityManagerClassGenerator(features, relationships, item)
             });
         }
 

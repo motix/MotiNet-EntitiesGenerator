@@ -87,7 +87,10 @@ namespace EntitiesGenerator.Web.Controllers
         protected override Expression<Func<Project, object>> EntityIdExpression => x => x.Id;
 
         protected override void EntitySpecificationAction(IFindSpecification<Project> specification)
-            => specification.AddInclude($"{nameof(Project.Modules)}.{nameof(Module.Items)}.{nameof(Item.FeatureSettings)}");
+        {
+            specification.AddInclude($"{nameof(Project.Modules)}.{nameof(Module.Items)}.{nameof(Item.FeatureSettings)}");
+            specification.AddInclude($"{nameof(Project.Modules)}.{nameof(Module.ItemsRelationships)}");
+        }
 
         protected override IEnumerable<Project> SortEntities(IEnumerable<Project> projects)
             => projects.OrderBy(x => x.Name);
@@ -101,6 +104,8 @@ namespace EntitiesGenerator.Web.Controllers
                 moduleViewModel.Project = null;
                 moduleViewModel.Items = null;
                 moduleViewModel.FullItems = Mapper.Map<List<ItemViewModel>>(model.Modules.Single(x => x.Id == moduleViewModel.Id).OrderedItems);
+                moduleViewModel.DistributeItemsRelationships();
+                moduleViewModel.ItemsRelationships = null;
                 foreach (var itemViewModel in moduleViewModel.FullItems)
                 {
                     itemViewModel.Module = null;
