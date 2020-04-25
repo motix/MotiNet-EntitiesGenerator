@@ -10,12 +10,12 @@ namespace EntitiesGenerator.Mvc
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [LocalizedRequired]
-        [Display(Name = "Module", ResourceType = typeof(DisplayNames))]
-        public string ModuleId { get; set; }
-
-        [LocalizedRequired]
         [Display(Name = nameof(Name), ResourceType = typeof(DisplayNames))]
         public string Name { get; set; }
+
+        [LocalizedRequired]
+        [Display(Name = "Module", ResourceType = typeof(DisplayNames))]
+        public string ModuleId { get; set; }
     }
 
     // Full
@@ -26,6 +26,12 @@ namespace EntitiesGenerator.Mvc
 
         [Display(Name = nameof(FeatureSettings), ResourceType = typeof(DisplayNames))]
         public ICollection<FeatureSettingLiteViewModel> FeatureSettings { get; set; }
+
+        [Display(Name = nameof(Item1ItemsRelationships), ResourceType = typeof(DisplayNames))]
+        public ICollection<ItemsRelationshipLiteViewModel> Item1ItemsRelationships { get; set; }
+
+        [Display(Name = nameof(Item2ItemsRelationships), ResourceType = typeof(DisplayNames))]
+        public ICollection<ItemsRelationshipLiteViewModel> Item2ItemsRelationships { get; set; }
     }
 
     // Lite

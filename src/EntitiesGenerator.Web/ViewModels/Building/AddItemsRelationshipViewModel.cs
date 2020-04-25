@@ -2,6 +2,8 @@
 {
     public class AddItemsRelationshipViewModel
     {
+        public int Position { get; set; }
+
         public string Item1Id { get; set; }
 
         public string Item2Id { get; set; }

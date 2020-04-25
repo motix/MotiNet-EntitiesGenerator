@@ -156,6 +156,7 @@
                     <table class="table table-hover table-sm">
                         <thead>
                             <tr>
+                                <th scope="col" class="text-right w-tight">{{displayNames['Position']}}</th>
                                 <th scope="col">{{displayNames['Item1']}}</th>
                                 <th scope="col">{{displayNames['Item1PropertyName']}}</th>
                                 <th scope="col">{{displayNames['Item2']}}</th>
@@ -167,11 +168,25 @@
                         </thead>
                         <tbody>
                             <tr v-if="entity.itemsRelationships.length === 0">
-                                <td colspan="4">
+                                <td colspan="8">
                                     There is no items relationship in this module. Please add a new one.
                                 </td>
                             </tr>
                             <tr v-for="relationship in entity.itemsRelationships" v-else>
+                                <td class="text-right">
+                                    <template v-if="relationship.editMode">
+                                        <single-line-input :placeholder="displayNames['Position']"
+                                                           placeholder-css-class="text-muted"
+                                                           v-model="relationship.position"
+                                                           @convert-input="(target, args) => target.converter.toNumber(args)"
+                                                           @convert-output="(target, args) => target.converter.fromNumber(args)"
+                                                           @input="dirtyItemsRelationship(relationship)"
+                                                           class="d-inline-block"></single-line-input>
+                                    </template>
+                                    <template v-else>
+                                        {{relationship.position}}
+                                    </template>
+                                </td>
                                 <td>{{relationship.item1.name}}</td>
                                 <td>
                                     <template v-if="relationship.editMode">
@@ -328,6 +343,14 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td class="text-right">
+                                    <single-line-input :placeholder="displayNames['Position']"
+                                                       placeholder-css-class="text-muted"
+                                                       v-model="newItemsRelationship.position"
+                                                       @convert-input="(target, args) => target.converter.toNumber(args)"
+                                                       @convert-output="(target, args) => target.converter.fromNumber(args)"
+                                                       class="d-inline-block"></single-line-input>
+                                </td>
                                 <td>
                                     <select class="custom-select custom-select-sm"
                                             v-model="newItemsRelationship.item1">
@@ -361,7 +384,7 @@
                                     <div class="btn-group">
                                         <button class="btn btn-sm btn-outline-primary"
                                                 title="Add"
-                                                v-bind:disabled="freezed || !newItemsRelationship.item1 || !newItemsRelationship.item2 || !newItemsRelationship.type"
+                                                v-bind:disabled="freezed || !newItemsRelationshipValidated"
                                                 @click="addItemsRelationship">
                                             <font-awesome-icon :icon="['fal', 'plus']" fixed-width></font-awesome-icon>
                                         </button>
@@ -434,6 +457,13 @@
             };
         }
 
+        static get computed() {
+            return {
+                ...super.computed,
+                ...VueConfigHelper.getComputed(NewViewPageController)
+            };
+        }
+
         static get methods() {
             return {
                 ...super.methods,
@@ -467,6 +497,15 @@
             this.entityServerValidationErrorHandler = new ModuleServerValidationErrorHandler();
         }
 
+        // Computed
+
+        get $newItemsRelationshipValidated() {
+            return (this.vm.newItemsRelationship.position || this.vm.newItemsRelationship.position === 0) &&
+                this.vm.newItemsRelationship.item1 &&
+                this.vm.newItemsRelationship.item2 &&
+                this.vm.newItemsRelationship.type;
+        }
+
         // Methods
 
         $addItemsRelationship() {
@@ -478,6 +517,7 @@
             ]);
 
             const data = {
+                position: this.vm.newItemsRelationship.position,
                 item1Id: this.vm.newItemsRelationship.item1.id,
                 item2Id: this.vm.newItemsRelationship.item2.id,
                 item1PropertyName: this.vm.newItemsRelationship.item1PropertyName,
@@ -648,6 +688,7 @@
 
         get emptyItemsRelationship() {
             return {
+                position: null,
                 item1: null,
                 item2: null,
                 item1ProperyName: null,

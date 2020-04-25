@@ -61,7 +61,7 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FeatureSettings.
+        ///   Looks up a localized string similar to Feature Settings.
         /// </summary>
         public static string FeatureSettings {
             get {
@@ -79,6 +79,42 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Item 1.
+        /// </summary>
+        public static string Item1 {
+            get {
+                return ResourceManager.GetString("Item1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item 1 Items Relationships.
+        /// </summary>
+        public static string Item1ItemsRelationships {
+            get {
+                return ResourceManager.GetString("Item1ItemsRelationships", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item 2.
+        /// </summary>
+        public static string Item2 {
+            get {
+                return ResourceManager.GetString("Item2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item 2 Items Relationships.
+        /// </summary>
+        public static string Item2ItemsRelationships {
+            get {
+                return ResourceManager.GetString("Item2ItemsRelationships", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Items.
         /// </summary>
         public static string Items {
@@ -88,7 +124,7 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ItemsRelationships.
+        ///   Looks up a localized string similar to Items Relationships.
         /// </summary>
         public static string ItemsRelationships {
             get {

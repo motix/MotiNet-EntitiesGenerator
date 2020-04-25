@@ -29,6 +29,16 @@
                 </div>
             </div>
         </extension>
+        <extension point="headerExtra">
+            <div v-if="entity.generateLocation">
+                <strong>{{displayNames['GenerateLocation']}}:</strong>
+                {{entity.generateLocation}}
+            </div>
+            <div v-if="entity.workingLocation">
+                <strong>{{displayNames['WorkingLocation']}}:</strong>
+                {{entity.workingLocation}}
+            </div>
+        </extension>
         <extension>
             <div>
                 <div class="custom-control custom-switch">

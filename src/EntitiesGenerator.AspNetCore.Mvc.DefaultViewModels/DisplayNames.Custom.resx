@@ -162,14 +162,8 @@
   <data name="IdSourcePropertyName" xml:space="preserve">
     <value>ID Source Property Name</value>
   </data>
-  <data name="Item1" xml:space="preserve">
-    <value>Item 1</value>
-  </data>
   <data name="Item1PropertyName" xml:space="preserve">
     <value>Item 1 Property Name</value>
-  </data>
-  <data name="Item2" xml:space="preserve">
-    <value>Item 2</value>
   </data>
   <data name="Item2PropertyName" xml:space="preserve">
     <value>Item 2 Property Name</value>

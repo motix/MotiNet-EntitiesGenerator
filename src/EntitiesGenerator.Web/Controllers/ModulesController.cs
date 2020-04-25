@@ -41,6 +41,7 @@ namespace EntitiesGenerator.Web.Controllers
                 nameof(OneToManyItemsRelationship) => new OneToManyItemsRelationship
                 {
                     ModuleId = id,
+                    Position = viewModel.Position,
                     Item1Id = viewModel.Item1Id,
                     Item2Id = viewModel.Item2Id,
                     Item1PropertyName = viewModel.Item1PropertyName,
@@ -50,6 +51,7 @@ namespace EntitiesGenerator.Web.Controllers
                 nameof(ManyToManyItemsRelationship) => new ManyToManyItemsRelationship
                 {
                     ModuleId = id,
+                    Position = viewModel.Position,
                     Item1Id = viewModel.Item1Id,
                     Item2Id = viewModel.Item2Id,
                     Item1PropertyName = viewModel.Item1PropertyName,

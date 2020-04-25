@@ -8,6 +8,9 @@
     MvcHelper.SetActiveSubMenuItem(ViewData, "Projects");
 
     var emptyModule = new ModuleViewModel();
+
+    displayNameCollector.Collect(x => Model.Entity.GenerateLocation, Html)
+                        .Collect(x => Model.Entity.WorkingLocation, Html);
 }
 
 @section Head {

@@ -10,12 +10,12 @@ namespace EntitiesGenerator.Mvc
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [LocalizedRequired]
-        [Display(Name = "Project", ResourceType = typeof(DisplayNames))]
-        public string ProjectId { get; set; }
-
-        [LocalizedRequired]
         [Display(Name = nameof(Name), ResourceType = typeof(DisplayNames))]
         public string Name { get; set; }
+
+        [LocalizedRequired]
+        [Display(Name = "Project", ResourceType = typeof(DisplayNames))]
+        public string ProjectId { get; set; }
     }
 
     // Full

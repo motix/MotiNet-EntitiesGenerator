@@ -15,16 +15,16 @@ namespace EntitiesGenerator
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
-        [StringLength(StringLengths.Guid)]
-        public string ModuleId { get; set; }
-
-        [Required]
         [StringLength(StringLengths.TitleContent)]
         public string Name { get; set; }
 
         [Required]
         [StringLength(StringLengths.TitleContent)]
         public string NormalizedName { get; set; }
+
+        [Required]
+        [StringLength(StringLengths.Guid)]
+        public string ModuleId { get; set; }
     }
 
     // Relationships
@@ -33,6 +33,10 @@ namespace EntitiesGenerator
         public Module Module { get; set; }
 
         public ICollection<FeatureSetting> FeatureSettings { get; set; }
+
+        public ICollection<ItemsRelationship> Item1ItemsRelationships { get; set; }
+
+        public ICollection<ItemsRelationship> Item2ItemsRelationships { get; set; }
     }
 
     // Customization

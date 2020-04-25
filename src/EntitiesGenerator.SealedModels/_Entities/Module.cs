@@ -15,16 +15,16 @@ namespace EntitiesGenerator
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
-        [StringLength(StringLengths.Guid)]
-        public string ProjectId { get; set; }
-
-        [Required]
         [StringLength(StringLengths.TitleContent)]
         public string Name { get; set; }
 
         [Required]
         [StringLength(StringLengths.TitleContent)]
         public string NormalizedName { get; set; }
+
+        [Required]
+        [StringLength(StringLengths.Guid)]
+        public string ProjectId { get; set; }
     }
 
     // Relationships
@@ -40,13 +40,8 @@ namespace EntitiesGenerator
     // Customization
     partial class Module
     {
-        private readonly Func<IEnumerable<ItemsRelationship>, IEnumerable<ItemsRelationship>> _orderedItemsRelationshipsMethod;
-
         public IEnumerable<Item> OrderedItems => Items?.OrderBy(x => x.Position);
 
-        public IEnumerable<ItemsRelationship> OrderedItemsRelationships
-            => _orderedItemsRelationshipsMethod == null ?
-            throw new NotImplementedException() :
-            _orderedItemsRelationshipsMethod.Invoke(ItemsRelationships);
+        public IEnumerable<ItemsRelationship> OrderedItemsRelationships => ItemsRelationships?.OrderBy(x => x.Position);
     }
 }

@@ -196,29 +196,11 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Item 1.
-        /// </summary>
-        public static string Item1 {
-            get {
-                return ResourceManager.GetString("Item1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Item 1 Property Name.
         /// </summary>
         public static string Item1PropertyName {
             get {
                 return ResourceManager.GetString("Item1PropertyName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Item 2.
-        /// </summary>
-        public static string Item2 {
-            get {
-                return ResourceManager.GetString("Item2", resourceCulture);
             }
         }
         

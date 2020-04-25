@@ -3,14 +3,16 @@ using EntitiesGenerator.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EntitiesGenerator.Web.Data.Migrations
 {
     [DbContext(typeof(EntitiesGeneratorDbContext))]
-    partial class EntitiesGeneratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200425150429_ItemsRelationship_Item1Item2NotUnique")]
+    partial class ItemsRelationship_Item1Item2NotUnique
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,9 +123,6 @@ namespace EntitiesGenerator.Web.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(36)")
                         .HasMaxLength(36);
-
-                    b.Property<int>("Position")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -398,13 +397,13 @@ namespace EntitiesGenerator.Web.Data.Migrations
             modelBuilder.Entity("EntitiesGenerator.ItemsRelationship", b =>
                 {
                     b.HasOne("EntitiesGenerator.Item", "Item1")
-                        .WithMany("Item1ItemsRelationships")
+                        .WithMany()
                         .HasForeignKey("Item1Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("EntitiesGenerator.Item", "Item2")
-                        .WithMany("Item2ItemsRelationships")
+                        .WithMany()
                         .HasForeignKey("Item2Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

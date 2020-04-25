@@ -29,11 +29,6 @@ namespace EntitiesGenerator.EntityFrameworkCore
             builder.HasIndex(nameof(Module.ProjectId), nameof(Module.Name)).IsUnique();
             builder.HasIndex(nameof(Module.ProjectId), nameof(Module.NormalizedName)).IsUnique();
 
-            // Restrict delete
-            builder.HasOne(x => x.Project)
-                   .WithMany(x => x.Modules)
-                   .OnDelete(DeleteBehavior.Restrict);
-
             // Ignore ordered children
             builder.Ignore(x => x.OrderedItems);
 
@@ -47,13 +42,21 @@ namespace EntitiesGenerator.EntityFrameworkCore
             builder.HasIndex(nameof(Item.ModuleId), nameof(Item.Name)).IsUnique();
             builder.HasIndex(nameof(Item.ModuleId), nameof(Item.NormalizedName)).IsUnique();
 
-            // Restrict delete
-            builder.HasOne(x => x.Module)
-                   .WithMany(x => x.Items)
-                   .OnDelete(DeleteBehavior.Restrict);
-
             // Ignore ordered children
             builder.Ignore(x => x.OrderedFeatureSettings);
+        }
+
+        protected override void ConfigureItemsRelationship(EntityTypeBuilder<ItemsRelationship> builder)
+        {
+            // Restrict delete
+            builder.HasOne(x => x.Item1)
+                   .WithMany(x => x.Item1ItemsRelationships)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            // Restrict delete
+            builder.HasOne(x => x.Item2)
+                   .WithMany(x => x.Item2ItemsRelationships)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -123,6 +123,18 @@
   <data name="Item" xml:space="preserve">
     <value>Item</value>
   </data>
+  <data name="Item1" xml:space="preserve">
+    <value>Item 1</value>
+  </data>
+  <data name="Item1ItemsRelationships" xml:space="preserve">
+    <value>Item 1 Items Relationships</value>
+  </data>
+  <data name="Item2" xml:space="preserve">
+    <value>Item 2</value>
+  </data>
+  <data name="Item2ItemsRelationships" xml:space="preserve">
+    <value>Item 2 Items Relationships</value>
+  </data>
   <data name="Items" xml:space="preserve">
     <value>Items</value>
   </data>

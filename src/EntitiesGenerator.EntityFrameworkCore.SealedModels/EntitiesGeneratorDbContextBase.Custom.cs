@@ -33,7 +33,6 @@ namespace EntitiesGenerator.EntityFrameworkCore
 
             modelBuilder.Entity<NameBasedEntityFeatureSetting>(ConfigureNameBasedEntityFeatureSetting);
             modelBuilder.Entity<ScopedNameBasedEntityFeatureSetting>(ConfigureScopedNameBasedEntityFeatureSetting);
-            modelBuilder.Entity<ItemsRelationship>(ConfigureItemsRelationshipInternal);
         }
 
         protected override void ConfigureFeatureSetting(EntityTypeBuilder<FeatureSetting> builder)
@@ -51,20 +50,6 @@ namespace EntitiesGenerator.EntityFrameworkCore
         {
             builder.Property(x => x.NamePropertyName)
                    .HasColumnName(nameof(ScopedNameBasedEntityFeatureSetting.NamePropertyName));
-        }
-
-        protected virtual void ConfigureItemsRelationshipInternal(EntityTypeBuilder<ItemsRelationship> builder)
-        {
-            // Unique
-            builder.HasIndex(nameof(ItemsRelationship.Item1Id), nameof(ItemsRelationship.Item2Id)).IsUnique();
-
-            // Multiple cascade paths
-            builder.HasOne(x => x.Item1)
-                   .WithMany()
-                   .OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(x => x.Item2)
-                   .WithMany()
-                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
