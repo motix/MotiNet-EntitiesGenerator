@@ -222,30 +222,6 @@ export default class FeatureGenerator {
 
     /**
      * @param {Item} item
-     * @param {ParameterListItem[]} data
-     */
-    core_BuilderClass_ConstructorParametersData(item, data) {
-        this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {ParameterListItem[]} data
-     */
-    core_BuilderClass_ConstructBuilderParametersData(item, data) {
-        this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    core_BuilderClass_PropertiesDeclarationsData(item, data) {
-        this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
      * @param {string[]} data
      */
     core_DependencyInjectionClass_EntityServiceRegistrationsData(item, data) {
@@ -301,76 +277,10 @@ export default class FeatureGenerator {
 
     /**
      * @param {Item} item
-     * @param {string[]} data
-     */
-    sm_EntityClass_CustomizationFieldDeclarationsData(item, data) {
-        this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    sm_EntityClass_CustomizationFieldDeclarationsData_FromOthers(item, data) {
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    sm_EntityClass_CustomizationPropertyDeclarationsData(item, data) {
-        this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    sm_EntityClass_CustomizationPropertyDeclarationsData_FromOthers(item, data) {
-    }
-
-    /**
-     * @param {Item} item
      * @param {string} subEntityName
      * @param {string[]} data
      */
     sm_SubEntityClass_EntityInterfacesData(item, subEntityName, data) {
-        this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string} subEntityName
-     * @param {string[]} data
-     */
-    sm_SubEntityClass_EntityPropertyDeclarationsData(item, subEntityName, data) {
-        this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string} subEntityName
-     * @param {string[]} data
-     */
-    sm_SubEntityClass_RelationshipsPropertyDeclarationsData(item, subEntityName, data) {
-        this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string} subEntityName
-     * @param {string[]} data
-     */
-    sm_SubEntityClass_CustomizationFieldDeclarationsData(item, subEntityName, data) {
-        this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string} subEntityName
-     * @param {string[]} data
-     */
-    sm_SubEntityClass_CustomizationPropertyDeclarationsData(item, subEntityName, data) {
         this.throwIfItemNotHaveFeature(item);
     }
 
@@ -397,32 +307,6 @@ export default class FeatureGenerator {
         this.throwIfItemNotHaveFeature(item);
     }
 
-    // EntityFrameworkCore
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    ef_DbContextClass_PropertyDeclarationsData(item, data) {
-        this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    ef_DbContextClass_ConfigureEntityRegistrationsData(item, data) {
-        this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    ef_DbContextClass_ConfigureEntityMethodsData(item, data) {
-        this.throwIfItemNotHaveFeature(item);
-    }
-
     // EntityFrameworkCore.SealedModels
 
     /**
@@ -431,13 +315,6 @@ export default class FeatureGenerator {
      */
     efSm_DbContextClass_EntityConfigurationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    efSm_DbContextClass_EntityConfigurationsData_FromOthers(item, data) {
     }
 
     /**
@@ -528,22 +405,8 @@ export default class FeatureGenerator {
      * @param {Item} item
      * @param {string[]} data
      */
-    aspDv_EntityViewModelsClass_BasePropertyDeclarationsData_FromOthers(item, data) {
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
     aspDv_EntityViewModelsClass_FullPropertyDeclarationsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    aspDv_EntityViewModelsClass_FullPropertyDeclarationsData_FromOthers(item, data) {
     }
 
     /**
@@ -578,21 +441,6 @@ export default class FeatureGenerator {
      */
     aspDv_DisplayNamesResxDesignerClass_ItemsData(item, data) {
         this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    aspDv_ProfileClass_CreateEntityMapChainedMethodsData(item, data) {
-        this.throwIfItemNotHaveFeature(item);
-    }
-
-    /**
-     * @param {Item} item
-     * @param {string[]} data
-     */
-    aspDv_ProfileClass_CreateEntityMapChainedMethodsData_FromOthers(item, data) {
     }
 }
 

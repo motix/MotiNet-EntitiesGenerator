@@ -54,15 +54,11 @@ export class SmProject_EntityClassGenerator extends CSharpEntitySpecificContentG
                 feature.sm_EntityClass_EntityInterfacesData(this.item, entityInterfacesData);
                 feature.sm_EntityClass_EntityPropertyDeclarationsData(this.item, entityPropertyDeclarationsData);
                 feature.sm_EntityClass_RelationshipsPropertyDeclarationsData(this.item, relationshipsPropertyDeclarationsData);
-                feature.sm_EntityClass_CustomizationFieldDeclarationsData(this.item, customizationFieldDeclarationsData);
-                feature.sm_EntityClass_CustomizationPropertyDeclarationsData(this.item, customizationPropertyDeclarationsData);
             }
 
             feature.sm_EntityClass_EntityInterfacesData_FromOthers(this.item, entityInterfacesData);
             feature.sm_EntityClass_EntityPropertyDeclarationsData_FromOthers(this.item, entityPropertyDeclarationsData);
             feature.sm_EntityClass_RelationshipsPropertyDeclarationsData_FromOthers(this.item, relationshipsPropertyDeclarationsData);
-            feature.sm_EntityClass_CustomizationFieldDeclarationsData_FromOthers(this.item, customizationFieldDeclarationsData);
-            feature.sm_EntityClass_CustomizationPropertyDeclarationsData_FromOthers(this.item, customizationPropertyDeclarationsData);
         }
 
         for (const relationship of this.item.module.itemsRelationships) {
@@ -136,10 +132,19 @@ export class SmProject_SubEntityClassGenerator extends CSharpEntitySpecificConte
         for (const feature of this.features.allFeatures) {
             if (feature.itemHasFeature(this.item)) {
                 feature.sm_SubEntityClass_EntityInterfacesData(this.item, this.subEntityName, entityInterfacesData);
-                feature.sm_SubEntityClass_EntityPropertyDeclarationsData(this.item, this.subEntityName, entityPropertyDeclarationsData);
-                feature.sm_SubEntityClass_RelationshipsPropertyDeclarationsData(this.item, this.subEntityName, relationshipsPropertyDeclarationsData);
-                feature.sm_SubEntityClass_CustomizationFieldDeclarationsData(this.item, this.subEntityName, customizationFieldDeclarationsData);
-                feature.sm_SubEntityClass_CustomizationPropertyDeclarationsData(this.item, this.subEntityName, customizationPropertyDeclarationsData);
+            }
+        }
+
+        for (const relationship of this.item.module.itemsRelationships) {
+            if (this.relationships.itemHasRelationship(this.item, relationship)) {
+                const subEntity = this.relationships.findSubEntity(this.item, relationship);
+                if (subEntity !== null) {
+                    const generator = this.relationships.getGenerator(relationship);
+                    generator.sm_EntityClass_EntityPropertyDeclarationsData(subEntity, relationship, entityPropertyDeclarationsData);
+                    generator.sm_EntityClass_RelationshipsPropertyDeclarationsData(subEntity, relationship, relationshipsPropertyDeclarationsData);
+                    generator.sm_EntityClass_CustomizationFieldDeclarationsData(subEntity, relationship, customizationFieldDeclarationsData);
+                    generator.sm_EntityClass_CustomizationPropertyDeclarationsData(subEntity, relationship, customizationPropertyDeclarationsData);
+                }
             }
         }
 

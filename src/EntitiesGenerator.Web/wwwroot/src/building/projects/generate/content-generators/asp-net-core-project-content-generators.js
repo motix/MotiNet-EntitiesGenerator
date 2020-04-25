@@ -77,7 +77,7 @@ namespace ${namespace}
 ${entityGenericTypeConstraints}
     {
         private readonly CancellationToken _cancel;
-        
+
         public AspNet${entityName}Manager(${constructorParameters})
             : base(${baseConstructorParameters})
             => _cancel = contextAccessor?.HttpContext?.RequestAborted ?? CancellationToken.None;

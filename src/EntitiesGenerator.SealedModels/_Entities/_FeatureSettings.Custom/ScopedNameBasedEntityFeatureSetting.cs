@@ -16,12 +16,5 @@ namespace EntitiesGenerator
         [Required]
         [StringLength(StringLengths.TinyContent)]
         public string LookupNormalizer { get; set; }
-
-        public bool DeleteRestrict { get; set; }
-
-        public bool HasSortedChildrenInScope { get; set; }
-
-        [StringLength(StringLengths.TinyContent)]
-        public string SortedChildrenInScopeCriteriaPropertyName { get; set; }
     }
 }

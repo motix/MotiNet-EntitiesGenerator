@@ -392,44 +392,6 @@
                                     {{entity.scopedNameBasedEntityFeatureSetting.lookupNormalizer}}
                                 </template>
                             </div>
-                            <div>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox"
-                                           class="custom-control-input"
-                                           id="scopedNameBasedEntityFeatureSetting_DeleteRestrict_Switch"
-                                           v-bind:disabled="!newMode && !editMode"
-                                           v-model="entity.scopedNameBasedEntityFeatureSetting.deleteRestrict"
-                                           @change="dirty()">
-                                    <label class="custom-control-label" for="scopedNameBasedEntityFeatureSetting_DeleteRestrict_Switch">{{displayNames['DeleteRestrict']}}</label>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox"
-                                           class="custom-control-input"
-                                           id="scopedNameBasedEntityFeatureSetting_HasSortedChildrenInScope_Switch"
-                                           v-bind:disabled="!newMode && !editMode"
-                                           v-model="entity.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope"
-                                           @change="dirty()">
-                                    <label class="custom-control-label" for="scopedNameBasedEntityFeatureSetting_HasSortedChildrenInScope_Switch">{{displayNames['HasSortedChildrenInScope']}}</label>
-                                </div>
-                            </div>
-                            <div v-if="entity.scopedNameBasedEntityFeatureSetting.hasSortedChildrenInScope">
-                                <strong>{{displayNames['SortedChildrenInScopeCriteriaPropertyName']}}:</strong>
-                                <template v-if="editMode || newMode">
-                                    <single-line-input :placeholder="displayNames['SortedChildrenInScopeCriteriaPropertyName']"
-                                                       placeholder-css-class="text-muted"
-                                                       v-model="entity.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName"
-                                                       @input="dirty()"
-                                                       class="d-inline-block"></single-line-input>
-                                </template>
-                                <template v-else-if="entity.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName === null">
-                                    <i class="text-muted">None</i>
-                                </template>
-                                <template v-else>
-                                    {{entity.scopedNameBasedEntityFeatureSetting.sortedChildrenInScopeCriteriaPropertyName}}
-                                </template>
-                            </div>
                         </div>
                     </section>
 
@@ -461,44 +423,6 @@
                                 </template>
                                 <template v-else>
                                     {{entity.childEntityFeatureSetting.parentName}}
-                                </template>
-                            </div>
-                            <div>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox"
-                                           class="custom-control-input"
-                                           id="childEntityFeatureSetting_DeleteRestrict_Switch"
-                                           v-bind:disabled="!newMode && !editMode"
-                                           v-model="entity.childEntityFeatureSetting.deleteRestrict"
-                                           @change="dirty()">
-                                    <label class="custom-control-label" for="childEntityFeatureSetting_DeleteRestrict_Switch">{{displayNames['DeleteRestrict']}}</label>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox"
-                                           class="custom-control-input"
-                                           id="childEntityFeatureSetting_HasSortedChildrenInParent_Switch"
-                                           v-bind:disabled="!newMode && !editMode"
-                                           v-model="entity.childEntityFeatureSetting.hasSortedChildrenInParent"
-                                           @change="dirty()">
-                                    <label class="custom-control-label" for="childEntityFeatureSetting_HasSortedChildrenInParent_Switch">{{displayNames['HasSortedChildrenInParent']}}</label>
-                                </div>
-                            </div>
-                            <div v-if="entity.childEntityFeatureSetting.hasSortedChildrenInParent">
-                                <strong>{{displayNames['SortedChildrenInParentCriteriaPropertyName']}}:</strong>
-                                <template v-if="editMode || newMode">
-                                    <single-line-input :placeholder="displayNames['SortedChildrenInParentCriteriaPropertyName']"
-                                                       placeholder-css-class="text-muted"
-                                                       v-model="entity.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName"
-                                                       @input="dirty()"
-                                                       class="d-inline-block"></single-line-input>
-                                </template>
-                                <template v-else-if="entity.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName === null">
-                                    <i class="text-muted">None</i>
-                                </template>
-                                <template v-else>
-                                    {{entity.childEntityFeatureSetting.sortedChildrenInParentCriteriaPropertyName}}
                                 </template>
                             </div>
                         </div>
@@ -658,10 +582,7 @@
                 enabled: false,
                 scopeName: null,
                 namePropertyName: null,
-                lookupNormalizer: 'LowerInvariantLookupNormalizer',
-                deleteRestrict: false,
-                hasSortedChildrenInScope: false,
-                sortedChildrenInScopeCriteriaPropertyName: null
+                lookupNormalizer: 'LowerInvariantLookupNormalizer'
             };
         }
 
@@ -669,10 +590,7 @@
             return {
                 itemId: '_',
                 enabled: false,
-                parentName: null,
-                deleteRestrict: false,
-                hasSortedChildrenInParent: false,
-                sortedChildrenInParentCriteriaPropertyName: null
+                parentName: null
             };
         }
 
@@ -719,14 +637,7 @@
 
             if (serializableItem.scopedNameBasedEntityFeatureSetting) {
                 this.normalizeNullableStrings(serializableItem.scopedNameBasedEntityFeatureSetting, [
-                    'namePropertyName',
-                    'sortedChildrenInScopeCriteriaPropertyName'
-                ]);
-            }
-
-            if (serializableItem.childEntityFeatureSetting) {
-                this.normalizeNullableStrings(serializableItem.childEntityFeatureSetting, [
-                    'sortedChildrenInParentCriteriaPropertyName'
+                    'namePropertyName'
                 ]);
             }
 

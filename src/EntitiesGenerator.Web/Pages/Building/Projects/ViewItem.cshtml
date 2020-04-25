@@ -26,12 +26,7 @@
                         .Collect(x => emptyCodeBasedEntityFeatureSetting.HasCodeGenerator, Html)
                         .Collect(x => emptyNameBasedEntityFeatureSetting.NamePropertyName, Html)
                         .Collect(x => emptyScopedNameBasedEntityFeatureSetting.ScopeName, Html)
-                        .Collect(x => emptyScopedNameBasedEntityFeatureSetting.DeleteRestrict, Html)
-                        .Collect(x => emptyScopedNameBasedEntityFeatureSetting.HasSortedChildrenInScope, Html)
-                        .Collect(x => emptyScopedNameBasedEntityFeatureSetting.SortedChildrenInScopeCriteriaPropertyName, Html)
-                        .Collect(x => childEntityFeatureSetting.ParentName, Html)
-                        .Collect(x => childEntityFeatureSetting.HasSortedChildrenInParent, Html)
-                        .Collect(x => childEntityFeatureSetting.SortedChildrenInParentCriteriaPropertyName, Html);
+                        .Collect(x => childEntityFeatureSetting.ParentName, Html);
 }
 
 @section Head {

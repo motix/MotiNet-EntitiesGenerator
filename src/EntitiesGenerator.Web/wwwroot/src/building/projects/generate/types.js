@@ -100,11 +100,11 @@
  */
 
 /**
- * @typedef {FeatureSetting & {scopeName: string, namePropertyName: string, lookupNormalizer: string, deleteRestrict: boolean, hasSortedChildrenInScope: boolean, sortedChildrenInScopeCriteriaPropertyName: string}} ScopedNameBasedEntityFeatureSetting
+ * @typedef {FeatureSetting & {scopeName: string, namePropertyName: string, lookupNormalizer: string}} ScopedNameBasedEntityFeatureSetting
  */
 
 /**
- * @typedef {FeatureSetting & {parentName: string, deleteRestrict: boolean, hasSortedChildrenInParent: boolean, sortedChildrenInParentCriteriaPropertyName: string}} ChildEntityFeatureSetting
+ * @typedef {FeatureSetting & {parentName: string}} ChildEntityFeatureSetting
  */
 
 /**

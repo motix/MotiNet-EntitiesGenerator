@@ -17,6 +17,24 @@ export default class AllRelationshipsGenerator {
     }
 
     /**
+     * @param {Item} item
+     * @param {ItemsRelationship} relationship
+     */
+    findSubEntity(item, relationship) {
+        if (item === relationship.item1) {
+            if (!_.find(item.module.items, value => value === relationship.item2)) {
+                return relationship.item2;
+            }
+        } else {
+            if (!_.find(item.module.items, value => value === relationship.item1)) {
+                return relationship.item1;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param {ItemsRelationship} relationship
      * @returns {RelationshipGenerator}
      */

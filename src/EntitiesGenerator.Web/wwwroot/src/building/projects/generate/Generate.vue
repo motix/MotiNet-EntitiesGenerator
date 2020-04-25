@@ -354,6 +354,43 @@
                     relationship.item2 = this.findById(relationship.item2Id, module.items);
                     delete relationship.item2Id;
                 }
+
+                for (const item of module.items) {
+                    if (item.scopedNameBasedEntityFeatureSetting !== null) {
+                        if (!_.some(module.itemsRelationships,
+                            value => value.type === 'OneToMany' && value.item1.name === item.scopedNameBasedEntityFeatureSetting.scopeName && value.item2 === item)) {
+                            let scope = _.find(module.items, value => value !== item && value.name === item.scopedNameBasedEntityFeatureSetting.scopeName);
+                            if (!scope) {
+                                scope = {
+                                    name: item.scopedNameBasedEntityFeatureSetting.scopeName
+                                };
+                            }
+                            module.itemsRelationships.push({
+                                module: module,
+                                item1: scope,
+                                item2: item,
+                                type: "OneToMany"
+                            });
+                        }
+                    }
+                    if (item.childEntityFeatureSetting !== null) {
+                        if (!_.some(module.itemsRelationships,
+                            value => value.type === 'OneToMany' && value.item1.name === item.childEntityFeatureSetting.parentName && value.item2 === item)) {
+                            let parent = _.find(module.items, value => value !== item && value.name === item.childEntityFeatureSetting.parentName);
+                            if (!parent) {
+                                parent = {
+                                    name: item.childEntityFeatureSetting.parentName
+                                };
+                            }
+                            module.itemsRelationships.push({
+                                module: module,
+                                item1: parent,
+                                item2: item,
+                                type: "OneToMany"
+                            });
+                        }
+                    }
+                }
             }
 
             return project;

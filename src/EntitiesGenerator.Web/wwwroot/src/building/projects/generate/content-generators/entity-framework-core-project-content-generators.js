@@ -35,29 +35,16 @@ export class EfProject_DbContextClassGenerator extends CSharpModuleSpecificConte
     generate() {
         const namespace = EfProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
+        const entities = this.features.moduleEntityNames(this.module);
         const moduleGenericTypeParameters = this.features.moduleGenericTypeParameters(this.module,
             `public abstract partial class ${moduleCommonName}DbContextBase`.length / 4 + 1, true);
         const moduleGenericTypeConstraints = this.features.moduleGenericTypeConstraints(this.module, 2, true, { start: 1 });
-        const propertyDeclarationsData = [];
-        const configureEntityRegistrationsData = [];
-        const configureEntityMethodsData = [];
-
-        for (const item of this.module.items) {
-            const entityName = item.name;
-            const pluralEntityName = pluralize(entityName);
-
-            propertyDeclarationsData.push(`public DbSet<T${entityName}> ${pluralEntityName} { get; set; }`);
-            configureEntityRegistrationsData.push(`modelBuilder.Entity<T${entityName}>(Configure${entityName});`);
-            configureEntityMethodsData.push(`protected virtual void Configure${entityName}(EntityTypeBuilder<T${entityName}> builder) { }`);
-
-            for (const feature of this.features.allFeatures) {
-                if (feature.itemHasFeature(item)) {
-                    feature.ef_DbContextClass_PropertyDeclarationsData(item, propertyDeclarationsData);
-                    feature.ef_DbContextClass_ConfigureEntityRegistrationsData(item, configureEntityRegistrationsData);
-                    feature.ef_DbContextClass_ConfigureEntityMethodsData(item, configureEntityMethodsData);
-                }
-            }
-        }
+        const propertyDeclarationsData = _.map(entities,
+            value => `public DbSet<T${value.name}> ${pluralize(value.name)} { get; set; }`);
+        const configureEntityRegistrationsData = _.map(entities,
+            value => `modelBuilder.Entity<T${value.name}>(Configure${value.name});`);
+        const configureEntityMethodsData = _.map(entities,
+            value => `protected virtual void Configure${value.name}(EntityTypeBuilder<T${value.name}> builder) { }`);
 
         for (const item of this.module.items) {
             for (const relationship of this.module.itemsRelationships) {

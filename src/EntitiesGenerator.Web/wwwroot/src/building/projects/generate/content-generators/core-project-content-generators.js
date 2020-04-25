@@ -315,7 +315,7 @@ export class CoreProject_ErrorDescriberClassGenerator extends CSharpModuleSpecif
         }
 
         const describerMethods = StringHelper.joinLines(_.uniq(describerMethodsData), 2, '\n', { start: 2 })
-                                             .replace(/#endregion.*/g, '#endregion');
+            .replace(/#endregion.*/g, '#endregion');
 
         const content = `using Microsoft.Extensions.Localization;
 using ${namespace}.Resources;
@@ -387,34 +387,13 @@ export class CoreProject_BuilderClassGenerator extends CSharpModuleSpecificConte
     generate() {
         const namespace = CoreProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
-        const constructorParametersData = [];
-        const constructBuilderParametersData = [];
-        const propertyDeclarationsData = [];
-
-        for (const item of this.module.items) {
-            const entityName = item.name;
-            const lowerFirstEntityName = _.lowerFirst(entityName);
-
-            constructorParametersData.push({
-                text: `Type ${lowerFirstEntityName}Type`,
-                lineBreak: item.parameterListLineBreak
-            });
-
-            constructBuilderParametersData.push({
-                text: `${lowerFirstEntityName}Type`,
-                lineBreak: item.parameterListLineBreak
-            });
-
-            propertyDeclarationsData.push(`public Type ${entityName}Type { get; private set; }`);
-
-            for (const feature of this.features.allFeatures) {
-                if (feature.itemHasFeature(item)) {
-                    feature.core_BuilderClass_ConstructorParametersData(item, constructorParametersData);
-                    feature.core_BuilderClass_ConstructBuilderParametersData(item, constructBuilderParametersData);
-                    feature.core_BuilderClass_PropertiesDeclarationsData(item, propertyDeclarationsData);
-                }
-            }
-        }
+        const entities = this.features.moduleEntityNames(this.module);
+        const constructorParametersData = _.map(entities,
+            value => ({ text: `Type ${_.lowerFirst(value.name)}Type`, lineBreak: value.lineBreak }));
+        const constructBuilderParametersData = _.map(entities,
+            value => ({ text: `${_.lowerFirst(value.name)}Type`, lineBreak: value.lineBreak }));
+        const propertyDeclarationsData = _.map(entities,
+            value => `public Type ${value.name}Type { get; private set; }`);
 
         const constructorParameters = StringHelper.joinParameters(_.uniqBy(constructorParametersData, value => value.text),
             3, { startComma: true, start: 1 });
@@ -465,12 +444,13 @@ export class CoreProject_DependencyInjectionClassGenerator extends CSharpModuleS
     generate() {
         const namespace = CoreProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
+        const entities = this.features.moduleEntityNames(this.module);
         const moduleGenericTypeParameters = this.features.moduleGenericTypeParameters(this.module,
             `public static ${moduleCommonName}Builder Add${moduleCommonName}`.length / 4);
         const moduleGenericTypeConstraints = this.features.moduleGenericTypeConstraints(this.module, 1, false, { start: 1 });
         const entityServiceRegistrationsData = [];
         const moduleServiceRegistrationsData = [];
-        const builderConstructorParametersData = _.map(this.features.moduleEntityNames(this.module),
+        const builderConstructorParametersData = _.map(entities,
             value => ({ text: `typeof(T${value.name})`, lineBreak: value.lineBreak }));
 
         for (const item of this.module.items) {

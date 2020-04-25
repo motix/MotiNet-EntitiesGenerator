@@ -153,9 +153,6 @@
   <data name="HasSortedChildrenInParent" xml:space="preserve">
     <value>Has Sorted Children in Parent</value>
   </data>
-  <data name="HasSortedChildrenInScope" xml:space="preserve">
-    <value>Has Sorted Children in Scope</value>
-  </data>
   <data name="HasSortedItem1sInItem2" xml:space="preserve">
     <value>Has Sorted Item 1s in Item 2</value>
   </data>
@@ -203,9 +200,6 @@
   </data>
   <data name="SortedChildrenInParentCriteriaPropertyName" xml:space="preserve">
     <value>Sorted Children in Parent Criteria Property Name</value>
-  </data>
-  <data name="SortedChildrenInScopeCriteriaPropertyName" xml:space="preserve">
-    <value>Sorted Children in Scope Criteria Property Name</value>
   </data>
   <data name="SortedItem1sInItem2CriteriaPropertyName" xml:space="preserve">
     <value>Sorted Item 1s in Item 2 Criteria Property Name</value>

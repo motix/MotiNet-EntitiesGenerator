@@ -68,9 +68,6 @@ export class AspDvProject_EntityViewModelsClassGenerator extends CSharpEntitySpe
                 feature.aspDv_EntityViewModelsClass_BasePropertyDeclarationsData(this.item, basePropertyDeclarationsData);
                 feature.aspDv_EntityViewModelsClass_FullPropertyDeclarationsData(this.item, fullPropertyDeclarationsData);
             }
-
-            feature.aspDv_EntityViewModelsClass_BasePropertyDeclarationsData_FromOthers(this.item, basePropertyDeclarationsData);
-            feature.aspDv_EntityViewModelsClass_FullPropertyDeclarationsData_FromOthers(this.item, fullPropertyDeclarationsData);
         }
 
         for (const relationship of this.item.module.itemsRelationships) {
@@ -134,6 +131,17 @@ export class AspDvProject_SubEntityViewModelsClassGenerator extends CSharpEntity
             }
         }
 
+        for (const relationship of this.item.module.itemsRelationships) {
+            if (this.relationships.itemHasRelationship(this.item, relationship)) {
+                const subEntity = this.relationships.findSubEntity(this.item, relationship);
+                if (subEntity !== null) {
+                    const generator = this.relationships.getGenerator(relationship);
+                    generator.aspDv_EntityViewModelsClass_BasePropertyDeclarationsData(subEntity, relationship, basePropertyDeclarationsData);
+                    generator.aspDv_EntityViewModelsClass_FullPropertyDeclarationsData(subEntity, relationship, fullPropertyDeclarationsData);
+                }
+            }
+        }
+
         const basePropertyDeclarations = StringHelper.joinLines(_.uniq(basePropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
         const fullPropertyDeclarations = StringHelper.joinLines(_.uniq(fullPropertyDeclarationsData), 2, '\n', { start: 1, end: 1, endIndent: 1, spaceIfEmpty: true });
 
@@ -178,6 +186,11 @@ export class AspDvProject_DisplayNamesResxGenerator extends ModuleSpecificConten
                 if (this.relationships.itemHasRelationship(item, relationship)) {
                     const generator = this.relationships.getGenerator(relationship);
                     generator.aspDv_DisplayNamesResx_ItemsData(item, relationship, itemsData);
+
+                    const subEntity = this.relationships.findSubEntity(item, relationship);
+                    if (subEntity !== null) {
+                        generator.aspDv_DisplayNamesResx_ItemsData(subEntity, relationship, itemsData);
+                    }
                 }
             }
         }
@@ -234,14 +247,6 @@ export class AspDvProject_ProfileClassGenerator extends CSharpModuleSpecificCont
 
         for (const entity of entities) {
             const createEntityMapChainedMethodsData = [];
-
-            for (const feature of this.features.allFeatures) {
-                if (feature.itemHasFeature(entity.item)) {
-                    feature.aspDv_ProfileClass_CreateEntityMapChainedMethodsData(entity.item, createEntityMapChainedMethodsData);
-                }
-
-                feature.aspDv_ProfileClass_CreateEntityMapChainedMethodsData_FromOthers(entity.item, createEntityMapChainedMethodsData);
-            }
 
             for (const relationship of this.module.itemsRelationships) {
                 if (this.relationships.itemHasRelationship(entity.item, relationship)) {

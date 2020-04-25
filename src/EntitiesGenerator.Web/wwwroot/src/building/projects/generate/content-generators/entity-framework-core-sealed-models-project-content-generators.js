@@ -53,8 +53,6 @@ export class EfSmProject_DbContextClassGenerator extends CSharpModuleSpecificCon
                 if (feature.itemHasFeature(item)) {
                     feature.efSm_DbContextClass_EntityConfigurationsData(item, entityConfigurationsData);
                 }
-
-                feature.efSm_DbContextClass_EntityConfigurationsData_FromOthers(item, entityConfigurationsData);
             }
 
             for (const relationship of this.module.itemsRelationships) {

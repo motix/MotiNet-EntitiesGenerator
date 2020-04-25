@@ -37,6 +37,7 @@ namespace EntitiesGenerator.Web.Controllers
         protected override void EntitySpecificationAction(IFindSpecification<Item> specification)
         {
             specification.AddInclude(x => x.Module.Project);
+            specification.AddInclude(x => x.Module.ItemsRelationships);
             specification.AddInclude(x => x.FeatureSettings);
         }
 

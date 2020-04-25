@@ -50,10 +50,10 @@ export default class OneToManyRelationshipGenerator extends RelationshipGenerato
             data.push(`[StringLength(StringLengths.Guid)]
 public string Id { get; set; } = Guid.NewGuid().ToString();`);
         } else {
-            const parentIdPropertyName = `${this.parentPropertyName(itemsRelationship)}Id`;
+            const parentPropertyName = this.parentPropertyName(itemsRelationship);
             data.push(`[Required]
 [StringLength(StringLengths.Guid)]
-public string ${parentIdPropertyName} { get; set; }`);
+public string ${parentPropertyName}Id { get; set; }`);
         }
     }
 

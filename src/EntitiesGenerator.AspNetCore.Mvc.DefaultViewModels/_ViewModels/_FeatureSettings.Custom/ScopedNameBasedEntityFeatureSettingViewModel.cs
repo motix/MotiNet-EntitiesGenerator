@@ -14,14 +14,5 @@ namespace EntitiesGenerator.Mvc
         [LocalizedRequired]
         [Display(Name = nameof(LookupNormalizer), ResourceType = typeof(DisplayNames_Custom))]
         public string LookupNormalizer { get; set; }
-
-        [Display(Name = nameof(DeleteRestrict), ResourceType = typeof(DisplayNames_Custom))]
-        public bool DeleteRestrict { get; set; }
-
-        [Display(Name = nameof(HasSortedChildrenInScope), ResourceType = typeof(DisplayNames_Custom))]
-        public bool HasSortedChildrenInScope { get; set; }
-
-        [Display(Name = nameof(SortedChildrenInScopeCriteriaPropertyName), ResourceType = typeof(DisplayNames_Custom))]
-        public string SortedChildrenInScopeCriteriaPropertyName { get; set; }
     }
 }
