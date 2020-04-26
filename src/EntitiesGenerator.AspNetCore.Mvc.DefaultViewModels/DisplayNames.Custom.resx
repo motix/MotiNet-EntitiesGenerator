@@ -171,6 +171,9 @@
   <data name="LookupNormalizer" xml:space="preserve">
     <value>Lookup Normalizer</value>
   </data>
+  <data name="ModelOnly" xml:space="preserve">
+    <value>Model Only</value>
+  </data>
   <data name="NamePropertyName" xml:space="preserve">
     <value>Name Property Name</value>
   </data>

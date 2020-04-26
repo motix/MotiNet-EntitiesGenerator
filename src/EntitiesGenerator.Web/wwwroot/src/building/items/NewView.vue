@@ -78,6 +78,17 @@
                 <div class="custom-control custom-switch">
                     <input type="checkbox"
                            class="custom-control-input"
+                           id="modelOnlySwitch"
+                           v-bind:disabled="!newMode && !editMode"
+                           v-model="entity.modelOnly"
+                           @change="dirty()">
+                    <label class="custom-control-label" for="modelOnlySwitch">{{displayNames['ModelOnly']}}</label>
+                </div>
+            </div>
+            <div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox"
+                           class="custom-control-input"
                            id="abstractModelSwitch"
                            v-bind:disabled="!newMode && !editMode"
                            v-model="entity.abstractModel"

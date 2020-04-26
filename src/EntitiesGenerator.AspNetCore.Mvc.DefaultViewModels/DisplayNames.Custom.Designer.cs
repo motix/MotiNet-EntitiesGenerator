@@ -223,6 +223,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Model Only.
+        /// </summary>
+        public static string ModelOnly {
+            get {
+                return ResourceManager.GetString("ModelOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name Property Name.
         /// </summary>
         public static string NamePropertyName {

@@ -85,6 +85,10 @@ export class AspProjectSG {
         };
 
         for (const item of module.items) {
+            if (item.modelOnly) {
+                continue;
+            }
+
             folder.children.push({
                 type: 'file',
                 name: `AspNet${item.name}Manager.cs`,

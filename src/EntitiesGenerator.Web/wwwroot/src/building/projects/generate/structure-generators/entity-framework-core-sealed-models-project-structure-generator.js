@@ -96,6 +96,10 @@ export class EfSmProjectSG {
         };
 
         for (const item of module.items) {
+            if (item.modelOnly) {
+                continue;
+            }
+
             folder.children.push({
                 type: 'file',
                 name: `${item.name}Store.cs`,

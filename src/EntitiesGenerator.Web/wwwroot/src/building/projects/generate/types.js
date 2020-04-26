@@ -57,6 +57,7 @@
  * @property {string} name
  * @property {string} displayName
  * @property {boolean} parameterListLineBreak
+ * @property {boolean} modelOnly
  * @property {boolean} abstractModel
  * @property {Module} module
  * @property {EntityFeatureSetting} entityFeatureSetting

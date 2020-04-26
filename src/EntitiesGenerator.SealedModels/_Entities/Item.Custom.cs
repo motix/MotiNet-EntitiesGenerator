@@ -13,6 +13,8 @@ namespace EntitiesGenerator
 
         public bool ParameterListLineBreak { get; set; }
 
+        public bool ModelOnly { get; set; }
+
         public bool AbstractModel { get; set; }
     }
 }

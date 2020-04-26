@@ -27,6 +27,10 @@ export default class FeatureGenerator {
      */
     moduleValidationRequired(module) {
         for (const item of module.items) {
+            if (item.modelOnly) {
+                continue;
+            }
+
             if (this.itemHasFeature(item) && this.itemValidationRequired(item)) {
                 return true;
             }

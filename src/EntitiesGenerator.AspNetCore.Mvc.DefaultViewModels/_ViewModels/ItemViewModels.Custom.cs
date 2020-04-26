@@ -18,6 +18,9 @@ namespace EntitiesGenerator.Mvc
         [Display(Name = nameof(ParameterListLineBreak), ResourceType = typeof(DisplayNames_Custom))]
         public bool ParameterListLineBreak { get; set; }
 
+        [Display(Name = nameof(ModelOnly), ResourceType = typeof(DisplayNames_Custom))]
+        public bool ModelOnly { get; set; }
+
         [Display(Name = nameof(AbstractModel), ResourceType = typeof(DisplayNames_Custom))]
         public bool AbstractModel { get; set; }
     }

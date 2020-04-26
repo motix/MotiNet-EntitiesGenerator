@@ -110,6 +110,10 @@ export class SmProjectSG {
         };
 
         for (const item of module.items) {
+            if (item.modelOnly) {
+                continue;
+            }
+
             folder.children.push({
                 type: 'file',
                 name: `${item.name}Accessor.cs`,
@@ -133,6 +137,10 @@ export class SmProjectSG {
         };
 
         for (const item of module.items) {
+            if (item.modelOnly) {
+                continue;
+            }
+
             for (const feature of features.allFeatures) {
                 if (feature.itemHasFeature(item)) {
                     feature.sm_SpecificationsFolder(item, folder);

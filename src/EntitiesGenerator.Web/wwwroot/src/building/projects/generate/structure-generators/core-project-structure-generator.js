@@ -119,6 +119,10 @@ export class CoreProjectSG {
         };
 
         for (const item of module.items) {
+            if (item.modelOnly === true) {
+                continue;
+            }
+
             const validationRequired = features.itemValidationRequired(item);
 
             const entityFolder = {

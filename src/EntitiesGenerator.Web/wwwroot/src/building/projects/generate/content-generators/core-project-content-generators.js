@@ -295,6 +295,10 @@ export class CoreProject_ErrorDescriberClassGenerator extends CSharpModuleSpecif
         const describerMethodsData = [];
 
         for (const item of this.module.items) {
+            if (item.modelOnly) {
+                continue;
+            }
+
             const itemDescriberMethodsData = [];
 
             for (const feature of this.features.allFeatures) {
@@ -368,6 +372,10 @@ export class CoreProject_ErrorDescriberResourcesResxGenerator extends ModuleSpec
         const itemsData = [];
 
         for (const item of this.module.items) {
+            if (item.modelOnly) {
+                continue;
+            }
+
             for (const feature of this.features.allFeatures) {
                 if (feature.itemHasFeature(item)) {
                     feature.core_ErrorDescriberResourcesResx_ItemsData(item, itemsData);
@@ -454,6 +462,10 @@ export class CoreProject_DependencyInjectionClassGenerator extends CSharpModuleS
             value => ({ text: `typeof(T${value.name})`, lineBreak: value.lineBreak }));
 
         for (const item of this.module.items) {
+            if (item.modelOnly) {
+                continue;
+            }
+
             const entityName = item.name;
             const entityGenericTypeParameters = this.features.itemGenericTypeParameters(item);
 

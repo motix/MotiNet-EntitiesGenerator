@@ -223,6 +223,10 @@ export class SmProject_DependencyInjectionClassGenerator extends CSharpModuleSpe
         const serviceRegistrationsData = [];
 
         for (const item of this.module.items) {
+            if (item.modelOnly) {
+                continue;
+            }
+
             const entityName = item.name;
             const entityEmptyGenericTypeParameters = this.features.itemEmptyGenericTypeParameters(item);
             const entityMakeGenericTypeParameters = this.features.itemMakeGenericTypeParameters(item);
