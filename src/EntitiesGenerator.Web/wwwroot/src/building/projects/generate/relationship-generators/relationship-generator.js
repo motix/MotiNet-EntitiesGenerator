@@ -48,6 +48,14 @@ export default class RelationshipGenerator {
      * @param {Item} item
      * @param {ItemsRelationship} itemsRelationship
      */
+    isSelfRelationship(item, itemsRelationship) {
+        return item === itemsRelationship.item1 && item === itemsRelationship.item2;
+    }
+
+    /**
+     * @param {Item} item
+     * @param {ItemsRelationship} itemsRelationship
+     */
     otherItem(item, itemsRelationship) {
         return item === itemsRelationship.item1 ? itemsRelationship.item2 : itemsRelationship.item1;
     }

@@ -21,6 +21,14 @@ export default class OneToManyRelationshipGenerator extends RelationshipGenerato
     }
 
     /**
+     * @param {Item} item
+     * @param {OneToManyItemsRelationship} itemsRelationship
+     */
+    isChildEntity(item, itemsRelationship) {
+        return item === itemsRelationship.item2;
+    }
+
+    /**
      * @param {OneToManyItemsRelationship} itemsRelationship
      */
     parentPropertyName(itemsRelationship) {
@@ -49,7 +57,9 @@ export default class OneToManyRelationshipGenerator extends RelationshipGenerato
         if (this.isParentEntity(item, itemsRelationship)) {
             data.push(`[StringLength(StringLengths.Guid)]
 public string Id { get; set; } = Guid.NewGuid().ToString();`);
-        } else {
+        }
+
+        if (this.isChildEntity(item, itemsRelationship)) {
             const parentPropertyName = this.parentPropertyName(itemsRelationship);
             const parentNullable = itemsRelationship.parentNullable;
             if (parentNullable) {
@@ -77,7 +87,9 @@ public string ${parentPropertyName}Id { get; set; }`);
         if (this.isParentEntity(item, itemsRelationship)) {
             const childrenPropertyName = this.childrenPropertyName(itemsRelationship);
             data.push(`public ICollection<${otherEntityName}> ${childrenPropertyName} { get; set; }`);
-        } else {
+        }
+
+        if (this.isChildEntity(item, itemsRelationship)) {
             const parentPropertyName = this.parentPropertyName(itemsRelationship);
             data.push(`public ${otherEntityName} ${parentPropertyName} { get; set; }`);
         }
@@ -168,7 +180,9 @@ builder.HasOne(x => x.${parentPropertyName})
 
         if (this.isParentEntity(item, itemsRelationship)) {
             data.push('public string Id { get; set; } = Guid.NewGuid().ToString();');
-        } else {
+        }
+
+        if (this.isChildEntity(item, itemsRelationship)) {
             const parentPropertyName = this.parentPropertyName(itemsRelationship);
             data.push(`[LocalizedRequired]
 [Display(Name = "${parentPropertyName}", ResourceType = typeof(DisplayNames))]
@@ -191,7 +205,9 @@ public string ${parentPropertyName}Id { get; set; }`);
             const childrenPropertyName = this.childrenPropertyName(itemsRelationship);
             data.push(`[Display(Name = nameof(${childrenPropertyName}), ResourceType = typeof(DisplayNames))]
 public ICollection<${otherEntityName}LiteViewModel> ${childrenPropertyName} { get; set; }`);
-        } else {
+        }
+
+        if (this.isChildEntity(item, itemsRelationship)) {
             const parentPropertyName = this.parentPropertyName(itemsRelationship);
             data.push(`[Display(Name = nameof(${parentPropertyName}), ResourceType = typeof(DisplayNames))]
 public ${otherEntityName}LiteViewModel ${parentPropertyName} { get; set; }`);
@@ -211,21 +227,23 @@ public ${otherEntityName}LiteViewModel ${parentPropertyName} { get; set; }`);
             const childrenDisplayName = _.startCase(childrenPropertyName);
 
             data.push({
-                    key: childrenPropertyName,
-                    content: `<data name="${childrenPropertyName}" xml:space="preserve">
+                key: childrenPropertyName,
+                content: `<data name="${childrenPropertyName}" xml:space="preserve">
   <value>${childrenDisplayName}</value>
 </data>`
-                });
-        } else {
+            });
+        }
+
+        if (this.isChildEntity(item, itemsRelationship)) {
             const parentPropertyName = this.parentPropertyName(itemsRelationship);
             const parentDisplayName = _.startCase(parentPropertyName);
 
             data.push({
-                    key: parentPropertyName,
-                    content: `<data name="${parentPropertyName}" xml:space="preserve">
+                key: parentPropertyName,
+                content: `<data name="${parentPropertyName}" xml:space="preserve">
   <value>${parentDisplayName}</value>
 </data>`
-                });
+            });
         }
     }
 

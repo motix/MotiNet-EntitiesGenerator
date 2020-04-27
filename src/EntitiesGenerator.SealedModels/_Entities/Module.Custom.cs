@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace EntitiesGenerator
+﻿namespace EntitiesGenerator
 {
     // Entity
     partial class Module

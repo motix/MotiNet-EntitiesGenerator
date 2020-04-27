@@ -611,11 +611,22 @@
                 this.normalizeNullableStrings(itemsRelationship, [
                     'sortedChildrenInParentCriteriaPropertyName'
                 ]);
+
+                if (!itemsRelationship.hasSortedChildrenInParent) {
+                    itemsRelationship.sortedChildrenInParentCriteriaPropertyName = null;
+                }
             } else if (itemsRelationship.type === 'ManyToMany') {
                 this.normalizeNullableStrings(itemsRelationship, [
                     'sortedItem2sInItem1CriteriaPropertyName',
                     'sortedItem1sInItem2CriteriaPropertyName'
                 ]);
+
+                if (!itemsRelationship.hasSortedItem2sInItem1) {
+                    itemsRelationship.sortedItem2sInItem1CriteriaPropertyName = null;
+                }
+                if (!itemsRelationship.hasSortedItem1sInItem2) {
+                    itemsRelationship.sortedItem1sInItem2CriteriaPropertyName = null;
+                }
             }
 
             const data = Object.assign({}, itemsRelationship);
