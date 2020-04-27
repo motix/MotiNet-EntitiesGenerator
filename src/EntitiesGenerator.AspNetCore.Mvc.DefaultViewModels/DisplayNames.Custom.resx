@@ -186,6 +186,9 @@
   <data name="ParentName" xml:space="preserve">
     <value>Parent Name</value>
   </data>
+  <data name="ParentNullable" xml:space="preserve">
+    <value>Parent Nullable</value>
+  </data>
   <data name="Position" xml:space="preserve">
     <value>Position</value>
   </data>

@@ -268,6 +268,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parent Nullable.
+        /// </summary>
+        public static string ParentNullable {
+            get {
+                return ResourceManager.GetString("ParentNullable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Position.
         /// </summary>
         public static string Position {

@@ -45,7 +45,7 @@ export default class ManyToManyRelationshipGenerator extends RelationshipGenerat
     // EntityFrameworkCore
 
     /**
-     * @param {ItemsRelationship} itemsRelationship
+     * @param {ManyToManyItemsRelationship} itemsRelationship
      * @param {StructureNode} folder
      */
     ef_ProjectFolder(itemsRelationship, folder) {
@@ -102,7 +102,7 @@ namespace ${namespace}
     // EntityFrameworkCore.SealedModels
 
     /**
-     * @param {ItemsRelationship} itemsRelationship
+     * @param {ManyToManyItemsRelationship} itemsRelationship
      * @param {StructureNode} folder
      */
     efSm_ProjectFolder(itemsRelationship, folder) {
@@ -257,7 +257,7 @@ namespace ${namespace}
 
     /**
      * @param {Item} item
-     * @param {ItemsRelationship} itemsRelationship
+     * @param {ManyToManyItemsRelationship} itemsRelationship
      * @param {string[]} data
      */
     sm_EntityClass_EntityPropertyDeclarationsData(item, itemsRelationship, data) {
@@ -330,7 +330,7 @@ public string Id { get; set; } = Guid.NewGuid().ToString();`);
 
     /**
      * @param {Item} item
-     * @param {ItemsRelationship} itemsRelationship
+     * @param {ManyToManyItemsRelationship} itemsRelationship
      * @param {string[]} data
      */
     ef_DbContextClass_PropertyDeclarationsData(item, itemsRelationship, data) {
@@ -348,7 +348,7 @@ public DbSet<${entity1Name}${entity2Name}<T${entity1Name}, T${entity2Name}, stri
 
     /**
      * @param {Item} item
-     * @param {ItemsRelationship} itemsRelationship
+     * @param {ManyToManyItemsRelationship} itemsRelationship
      * @param {string[]} data
      */
     ef_DbContextClass_ConfigureEntityRegistrationsData(item, itemsRelationship, data) {
@@ -389,7 +389,7 @@ builder.Ignore(x => x.${othersPropertyName});`);
 
     /**
      * @param {Item} item
-     * @param {ItemsRelationship} itemsRelationship
+     * @param {ManyToManyItemsRelationship} itemsRelationship
      * @param {string[]} data
      */
     aspDv_EntityViewModelsClass_BasePropertyDeclarationsData(item, itemsRelationship, data) {
@@ -400,7 +400,7 @@ builder.Ignore(x => x.${othersPropertyName});`);
 
     /**
      * @param {Item} item
-     * @param {ItemsRelationship} itemsRelationship
+     * @param {ManyToManyItemsRelationship} itemsRelationship
      * @param {string[]} data
      */
     aspDv_EntityViewModelsClass_FullPropertyDeclarationsData(item, itemsRelationship, data) {
@@ -416,7 +416,7 @@ public ICollection<${otherEntityName}LiteViewModel> ${othersPropertyName} { get;
 
     /**
      * @param {Item} item
-     * @param {ItemsRelationship} itemsRelationship
+     * @param {ManyToManyItemsRelationship} itemsRelationship
      * @param {{key: string, content: string}[]} data
      */
     aspDv_DisplayNamesResx_ItemsData(item, itemsRelationship, data) {
@@ -435,7 +435,7 @@ public ICollection<${otherEntityName}LiteViewModel> ${othersPropertyName} { get;
 
     /**
      * @param {Item} item
-     * @param {ItemsRelationship} itemsRelationship
+     * @param {ManyToManyItemsRelationship} itemsRelationship
      * @param {{key: string, content: string}[]} data
      */
     aspDv_DisplayNamesResxDesignerClass_ItemsData(item, itemsRelationship, data) {

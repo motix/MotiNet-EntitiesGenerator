@@ -40,7 +40,7 @@ export default class OneToManyRelationshipGenerator extends RelationshipGenerato
 
     /**
      * @param {Item} item
-     * @param {ItemsRelationship} itemsRelationship
+     * @param {OneToManyItemsRelationship} itemsRelationship
      * @param {string[]} data
      */
     sm_EntityClass_EntityPropertyDeclarationsData(item, itemsRelationship, data) {
@@ -51,9 +51,15 @@ export default class OneToManyRelationshipGenerator extends RelationshipGenerato
 public string Id { get; set; } = Guid.NewGuid().ToString();`);
         } else {
             const parentPropertyName = this.parentPropertyName(itemsRelationship);
-            data.push(`[Required]
+            const parentNullable = itemsRelationship.parentNullable;
+            if (parentNullable) {
+                data.push(`[StringLength(StringLengths.Guid)]
+public string ${parentPropertyName}Id { get; set; }`);
+            } else {
+                data.push(`[Required]
 [StringLength(StringLengths.Guid)]
 public string ${parentPropertyName}Id { get; set; }`);
+            }
         }
     }
 
@@ -154,7 +160,7 @@ builder.HasOne(x => x.${parentPropertyName})
 
     /**
      * @param {Item} item
-     * @param {ItemsRelationship} itemsRelationship
+     * @param {OneToManyItemsRelationship} itemsRelationship
      * @param {string[]} data
      */
     aspDv_EntityViewModelsClass_BasePropertyDeclarationsData(item, itemsRelationship, data) {
@@ -172,7 +178,7 @@ public string ${parentPropertyName}Id { get; set; }`);
 
     /**
      * @param {Item} item
-     * @param {ItemsRelationship} itemsRelationship
+     * @param {OneToManyItemsRelationship} itemsRelationship
      * @param {string[]} data
      */
     aspDv_EntityViewModelsClass_FullPropertyDeclarationsData(item, itemsRelationship, data) {
@@ -194,7 +200,7 @@ public ${otherEntityName}LiteViewModel ${parentPropertyName} { get; set; }`);
 
     /**
      * @param {Item} item
-     * @param {ItemsRelationship} itemsRelationship
+     * @param {OneToManyItemsRelationship} itemsRelationship
      * @param {{key: string, content: string}[]} data
      */
     aspDv_DisplayNamesResx_ItemsData(item, itemsRelationship, data) {
@@ -225,7 +231,7 @@ public ${otherEntityName}LiteViewModel ${parentPropertyName} { get; set; }`);
 
     /**
      * @param {Item} item
-     * @param {ItemsRelationship} itemsRelationship
+     * @param {OneToManyItemsRelationship} itemsRelationship
      * @param {{key: string, content: string}[]} data
      */
     aspDv_DisplayNamesResxDesignerClass_ItemsData(item, itemsRelationship, data) {

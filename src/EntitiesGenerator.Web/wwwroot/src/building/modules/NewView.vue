@@ -232,6 +232,16 @@
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox"
                                                    class="custom-control-input"
+                                                   :id="`itemsRelationship_${relationship.id}_ParentNullable_Switch`"
+                                                   v-bind:disabled="!relationship.editMode"
+                                                   v-model="relationship.parentNullable"
+                                                   @change="dirtyItemsRelationship(relationship)">
+                                            <label class="custom-control-label"
+                                                   :for="`itemsRelationship_${relationship.id}_ParentNullable_Switch`">{{displayNames['ParentNullable']}}</label>
+                                        </div>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox"
+                                                   class="custom-control-input"
                                                    :id="`itemsRelationship_${relationship.id}_DeleteRestrict_Switch`"
                                                    v-bind:disabled="!relationship.editMode"
                                                    v-model="relationship.deleteRestrict"

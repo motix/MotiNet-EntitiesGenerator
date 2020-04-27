@@ -123,7 +123,7 @@
  */
 
 /**
- * @typedef {ItemsRelationship & {deleteRestrict: boolean, hasSortedChildrenInParent: boolean, sortedChildrenInParentCriteriaPropertyName: string}} OneToManyItemsRelationship
+ * @typedef {ItemsRelationship & {parentNullable: boolean, deleteRestrict: boolean, hasSortedChildrenInParent: boolean, sortedChildrenInParentCriteriaPropertyName: string}} OneToManyItemsRelationship
  */
 
 /**

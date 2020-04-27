@@ -353,6 +353,7 @@
                 ];
                 delete module.oneToManyItemsRelationships;
                 delete module.manyToManyItemsRelationships;
+                module.itemsRelationships = _.sortBy(module.itemsRelationships, 'position');
 
                 for (const relationship of module.itemsRelationships) {
                     relationship.module = module;
