@@ -1,5 +1,6 @@
 ﻿// EntityFrameworkCore.SealedModels
 
+import pluralize from 'pluralize';
 import 'prismjs/components/prism-csharp';
 import ContentHelper, { IdentifierHelper, StringHelper } from '../content-helper';
 
@@ -42,8 +43,15 @@ export class EfSmProject_DbContextClassGenerator extends CSharpModuleSpecificCon
     generate() {
         const namespace = EfSmProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
+        const modelOnlyEntities = this.features.moduleModelOnlyEntityNames(this.module);
         const moduleSpecificTypeParameters = this.features.moduleSpecificTypeParameters(this.module,
             `: ${moduleCommonName}DbContextBase`.length / 4 + 2, true);
+        const propertyDeclarationsData = _.map(modelOnlyEntities,
+            value => `public DbSet<${value.name}> ${pluralize(value.name)} { get; set; }`);
+        const configureEntityRegistrationsData = _.map(modelOnlyEntities,
+            value => `modelBuilder.Entity<${value.name}>(Configure${value.name});`);
+        //const configureEntityMethodsData = _.map(entities,
+        //    value => `protected virtual void Configure${value.name}(EntityTypeBuilder<T${value.name}> builder) { }`);
         const configureEntityMethodsData = [];
 
         for (const item of this.module.items) {
@@ -64,16 +72,37 @@ export class EfSmProject_DbContextClassGenerator extends CSharpModuleSpecificCon
 
             if (entityConfigurationsData.length > 0) {
                 const entityName = item.name;
+                const modification = item.modelOnly ? 'virtual' : 'override';
                 const entityConfigurations = StringHelper.joinLines(_.uniq(entityConfigurationsData), 1, '\n');
 
-                configureEntityMethodsData.push(`protected override void Configure${entityName}(EntityTypeBuilder<${entityName}> builder)
+                configureEntityMethodsData.push(`protected ${modification} void Configure${entityName}(EntityTypeBuilder<${entityName}> builder)
 {
 ${entityConfigurations}
 }`);
+            } else if (item.modelOnly) {
+                const entityName = item.name;
+                configureEntityMethodsData.push(`protected virtual void Configure${entityName}(EntityTypeBuilder<${entityName}> builder) { }`);
             }
         }
 
+        const propertyDeclarations = StringHelper.joinLines(_.uniq(propertyDeclarationsData), 2, '\n', { start: 2, end: 1 });
+        const configureEntityRegistrations = StringHelper.joinLines(_.uniq(configureEntityRegistrationsData), 1, '', { start: 1, end: 1, spaceIfEmpty: true });
         const configureEntityMethods = StringHelper.joinLines(_.uniq(configureEntityMethodsData), 2, '\n', { start: 2 });
+
+        var onModelCreatingMethod = modelOnlyEntities.length === 0 ? '' : `
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    base.OnModelCreating(modelBuilder);
+${configureEntityRegistrations}
+    var internalMethod = GetType().GetMethod("OnModelCreatingInternal",
+        System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+    if (internalMethod != null)
+    {
+        internalMethod.Invoke(this, new object[] { modelBuilder });
+    }
+}`;
+        onModelCreatingMethod = StringHelper.indent(onModelCreatingMethod, 2);
 
         const content = `using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -85,7 +114,7 @@ namespace ${namespace}
     {
         protected ${moduleCommonName}DbContextBase(DbContextOptions options) : base(options) { }
 
-        protected ${moduleCommonName}DbContextBase() { }${configureEntityMethods}
+        protected ${moduleCommonName}DbContextBase() { }${propertyDeclarations}${onModelCreatingMethod}${configureEntityMethods}
     }
 }
 `;

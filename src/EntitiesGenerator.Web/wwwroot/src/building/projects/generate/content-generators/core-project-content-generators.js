@@ -395,7 +395,7 @@ export class CoreProject_BuilderClassGenerator extends CSharpModuleSpecificConte
     generate() {
         const namespace = CoreProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
-        const entities = this.features.moduleEntityNames(this.module);
+        const entities = this.features.moduleBuilderEntityNames(this.module);
         const constructorParametersData = _.map(entities,
             value => ({ text: `Type ${_.lowerFirst(value.name)}Type`, lineBreak: value.lineBreak }));
         const constructBuilderParametersData = _.map(entities,
@@ -452,7 +452,7 @@ export class CoreProject_DependencyInjectionClassGenerator extends CSharpModuleS
     generate() {
         const namespace = CoreProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
-        const entities = this.features.moduleEntityNames(this.module);
+        const entities = this.features.moduleBuilderEntityNames(this.module);
         const moduleGenericTypeParameters = this.features.moduleGenericTypeParameters(this.module,
             `public static ${moduleCommonName}Builder Add${moduleCommonName}`.length / 4);
         const moduleGenericTypeConstraints = this.features.moduleGenericTypeConstraints(this.module, 1, false, { start: 1 });

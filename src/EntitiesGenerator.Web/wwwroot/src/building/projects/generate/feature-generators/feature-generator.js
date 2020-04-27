@@ -58,6 +58,7 @@ export default class FeatureGenerator {
         return [{
             item: item,
             name: item.name,
+            modelOnly: item.modelOnly,
             lineBreak: item.parameterListLineBreak
         }];
     }

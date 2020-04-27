@@ -255,11 +255,15 @@ export class AspDvProject_ProfileClassGenerator extends CSharpModuleSpecificCont
                 }
             }
 
+            const sourceType = entity.modelOnly ?
+                `builder.DomainSpecificTypes[nameof(${entity.name}ViewModel).Replace("ViewModel", string.Empty)],
+        ` :
+                `builder.${entity.name}Type, `;
             const createEntityMapChainedMethods = StringHelper.joinLines(_.uniq(createEntityMapChainedMethodsData), 1, '', { start: 1 });
 
-            createEntityMapsData.push(`CreateMap(builder.${entity.name}Type, typeof(${entity.name}ViewModel))${createEntityMapChainedMethods}
+            createEntityMapsData.push(`CreateMap(${sourceType}typeof(${entity.name}ViewModel))${createEntityMapChainedMethods}
     .ReverseMap();
-CreateMap(builder.${entity.name}Type, typeof(${entity.name}LiteViewModel));`);
+CreateMap(${sourceType}typeof(${entity.name}LiteViewModel));`);
         }
 
         const createEntityMaps = StringHelper.joinLines(createEntityMapsData, 3, '\n', { start: 1, end: 1 });

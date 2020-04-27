@@ -28,6 +28,7 @@
  * @typedef {Object} EntityNameListItem
  * @property {Item} item
  * @property {string} name
+ * @property {boolean} modelOnly
  * @property {boolean} lineBreak
  * @property {boolean} isSubEntity
  * @property {boolean} isUnmanagedSubEntity

@@ -218,8 +218,11 @@ export class SmProject_DependencyInjectionClassGenerator extends CSharpModuleSpe
     generate() {
         const namespace = SmProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
+        const modelOnlyEntities = this.features.moduleModelOnlyEntityNames(this.module);
         const moduleSpecificTypeParameters = this.features.moduleSpecificTypeParameters(this.module,
             `=> services.Add${moduleCommonName}`.length / 4 + 1);
+        const domainSpecificTypesData = _.map(modelOnlyEntities,
+            value => `builder.DomainSpecificTypes.Add(nameof(${value.name}), typeof(${value.name}));`);
         const serviceRegistrationsData = [];
 
         for (const item of this.module.items) {
@@ -243,6 +246,7 @@ export class SmProject_DependencyInjectionClassGenerator extends CSharpModuleSpe
             }
         }
 
+        const domainSpecificTypes = StringHelper.joinLines(_.uniq(domainSpecificTypesData), 3, '', { start: 1, end: 1 });
         const serviceRegistrations = StringHelper.joinLines(_.uniq(serviceRegistrationsData), 3, '\n', { start: 1, end: 1 });
 
         var body;
@@ -273,7 +277,7 @@ namespace Microsoft.Extensions.DependencyInjection
 ${body}
 
         public static ${moduleCommonName}Builder AddSealedModels(this ${moduleCommonName}Builder builder)
-        {
+        {${domainSpecificTypes}
             var services = builder.Services;
 ${serviceRegistrations}
             var internalMethod = typeof(SealedModels${moduleCommonName}BuilderExtensions).GetMethod("AddSealedModelsInternal",

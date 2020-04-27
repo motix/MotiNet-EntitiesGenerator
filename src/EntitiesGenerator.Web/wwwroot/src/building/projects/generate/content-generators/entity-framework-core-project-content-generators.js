@@ -35,7 +35,7 @@ export class EfProject_DbContextClassGenerator extends CSharpModuleSpecificConte
     generate() {
         const namespace = EfProjectSG.getDefaultNamespace(this.module);
         const moduleCommonName = IdentifierHelper.getModuleCommonName(this.module);
-        const entities = this.features.moduleEntityNames(this.module);
+        const entities = this.features.moduleBuilderEntityNames(this.module);
         const moduleGenericTypeParameters = this.features.moduleGenericTypeParameters(this.module,
             `public abstract partial class ${moduleCommonName}DbContextBase`.length / 4 + 1, true);
         const moduleGenericTypeConstraints = this.features.moduleGenericTypeConstraints(this.module, 2, true, { start: 1 });

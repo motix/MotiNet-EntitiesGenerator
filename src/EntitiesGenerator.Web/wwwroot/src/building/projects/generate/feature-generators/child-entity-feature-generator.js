@@ -27,10 +27,12 @@ export default class ChildEntityFeatureGenerator extends FeatureGenerator {
             {
                 item: item,
                 name: item.name,
+                modelOnly: item.modelOnly,
                 lineBreak: item.parameterListLineBreak
             }, {
                 item: item,
                 name: this.parentName(item),
+                modelOnly: item.modelOnly,
                 lineBreak: false,
                 isSubEntity: true
             }];

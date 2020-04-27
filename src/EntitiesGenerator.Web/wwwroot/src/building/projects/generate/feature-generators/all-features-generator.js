@@ -88,12 +88,34 @@ export default class AllFeaturesGenerator {
 
     /**
      * @param {Module} module
+     */
+    moduleBuilderEntityNames(module) {
+        const entities = this.moduleEntityNames(module);
+
+        _.remove(entities, value => value.modelOnly);
+
+        return entities;
+    }
+
+    /**
+     * @param {Module} module
+     */
+    moduleModelOnlyEntityNames(module) {
+        const entities = this.moduleEntityNames(module);
+
+        _.remove(entities, value => !value.modelOnly);
+
+        return entities;
+    }
+
+    /**
+     * @param {Module} module
      * @param {number} indent
      * @param {boolean} [includeKeyType]
      * @param {NewLineIfNotEmptyConfig} [newLineIfNotEmpty]
      */
     moduleGenericTypeParameters(module, indent, includeKeyType, newLineIfNotEmpty) {
-        const entities = this.moduleEntityNames(module);
+        const entities = this.moduleBuilderEntityNames(module);
 
         if (includeKeyType === true) {
             entities.push({
@@ -130,7 +152,7 @@ export default class AllFeaturesGenerator {
      * @param {NewLineIfNotEmptyConfig} [newLineIfNotEmpty]
      */
     moduleGenericTypeConstraints(module, indent, includeKeyType, newLineIfNotEmpty) {
-        const entities = this.moduleEntityNames(module);
+        const entities = this.moduleBuilderEntityNames(module);
 
         if (includeKeyType === true) {
             entities.push({
@@ -159,7 +181,7 @@ export default class AllFeaturesGenerator {
      * @param {NewLineIfNotEmptyConfig} [newLineIfNotEmpty]
      */
     moduleSpecificTypeParameters(module, indent, includeKeyType, newLineIfNotEmpty) {
-        const entities = this.moduleEntityNames(module);
+        const entities = this.moduleBuilderEntityNames(module);
 
         if (includeKeyType === true) {
             entities.push({
@@ -199,6 +221,7 @@ export default class AllFeaturesGenerator {
         var entities = [{
             item: item,
             name: item.name,
+            modelOnly: item.modelOnly,
             lineBreak: item.parameterListLineBreak
         }];
 
