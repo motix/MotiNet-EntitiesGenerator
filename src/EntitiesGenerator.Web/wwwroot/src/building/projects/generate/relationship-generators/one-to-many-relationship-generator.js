@@ -113,10 +113,8 @@ public string ${parentPropertyName}Id { get; set; }`);
             const criteriaPropertyName = itemsRelationship.sortedChildrenInParentCriteriaPropertyName;
 
             if (criteriaPropertyName === null) {
-                data.push(`public IEnumerable<${childEntityName}> Ordered${childrenPropertyName}
-    => _ordered${childrenPropertyName}Method == null ?
-    throw new NotImplementedException() :
-    _ordered${childrenPropertyName}Method.Invoke(${childrenPropertyName});`);
+                data.push(`public IEnumerable<${childEntityName}> Ordered${childrenPropertyName} => _ordered${childrenPropertyName}Method == null ?
+    throw new NotImplementedException() : _ordered${childrenPropertyName}Method.Invoke(${childrenPropertyName});`);
             } else {
                 data.push(`public IEnumerable<${childEntityName}> Ordered${childrenPropertyName} => ${childrenPropertyName}?.OrderBy(x => x.${criteriaPropertyName});`);
             }

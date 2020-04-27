@@ -123,6 +123,7 @@
                                 <th scope="col" class="text-right w-tight">{{displayNames['Position']}}</th>
                                 <th scope="col">{{displayNames['Name']}}</th>
                                 <th scope="col">{{displayNames['DisplayName']}}</th>
+                                <th scope="col" class="text-center">{{displayNames['ModelOnly']}}</th>
                                 <th scope="col" class="text-center">{{displayNames['ParameterListLineBreak']}}</th>
                                 <th scope="col" class="text-center">{{displayNames['AbstractModel']}}</th>
                                 <th scope="col">{{displayNames['FeatureSettings']}}</th>
@@ -136,12 +137,16 @@
                                 </td>
                                 <td>{{item.displayName}}</td>
                                 <td class="text-center">
+                                    <font-awesome-icon :icon="['fal', 'check-square']" fixed-width v-if="item.modelOnly"></font-awesome-icon>
+                                    <font-awesome-icon :icon="['fal', 'square']" fixed-width v-else></font-awesome-icon>
+                                </td>
+                                <td class="text-center">
                                     <font-awesome-icon :icon="['fal', 'check-square']" fixed-width v-if="item.parameterListLineBreak"></font-awesome-icon>
-                                    <font-awesome-icon :icon="['fal', 'square']" fixed-width v-if="!item.parameterListLineBreak"></font-awesome-icon>
+                                    <font-awesome-icon :icon="['fal', 'square']" fixed-width v-else></font-awesome-icon>
                                 </td>
                                 <td class="text-center">
                                     <font-awesome-icon :icon="['fal', 'check-square']" fixed-width v-if="item.abstractModel"></font-awesome-icon>
-                                    <font-awesome-icon :icon="['fal', 'square']" fixed-width v-if="!item.abstractModel"></font-awesome-icon>
+                                    <font-awesome-icon :icon="['fal', 'square']" fixed-width v-else></font-awesome-icon>
                                 </td>
                                 <td>
                                 </td>
@@ -157,11 +162,11 @@
                         <thead>
                             <tr>
                                 <th scope="col" class="text-right w-tight">{{displayNames['Position']}}</th>
-                                <th scope="col">{{displayNames['Item1']}}</th>
-                                <th scope="col">{{displayNames['Item1PropertyName']}}</th>
-                                <th scope="col">{{displayNames['Item2']}}</th>
-                                <th scope="col">{{displayNames['Item2PropertyName']}}</th>
-                                <th scope="col">{{displayNames['Type']}}</th>
+                                <th scope="col" class="text-right w-tight">{{displayNames['Item1']}}</th>
+                                <th scope="col" class="w-tight">{{displayNames['Item1PropertyName']}}</th>
+                                <th scope="col" class="text-right w-tight">{{displayNames['Item2']}}</th>
+                                <th scope="col" class="w-tight">{{displayNames['Item2PropertyName']}}</th>
+                                <th scope="col" class="text-center w-tight">{{displayNames['Type']}}</th>
                                 <th scope="col">Relationship Settings</th>
                                 <th scope="col" class="w-tight"></th>
                             </tr>
@@ -187,8 +192,10 @@
                                         {{relationship.position}}
                                     </template>
                                 </td>
-                                <td>{{relationship.item1.name}}</td>
-                                <td>
+                                <td class="text-right text-nowrap">
+                                    <code>{{relationship.item1.name}}</code>
+                                </td>
+                                <td class="text-nowrap">
                                     <template v-if="relationship.editMode">
                                         <single-line-input :placeholder="displayNames['Item1PropertyName']"
                                                            placeholder-css-class="text-muted"
@@ -196,14 +203,16 @@
                                                            @input="dirtyItemsRelationship(relationship)"></single-line-input>
                                     </template>
                                     <template v-else-if="relationship.item1PropertyName === null">
-                                        <i class="text-muted">None</i>
+                                        <code>.<span class="text-info">{{item1AutoPropertyName(relationship)}}</span></code>
                                     </template>
                                     <template v-else>
-                                        {{relationship.item1PropertyName}}
+                                        <code>.<span class="text-primary">{{relationship.item1PropertyName}}</span></code>
                                     </template>
                                 </td>
-                                <td>{{relationship.item2.name}}</td>
-                                <td>
+                                <td class="text-right text-nowrap">
+                                    <code>{{relationship.item2.name}}</code>
+                                </td>
+                                <td class="text-nowrap">
                                     <template v-if="relationship.editMode">
                                         <single-line-input :placeholder="displayNames['Item2PropertyName']"
                                                            placeholder-css-class="text-muted"
@@ -211,13 +220,13 @@
                                                            @input="dirtyItemsRelationship(relationship)"></single-line-input>
                                     </template>
                                     <template v-else-if="relationship.item2PropertyName === null">
-                                        <i class="text-muted">None</i>
+                                        <code>.<span class="text-info">{{item2AutoPropertyName(relationship)}}</span></code>
                                     </template>
                                     <template v-else>
-                                        {{relationship.item2PropertyName}}
+                                        <code>.<span class="text-primary">{{relationship.item2PropertyName}}</span></code>
                                     </template>
                                 </td>
-                                <td>{{relationship.type}}</td>
+                                <td class="text-center">{{relationship.type}}</td>
                                 <td>
                                     <template v-if="relationship.type === 'OneToMany'">
                                         <div class="custom-control custom-switch">
@@ -400,6 +409,7 @@
 </template>
 
 <script>
+    import pluralize from 'pluralize';
     import axios from 'axios';
     import Swal from 'sweetalert2';
     import TypeList from '../shared/type-lists';
@@ -507,6 +517,32 @@
         }
 
         // Methods
+
+        $item1AutoPropertyName(relationship) {
+            switch (relationship.type) {
+                case 'OneToMany':
+                    return pluralize(relationship.item2.name);
+                    break;
+                case 'ManyToMany':
+                    return pluralize(relationship.item2.name);
+                    break;
+                default:
+                    return null;
+            }
+        }
+
+        $item2AutoPropertyName(relationship) {
+            switch (relationship.type) {
+                case 'OneToMany':
+                    return relationship.item1.name;
+                    break;
+                case 'ManyToMany':
+                    return pluralize(relationship.item1.name);
+                    break;
+                default:
+                    return null;
+            }
+        }
 
         $addItemsRelationship() {
             // Nullable strings
@@ -712,6 +748,7 @@
             ];
             delete editableModule.oneToManyItemsRelationships;
             delete editableModule.manyToManyItemsRelationships;
+            editableModule.itemsRelationships = _.sortBy(editableModule.itemsRelationships, 'position');
 
             for (const relationship of editableModule.itemsRelationships) {
                 this.vm.$set(relationship, 'module', editableModule);

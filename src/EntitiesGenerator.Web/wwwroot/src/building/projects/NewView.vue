@@ -128,7 +128,7 @@
                                 </td>
                                 <td class="text-center">
                                     <font-awesome-icon :icon="['fal', 'check-square']" fixed-width v-if="module.hasOwnNamespace"></font-awesome-icon>
-                                    <font-awesome-icon :icon="['fal', 'square']" fixed-width v-if="!module.hasOwnNamespace"></font-awesome-icon>
+                                    <font-awesome-icon :icon="['fal', 'square']" fixed-width v-else></font-awesome-icon>
                                 </td>
                             </tr>
                         </tbody>

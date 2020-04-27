@@ -318,10 +318,8 @@ public string Id { get; set; } = Guid.NewGuid().ToString();`);
             const criteriaPropertyName = this.criteriaPropertyName(item, itemsRelationship);
 
             if (criteriaPropertyName === null) {
-                data.push(`public IEnumerable<${otherEntityName}> Ordered${othersPropertyName}
-    => _ordered${othersPropertyName}Method == null ?
-    throw new NotImplementedException() :
-    _ordered${othersPropertyName}Method.Invoke(${othersPropertyName});`);
+                data.push(`public IEnumerable<${otherEntityName}> Ordered${othersPropertyName} => _ordered${othersPropertyName}Method == null ?
+    throw new NotImplementedException() : _ordered${othersPropertyName}Method.Invoke(${othersPropertyName});`);
             } else {
                 data.push(`public IEnumerable<${otherEntityName}> Ordered${othersPropertyName} => ${othersPropertyName}?.OrderBy(x => x.${criteriaPropertyName});`);
             }
