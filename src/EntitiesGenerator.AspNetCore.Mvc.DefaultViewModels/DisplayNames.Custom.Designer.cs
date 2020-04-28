@@ -151,6 +151,42 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Has Full Children in Parent View Model.
+        /// </summary>
+        public static string HasFullChildrenInParentViewModel {
+            get {
+                return ResourceManager.GetString("HasFullChildrenInParentViewModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Has Full Item 1s in Item 2 View Model.
+        /// </summary>
+        public static string HasFullItem1sInItem2ViewModel {
+            get {
+                return ResourceManager.GetString("HasFullItem1sInItem2ViewModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Has Full Item 2s in Item 1 View Model.
+        /// </summary>
+        public static string HasFullItem2sInItem1ViewModel {
+            get {
+                return ResourceManager.GetString("HasFullItem2sInItem1ViewModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Has Full Parent in Children View Model.
+        /// </summary>
+        public static string HasFullParentInChildrenViewModel {
+            get {
+                return ResourceManager.GetString("HasFullParentInChildrenViewModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Has Own Namespace.
         /// </summary>
         public static string HasOwnNamespace {

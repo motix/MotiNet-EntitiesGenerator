@@ -124,9 +124,9 @@
  */
 
 /**
- * @typedef {ItemsRelationship & {parentNullable: boolean, deleteRestrict: boolean, hasSortedChildrenInParent: boolean, sortedChildrenInParentCriteriaPropertyName: string}} OneToManyItemsRelationship
+ * @typedef {ItemsRelationship & {parentNullable: boolean, deleteRestrict: boolean, hasSortedChildrenInParent: boolean, sortedChildrenInParentCriteriaPropertyName: string, hasFullChildrenInParentViewModel: boolean, hasFullParentInChildrenViewModel: boolean}} OneToManyItemsRelationship
  */
 
 /**
- * @typedef {ItemsRelationship & {hasSortedItem2sInItem1: boolean, sortedItem2sInItem1CriteriaPropertyName: string, hasSortedItem1sInItem2: boolean, sortedItem1sInItem2CriteriaPropertyName: string}} ManyToManyItemsRelationship
+ * @typedef {ItemsRelationship & {hasSortedItem2sInItem1: boolean, sortedItem2sInItem1CriteriaPropertyName: string, hasSortedItem1sInItem2: boolean, sortedItem1sInItem2CriteriaPropertyName: string, hasFullItem2sInItem1ViewModel: boolean, hasFullItem1sInItem2ViewModel: boolean}} ManyToManyItemsRelationship
  */

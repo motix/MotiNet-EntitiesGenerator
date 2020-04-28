@@ -12,5 +12,9 @@ namespace EntitiesGenerator
 
         [StringLength(StringLengths.TinyContent)]
         public string SortedChildrenInParentCriteriaPropertyName { get; set; }
+
+        public bool HasFullChildrenInParentViewModel { get; set; }
+
+        public bool HasFullParentInChildrenViewModel { get; set; }
     }
 }

@@ -412,6 +412,11 @@ builder.Ignore(x => x.${othersPropertyName});`);
 
         data.push(`[Display(Name = nameof(${othersPropertyName}), ResourceType = typeof(DisplayNames))]
 public ICollection<${otherEntityName}LiteViewModel> ${othersPropertyName} { get; set; }`);
+
+        if ((item === itemsRelationship.item1 && itemsRelationship.hasFullItem2sInItem1ViewModel) ||
+            (item === itemsRelationship.item2 && itemsRelationship.hasFullItem1sInItem2ViewModel)) {
+            data.push(`public ICollection<${otherEntityName}ViewModel> Full${othersPropertyName} { get; set; }`);
+        }
     }
 
     /**

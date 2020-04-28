@@ -34,10 +34,14 @@
                         .Collect(x => emptyOneToManyItemsRelationship.DeleteRestrict, Html)
                         .Collect(x => emptyOneToManyItemsRelationship.HasSortedChildrenInParent, Html)
                         .Collect(x => emptyOneToManyItemsRelationship.SortedChildrenInParentCriteriaPropertyName, Html)
+                        .Collect(x => emptyOneToManyItemsRelationship.HasFullParentInChildrenViewModel, Html)
+                        .Collect(x => emptyOneToManyItemsRelationship.HasFullChildrenInParentViewModel, Html)
                         .Collect(x => emptyManyToManyItemsRelationship.HasSortedItem2sInItem1, Html)
                         .Collect(x => emptyManyToManyItemsRelationship.SortedItem2sInItem1CriteriaPropertyName, Html)
                         .Collect(x => emptyManyToManyItemsRelationship.HasSortedItem1sInItem2, Html)
-                        .Collect(x => emptyManyToManyItemsRelationship.SortedItem1sInItem2CriteriaPropertyName, Html);
+                        .Collect(x => emptyManyToManyItemsRelationship.SortedItem1sInItem2CriteriaPropertyName, Html)
+                        .Collect(x => emptyManyToManyItemsRelationship.HasFullItem1sInItem2ViewModel, Html)
+                        .Collect(x => emptyManyToManyItemsRelationship.HasFullItem2sInItem1ViewModel, Html);
 }
 
 @section Head {

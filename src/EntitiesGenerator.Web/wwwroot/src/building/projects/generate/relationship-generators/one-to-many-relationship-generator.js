@@ -203,14 +203,24 @@ public string ${parentPropertyName}Id { get; set; }`);
 
         if (this.isParentEntity(item, itemsRelationship)) {
             const childrenPropertyName = this.childrenPropertyName(itemsRelationship);
+
             data.push(`[Display(Name = nameof(${childrenPropertyName}), ResourceType = typeof(DisplayNames))]
 public ICollection<${otherEntityName}LiteViewModel> ${childrenPropertyName} { get; set; }`);
+
+            if (itemsRelationship.hasFullChildrenInParentViewModel) {
+                data.push(`public ICollection<${otherEntityName}ViewModel> Full${childrenPropertyName} { get; set; }`);
+            }
         }
 
         if (this.isChildEntity(item, itemsRelationship)) {
             const parentPropertyName = this.parentPropertyName(itemsRelationship);
+
             data.push(`[Display(Name = nameof(${parentPropertyName}), ResourceType = typeof(DisplayNames))]
 public ${otherEntityName}LiteViewModel ${parentPropertyName} { get; set; }`);
+
+            if (itemsRelationship.hasFullParentInChildrenViewModel) {
+                data.push(`public ${otherEntityName}ViewModel Full${parentPropertyName} { get; set; }`);
+            }
         }
     }
 

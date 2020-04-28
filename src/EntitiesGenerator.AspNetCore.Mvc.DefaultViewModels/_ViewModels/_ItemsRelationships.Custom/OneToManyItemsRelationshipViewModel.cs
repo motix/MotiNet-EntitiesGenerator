@@ -15,5 +15,11 @@ namespace EntitiesGenerator.Mvc
 
         [Display(Name = nameof(SortedChildrenInParentCriteriaPropertyName), ResourceType = typeof(DisplayNames_Custom))]
         public string SortedChildrenInParentCriteriaPropertyName { get; set; }
+
+        [Display(Name = nameof(HasFullChildrenInParentViewModel), ResourceType = typeof(DisplayNames_Custom))]
+        public bool HasFullChildrenInParentViewModel { get; set; }
+
+        [Display(Name = nameof(HasFullParentInChildrenViewModel), ResourceType = typeof(DisplayNames_Custom))]
+        public bool HasFullParentInChildrenViewModel { get; set; }
     }
 }

@@ -13,5 +13,9 @@ namespace EntitiesGenerator
 
         [StringLength(StringLengths.TinyContent)]
         public string SortedItem1sInItem2CriteriaPropertyName { get; set; }
+
+        public bool HasFullItem2sInItem1ViewModel { get; set; }
+
+        public bool HasFullItem1sInItem2ViewModel { get; set; }
     }
 }

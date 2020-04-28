@@ -147,6 +147,18 @@
   <data name="HasEntityFrameworkCoreSealedModelsOptions" xml:space="preserve">
     <value>Has EntityFrameworkCore.SealedModels Options</value>
   </data>
+  <data name="HasFullChildrenInParentViewModel" xml:space="preserve">
+    <value>Has Full Children in Parent View Model</value>
+  </data>
+  <data name="HasFullItem1sInItem2ViewModel" xml:space="preserve">
+    <value>Has Full Item 1s in Item 2 View Model</value>
+  </data>
+  <data name="HasFullItem2sInItem1ViewModel" xml:space="preserve">
+    <value>Has Full Item 2s in Item 1 View Model</value>
+  </data>
+  <data name="HasFullParentInChildrenViewModel" xml:space="preserve">
+    <value>Has Full Parent in Children View Model</value>
+  </data>
   <data name="HasOwnNamespace" xml:space="preserve">
     <value>Has Own Namespace</value>
   </data>

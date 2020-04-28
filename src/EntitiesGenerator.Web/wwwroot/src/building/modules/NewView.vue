@@ -203,10 +203,26 @@
                                                            @input="dirtyItemsRelationship(relationship)"></single-line-input>
                                     </template>
                                     <template v-else-if="relationship.item1PropertyName === null">
-                                        <code>.<span class="text-info">{{item1AutoPropertyName(relationship)}}</span></code>
+                                        <div>
+                                            <code>.<span class="text-info">{{item1AutoPropertyName(relationship)}}</span></code>
+                                        </div>
+                                        <div v-if="relationship.type === 'OneToMany' && relationship.hasFullChildrenInParentViewModel">
+                                            <code>.<span class="text-info">Full{{item1AutoPropertyName(relationship)}}</span></code>
+                                        </div>
+                                        <div v-if="relationship.type === 'ManyToMany' && relationship.hasFullItem2sInItem1ViewModel">
+                                            <code>.<span class="text-info">Full{{item1AutoPropertyName(relationship)}}</span></code>
+                                        </div>
                                     </template>
                                     <template v-else>
-                                        <code>.<span class="text-primary">{{relationship.item1PropertyName}}</span></code>
+                                        <div>
+                                            <code>.<span class="text-primary">{{relationship.item1PropertyName}}</span></code>
+                                        </div>
+                                        <div v-if="relationship.type === 'OneToMany' && relationship.hasFullChildrenInParentViewModel">
+                                            <code>.<span class="text-primary">Full{{relationship.item1PropertyName}}</span></code>
+                                        </div>
+                                        <div v-if="relationship.type === 'ManyToMany' && relationship.hasFullItem2sInItem1ViewModel">
+                                            <code>.<span class="text-primary">Full{{relationship.item1PropertyName}}</span></code>
+                                        </div>
                                     </template>
                                 </td>
                                 <td class="text-right text-nowrap">
@@ -220,10 +236,26 @@
                                                            @input="dirtyItemsRelationship(relationship)"></single-line-input>
                                     </template>
                                     <template v-else-if="relationship.item2PropertyName === null">
-                                        <code>.<span class="text-info">{{item2AutoPropertyName(relationship)}}</span></code>
+                                        <div>
+                                            <code>.<span class="text-info">{{item2AutoPropertyName(relationship)}}</span></code>
+                                        </div>
+                                        <div v-if="relationship.type === 'OneToMany' && relationship.hasFullParentInChildrenViewModel">
+                                            <code>.<span class="text-info">Full{{item2AutoPropertyName(relationship)}}</span></code>
+                                        </div>
+                                        <div v-if="relationship.type === 'ManyToMany' && relationship.hasFullItem1sInItem2ViewModel">
+                                            <code>.<span class="text-info">Full{{item2AutoPropertyName(relationship)}}</span></code>
+                                        </div>
                                     </template>
                                     <template v-else>
-                                        <code>.<span class="text-primary">{{relationship.item2PropertyName}}</span></code>
+                                        <div>
+                                            <code>.<span class="text-primary">{{relationship.item2PropertyName}}</span></code>
+                                        </div>
+                                        <div v-if="relationship.type === 'OneToMany' && relationship.hasFullParentInChildrenViewModel">
+                                            <code>.<span class="text-primary">Full{{relationship.item2PropertyName}}</span></code>
+                                        </div>
+                                        <div v-if="relationship.type === 'ManyToMany' && relationship.hasFullItem1sInItem2ViewModel">
+                                            <code>.<span class="text-primary">Full{{relationship.item2PropertyName}}</span></code>
+                                        </div>
                                     </template>
                                 </td>
                                 <td class="text-center">{{relationship.type}}</td>
@@ -273,6 +305,26 @@
                                             <template v-else>
                                                 {{relationship.sortedChildrenInParentCriteriaPropertyName}}
                                             </template>
+                                        </div>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox"
+                                                   class="custom-control-input"
+                                                   :id="`itemsRelationship_${relationship.id}_HasFullChildrenInParentViewModel_Switch`"
+                                                   v-bind:disabled="!relationship.editMode"
+                                                   v-model="relationship.hasFullChildrenInParentViewModel"
+                                                   @change="dirtyItemsRelationship(relationship)">
+                                            <label class="custom-control-label"
+                                                   :for="`itemsRelationship_${relationship.id}_HasFullChildrenInParentViewModel_Switch`">{{displayNames['HasFullChildrenInParentViewModel']}}</label>
+                                        </div>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox"
+                                                   class="custom-control-input"
+                                                   :id="`itemsRelationship_${relationship.id}_HasFullParentInChildrenViewModel_Switch`"
+                                                   v-bind:disabled="!relationship.editMode"
+                                                   v-model="relationship.hasFullParentInChildrenViewModel"
+                                                   @change="dirtyItemsRelationship(relationship)">
+                                            <label class="custom-control-label"
+                                                   :for="`itemsRelationship_${relationship.id}_HasFullParentInChildrenViewModel_Switch`">{{displayNames['HasFullParentInChildrenViewModel']}}</label>
                                         </div>
                                     </template>
                                     <template v-if="relationship.type === 'ManyToMany'">
@@ -325,6 +377,26 @@
                                             <template v-else>
                                                 {{relationship.sortedItem1sInItem2CriteriaPropertyName}}
                                             </template>
+                                        </div>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox"
+                                                   class="custom-control-input"
+                                                   :id="`itemsRelationship_${relationship.id}_HasFullItem2sInItem1ViewModel_Switch`"
+                                                   v-bind:disabled="!relationship.editMode"
+                                                   v-model="relationship.hasFullItem2sInItem1ViewModel"
+                                                   @change="dirtyItemsRelationship(relationship)">
+                                            <label class="custom-control-label"
+                                                   :for="`itemsRelationship_${relationship.id}_HasFullItem2sInItem1ViewModel_Switch`">{{displayNames['HasFullItem2sInItem1ViewModel']}}</label>
+                                        </div>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox"
+                                                   class="custom-control-input"
+                                                   :id="`itemsRelationship_${relationship.id}_HasFullItem1sInItem2ViewModel_Switch`"
+                                                   v-bind:disabled="!relationship.editMode"
+                                                   v-model="relationship.hasFullItem1sInItem2ViewModel"
+                                                   @change="dirtyItemsRelationship(relationship)">
+                                            <label class="custom-control-label"
+                                                   :for="`itemsRelationship_${relationship.id}_HasFullItem1sInItem2ViewModel_Switch`">{{displayNames['HasFullItem1sInItem2ViewModel']}}</label>
                                         </div>
                                     </template>
                                 </td>
