@@ -1,9 +1,9 @@
 ﻿import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome';
-import Swal from 'sweetalert2';
 import _ from 'lodash';
-import VueConfigHelper from '../../utilities/VueConfigHelper';
-import KeepAlive from '../../utilities/KeepAlive';
+import Swal from 'sweetalert2';
 import DataLoader from '../../utilities/DataLoader';
+import KeepAlive from '../../utilities/KeepAlive';
+import VueConfigHelper from '../../utilities/VueConfigHelper';
 
 /** @typedef {import("../../utilities/DataLoader").DataLoaderMapping} DataLoaderMapping */
 
@@ -153,17 +153,17 @@ export default class PageController {
             message += ' Please send error informaiton bellow to support.';
         }
 
+        // Error from promise call
+        if (errorData.response && errorData.response.data) {
+            console.error(errorData.response.data);
+        }
+
         Swal.fire({
             icon: 'error',
             title: 'Error',
             text: message,
             footer: errorData && errorData.toString()
         });
-
-        // Error from promise call
-        if (errorData.response && errorData.response.data) {
-            console.error(errorData.response.data);
-        }
     }
 
     /**
@@ -175,6 +175,11 @@ export default class PageController {
         message += ' Page reload is required.';
         if (errorData) {
             message += ' Please send error informaiton bellow to support.';
+        }
+
+        // Error from promise call
+        if (errorData.response && errorData.response.data) {
+            console.error(errorData.response.data);
         }
 
         Swal.fire({
