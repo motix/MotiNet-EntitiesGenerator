@@ -21,6 +21,11 @@ export class EfProject_ProjectFileGenerator extends ProjectFileGenerator {
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectCapability Include="DynamicDependentFile" />
+    <ProjectCapability Include="DynamicFileNesting" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
   </ItemGroup>
 

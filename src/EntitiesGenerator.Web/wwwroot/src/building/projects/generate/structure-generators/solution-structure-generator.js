@@ -36,6 +36,11 @@ export default class SolutionStructureGenerator {
                     children: [
                         {
                             type: 'file',
+                            name: '.filenesting.json',
+                            generator: new CG.SolutionFileNestingGenerator(features, relationships, project)
+                        },
+                        {
+                            type: 'file',
                             name: 'README.md',
                             generator: new CG.SolutionReadmeGenerator(features, relationships, project)
                         },

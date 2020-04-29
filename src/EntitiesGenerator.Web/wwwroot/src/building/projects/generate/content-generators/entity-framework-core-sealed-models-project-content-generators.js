@@ -24,6 +24,11 @@ export class EfSmProject_ProjectFileGenerator extends ProjectFileGenerator {
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectCapability Include="DynamicDependentFile" />
+    <ProjectCapability Include="DynamicFileNesting" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MotiNet.Extensions.Entities.EntityFrameworkCore" Version="${ContentHelper.MotiNetEntitiesVersion}" />
   </ItemGroup>
 

@@ -22,6 +22,11 @@ export class CoreProject_ProjectFileGenerator extends ProjectFileGenerator {
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectCapability Include="DynamicDependentFile" />
+    <ProjectCapability Include="DynamicFileNesting" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="3.1.3" />
     <PackageReference Include="MotiNet.Extensions.Entities.Core" Version="${ContentHelper.MotiNetEntitiesVersion}" />
   </ItemGroup>

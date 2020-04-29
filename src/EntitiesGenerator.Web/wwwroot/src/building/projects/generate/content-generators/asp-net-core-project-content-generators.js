@@ -22,6 +22,11 @@ export class AspProject_ProjectFileGenerator extends ProjectFileGenerator {
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectCapability Include="DynamicDependentFile" />
+    <ProjectCapability Include="DynamicFileNesting" />
+  </ItemGroup>
+
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 

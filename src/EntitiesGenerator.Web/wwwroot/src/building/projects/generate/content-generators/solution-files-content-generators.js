@@ -59,6 +59,7 @@ VisualStudioVersion = 16.0.28606.126
 MinimumVisualStudioVersion = 10.0.40219.1
 ${foldersSection}Project("{${solutionFolderTypeGuid}}") = "Solution Items", "Solution Items", "{${ContentHelper.newGuid()}}"
 	ProjectSection(SolutionItems) = preProject
+		.filenesting.json = .filenesting.json
 		NuGet.config = NuGet.config
 		README.md = README.md
 	EndProjectSection
@@ -85,6 +86,30 @@ EndProject
             sections.projectsNestingSection += `
 		{${projectGuid}} = {${parentGuid}}`;
         }
+    }
+}
+
+export class SolutionFileNestingGenerator extends ProjectSpecificContentGenerator {
+    get language() { return 'json'; }
+
+    generate() {
+        const content = `{
+  "help": "https://go.microsoft.com/fwlink/?linkid=866610",
+
+  "dependentFileProviders": {
+    "add": {
+      "fileSuffixToExtension": {
+        "add": {
+          "-custom.cs": [
+            ".cs"
+          ]
+        }
+      }
+    }
+  }
+}`;
+
+        return content;
     }
 }
 

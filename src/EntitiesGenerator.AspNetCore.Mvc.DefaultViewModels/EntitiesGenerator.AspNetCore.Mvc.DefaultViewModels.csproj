@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectCapability Include="DynamicDependentFile" />
+    <ProjectCapability Include="DynamicFileNesting" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="MotiNet.ComponentModel.Annotations" Version="1.1.0-beta-0009" />
     <PackageReference Include="MotiNet.Extensions.AutoMapper" Version="1.1.0-beta-0009" />
@@ -16,10 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="DisplayNames.Custom.Designer.cs">
+    <Compile Update="DisplayNames_Custom.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>DisplayNames.Custom.resx</DependentUpon>
+      <DependentUpon>DisplayNames_Custom.resx</DependentUpon>
     </Compile>
     <Compile Update="DisplayNames.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -29,9 +34,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="DisplayNames.Custom.resx">
+    <EmbeddedResource Update="DisplayNames_Custom.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>DisplayNames.Custom.Designer.cs</LastGenOutput>
+      <LastGenOutput>DisplayNames_Custom.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="DisplayNames.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
