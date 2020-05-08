@@ -4,7 +4,7 @@ export default class ContentHelper {
     // MotiNet versions
 
     static get MotiNetCoreVersion() { return '1.1.0-beta-0009' };
-    static get MotiNetEntitiesVersion() { return '1.1.0-beta-0018' };
+    static get MotiNetEntitiesVersion() { return '1.1.0-beta-0025' };
 
     // String Generations
 

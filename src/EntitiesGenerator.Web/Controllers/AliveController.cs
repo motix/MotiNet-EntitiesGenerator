@@ -2,7 +2,9 @@
 
 namespace EntitiesGenerator.Web.Controllers
 {
+    
     [Route("api/[controller]")]
+    [ApiController]
     public class AliveController : ControllerBase
     {
         [HttpGet]

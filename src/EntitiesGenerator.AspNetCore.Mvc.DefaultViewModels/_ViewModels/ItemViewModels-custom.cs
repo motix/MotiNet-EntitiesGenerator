@@ -23,6 +23,9 @@ namespace EntitiesGenerator.Mvc
 
         [Display(Name = nameof(AbstractModel), ResourceType = typeof(DisplayNames_Custom))]
         public bool AbstractModel { get; set; }
+
+        [Display(Name = nameof(ReverseMappingLiteViewModel), ResourceType = typeof(DisplayNames_Custom))]
+        public bool ReverseMappingLiteViewModel { get; set; }
     }
 
     // Full
@@ -50,6 +53,8 @@ namespace EntitiesGenerator.Mvc
 
         public PreprocessedEntityFeatureSettingViewModel PreprocessedEntityFeatureSetting { get; set; }
 
+        public InterModuleEntityFeatureSettingViewModel InterModuleEntityFeatureSetting { get; set; }
+
         public void CollectFeatureSettings()
         {
             FeatureSettings = new List<FeatureSettingLiteViewModel>
@@ -62,7 +67,8 @@ namespace EntitiesGenerator.Mvc
                 ReadableIdEntityFeatureSetting,
                 OnOffEntityFeatureSetting,
                 ChildEntityFeatureSetting,
-                PreprocessedEntityFeatureSetting
+                PreprocessedEntityFeatureSetting,
+                InterModuleEntityFeatureSetting
             };
 
             FeatureSettings = FeatureSettings.Where(x => x != null).ToList();
@@ -100,6 +106,9 @@ namespace EntitiesGenerator.Mvc
                         break;
                     case PreprocessedEntityFeatureSettingViewModel viewModel:
                         PreprocessedEntityFeatureSetting = viewModel;
+                        break;
+                    case InterModuleEntityFeatureSettingViewModel viewModel:
+                        InterModuleEntityFeatureSetting = viewModel;
                         break;
                     default:
                         throw new NotImplementedException();

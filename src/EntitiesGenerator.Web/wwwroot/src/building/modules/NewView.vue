@@ -126,6 +126,7 @@
                                 <th scope="col" class="text-center">{{displayNames['ModelOnly']}}</th>
                                 <th scope="col" class="text-center">{{displayNames['ParameterListLineBreak']}}</th>
                                 <th scope="col" class="text-center">{{displayNames['AbstractModel']}}</th>
+                                <th scope="col" class="text-center">{{displayNames['ReverseMappingLiteViewModel']}}</th>
                                 <th scope="col">{{displayNames['FeatureSettings']}}</th>
                             </tr>
                         </thead>
@@ -146,6 +147,10 @@
                                 </td>
                                 <td class="text-center">
                                     <font-awesome-icon :icon="['fal', 'check-square']" fixed-width v-if="item.abstractModel"></font-awesome-icon>
+                                    <font-awesome-icon :icon="['fal', 'square']" fixed-width v-else></font-awesome-icon>
+                                </td>
+                                <td class="text-center">
+                                    <font-awesome-icon :icon="['fal', 'check-square']" fixed-width v-if="item.reverseMappingLiteViewModel"></font-awesome-icon>
                                     <font-awesome-icon :icon="['fal', 'square']" fixed-width v-else></font-awesome-icon>
                                 </td>
                                 <td>

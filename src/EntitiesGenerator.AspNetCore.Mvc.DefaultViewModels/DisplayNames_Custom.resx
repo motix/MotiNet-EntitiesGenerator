@@ -207,6 +207,9 @@
   <data name="Relationships" xml:space="preserve">
     <value>Relationships</value>
   </data>
+  <data name="ReverseMappingLiteViewModel" xml:space="preserve">
+    <value>Reverse Mapping Lite View Model</value>
+  </data>
   <data name="ScopeName" xml:space="preserve">
     <value>Scope Name</value>
   </data>

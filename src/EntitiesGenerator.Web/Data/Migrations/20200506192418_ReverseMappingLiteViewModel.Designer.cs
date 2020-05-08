@@ -3,14 +3,16 @@ using EntitiesGenerator.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EntitiesGenerator.Web.Data.Migrations
 {
     [DbContext(typeof(EntitiesGeneratorDbContext))]
-    partial class EntitiesGeneratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200506192418_ReverseMappingLiteViewModel")]
+    partial class ReverseMappingLiteViewModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

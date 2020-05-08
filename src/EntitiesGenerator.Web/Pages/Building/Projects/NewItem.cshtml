@@ -13,7 +13,8 @@
                         .Collect(x => emptyItem.DisplayName, Html)
                         .Collect(x => emptyItem.ParameterListLineBreak, Html)
                         .Collect(x => emptyItem.ModelOnly, Html)
-                        .Collect(x => emptyItem.AbstractModel, Html);
+                        .Collect(x => emptyItem.AbstractModel, Html)
+                        .Collect(x => emptyItem.ReverseMappingLiteViewModel, Html);
 }
 
 @section Head {

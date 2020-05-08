@@ -96,6 +96,17 @@
                     <label class="custom-control-label" for="abstractModelSwitch">{{displayNames['AbstractModel']}}</label>
                 </div>
             </div>
+            <div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox"
+                           class="custom-control-input"
+                           id="reverseMappingLiteViewModelSwitch"
+                           v-bind:disabled="!newMode && !editMode"
+                           v-model="entity.reverseMappingLiteViewModel"
+                           @change="dirty()">
+                    <label class="custom-control-label" for="reverseMappingLiteViewModelSwitch">{{displayNames['ReverseMappingLiteViewModel']}}</label>
+                </div>
+            </div>
             <section class="mt-4" v-if="!newMode">
                 <h3>{{displayNames['FeatureSettings']}}</h3>
                 <div>
@@ -453,6 +464,21 @@
                             </span>
                         </h4>
                     </section>
+
+                    <!--InterModuleEntityFeatureSetting-->
+                    <section class="mt-3">
+                        <h4>
+                            <span class="custom-control custom-switch">
+                                <input type="checkbox"
+                                       class="custom-control-input"
+                                       id="interModuleEntityFeatureSetting_Enabled_Switch"
+                                       v-bind:disabled="!newMode && !editMode"
+                                       v-model="entity.interModuleEntityFeatureSetting.enabled"
+                                       @change="dirty()">
+                                <label class="custom-control-label" for="interModuleEntityFeatureSetting_Enabled_Switch">Inter-module Entity</label>
+                            </span>
+                        </h4>
+                    </section>
                 </div>
             </section>
         </extension>
@@ -606,6 +632,13 @@
         }
 
         get emptyPreprocessedEntityFeatureSetting() {
+            return {
+                itemId: '_',
+                enabled: false
+            };
+        }
+
+        get emptyInterModuleEntityFeatureSetting() {
             return {
                 itemId: '_',
                 enabled: false

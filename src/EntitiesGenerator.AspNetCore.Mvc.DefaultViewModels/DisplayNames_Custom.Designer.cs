@@ -331,6 +331,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reverse Mapping Lite View Model.
+        /// </summary>
+        public static string ReverseMappingLiteViewModel {
+            get {
+                return ResourceManager.GetString("ReverseMappingLiteViewModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Scope Name.
         /// </summary>
         public static string ScopeName {

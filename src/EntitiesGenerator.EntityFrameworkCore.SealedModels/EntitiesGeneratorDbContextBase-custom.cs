@@ -23,6 +23,8 @@ namespace EntitiesGenerator.EntityFrameworkCore
 
         public DbSet<PreprocessedEntityFeatureSetting> PreprocessedEntityFeatureSettings { get; set; }
 
+        public DbSet<InterModuleEntityFeatureSetting> InterModuleEntityFeatureSettings { get; set; }
+
         public DbSet<OneToManyItemsRelationship> OneToManyItemsRelationships { get; set; }
 
         public DbSet<ManyToManyItemsRelationship> ManyToManyItemsRelationships { get; set; }

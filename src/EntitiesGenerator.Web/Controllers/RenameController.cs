@@ -9,7 +9,8 @@ using System.Text.RegularExpressions;
 namespace EntitiesGenerator.Web.Controllers
 {
     [Route("api/[controller]")]
-    public class RenameController : Controller
+    [ApiController]
+    public class RenameController : ControllerBase
     {
         [HttpPost("check-path")]
         public ActionResult<object> CheckPath([FromBody] CheckPathViewModel viewModel)

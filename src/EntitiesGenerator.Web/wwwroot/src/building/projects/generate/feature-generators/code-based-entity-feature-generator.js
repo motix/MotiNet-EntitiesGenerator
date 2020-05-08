@@ -266,6 +266,23 @@ public string ${codePropertyName} { get; set; }`);
             `public void SetCode(${item.name} ${_.lowerFirst(item.name)}, string ${lowerFirstCodePropertyName}) => ${_.lowerFirst(item.name)}.${codePropertyName} = ${lowerFirstCodePropertyName};`);
     }
 
+    /**
+     * @param {Item} item
+     * @param {string[]} data
+     */
+    sm_DependencyInjectionClass_ServiceRegistrationsData(item, data) {
+        this.throwIfItemNotHaveFeature(item);
+
+        const entityName = item.name;
+
+        if (this.hasCodeGenerator(item)) {
+            data.push(`// Supports code generator
+services.TryAddScoped(
+    typeof(ICodeBasedEntityAccessor<>).MakeGenericType(builder.${entityName}Type),
+    typeof(${entityName}Accessor));`);
+        }
+    }
+
     // EntityFrameworkCore.SealedModels
 
     /**

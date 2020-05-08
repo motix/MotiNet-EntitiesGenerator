@@ -273,6 +273,7 @@ public static ${moduleCommonName}Builder Add${moduleCommonName}WithSealedModels(
 
         const content = `using ${namespace};
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using MotiNet.Entities;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection

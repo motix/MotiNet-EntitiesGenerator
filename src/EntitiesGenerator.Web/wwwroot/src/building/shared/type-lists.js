@@ -11,7 +11,8 @@ export default class TypeLists {
             'NameBasedEntity',
             'ScopedNameBasedEntity',
             'ChildEntity',
-            'PreprocessedEntity'
+            'PreprocessedEntity',
+            'InterModuleEntity'
         ];
     }
 

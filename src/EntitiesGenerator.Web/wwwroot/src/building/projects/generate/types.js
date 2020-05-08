@@ -60,6 +60,7 @@
  * @property {boolean} parameterListLineBreak
  * @property {boolean} modelOnly
  * @property {boolean} abstractModel
+ * @property {boolean} reverseMappingLiteViewModel
  * @property {Module} module
  * @property {EntityFeatureSetting} entityFeatureSetting
  * @property {ReadableIdEntityFeatureSetting} readableIdEntityFeatureSetting
@@ -70,6 +71,7 @@
  * @property {ScopedNameBasedEntityFeatureSetting} scopedNameBasedEntityFeatureSetting
  * @property {ChildEntityFeatureSetting} childEntityFeatureSetting
  * @property {PreprocessedEntityFeatureSetting} preprocessedEntityFeatureSetting
+ * @property {InterModuleEntityFeatureSetting} interModuleEntityFeatureSetting
  */
 
 /**
@@ -111,6 +113,10 @@
 
 /**
  * @typedef {FeatureSetting} PreprocessedEntityFeatureSetting
+ */
+
+/**
+ * @typedef {FeatureSetting} InterModuleEntityFeatureSetting
  */
 
 /**

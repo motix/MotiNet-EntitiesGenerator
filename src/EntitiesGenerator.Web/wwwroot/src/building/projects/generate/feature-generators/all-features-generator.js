@@ -10,6 +10,7 @@ import NameBasedEntityFeatureGenerator from './name-based-entity-feature-generat
 import ScopedNameBasedEntityFeatureGenerator from './scoped-name-based-entity-feature-generator';
 import ChildEntityFeatureGenerator from './child-entity-feature-generator';
 import PreprocessedEntityFeatureGenerator from './preprocessed-entity-feature-generator';
+import InterModuleEntityFeatureGenerator from './inter-module-entity-feature-generator';
 
 export default class AllFeaturesGenerator {
     constructor() {
@@ -22,6 +23,7 @@ export default class AllFeaturesGenerator {
         this.scopedNameBasedEntityFeatureGenerator = new ScopedNameBasedEntityFeatureGenerator();
         this.childEntityFeatureGenerator = new ChildEntityFeatureGenerator();
         this.preprocessedEntityFeatureGenerator = new PreprocessedEntityFeatureGenerator();
+        this.interModuleEntityFeatureGenerator = new InterModuleEntityFeatureGenerator();
 
         /**
          * @type FeatureGenerator[]

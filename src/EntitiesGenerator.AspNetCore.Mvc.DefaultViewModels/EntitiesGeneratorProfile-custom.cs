@@ -36,6 +36,9 @@
             CreateMap(builder.DomainSpecificTypes[nameof(PreprocessedEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
                       typeof(PreprocessedEntityFeatureSettingViewModel))
                 .ReverseMap();
+            CreateMap(builder.DomainSpecificTypes[nameof(InterModuleEntityFeatureSettingViewModel).Replace("ViewModel", string.Empty)],
+                      typeof(InterModuleEntityFeatureSettingViewModel))
+                .ReverseMap();
 
             CreateMap(builder.ItemsRelationshipType, typeof(ItemsRelationshipLiteViewModel))
                 .IncludeAllDerived()

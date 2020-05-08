@@ -155,7 +155,9 @@ public string ${parentPropertyName}Id { get; set; }`);
                 data.push(`// Ignore ordered children
 builder.Ignore(x => x.Ordered${childrenPropertyName});`);
             }
-        } else {
+        }
+
+        if (this.isChildEntity(item, itemsRelationship)) {
             if (itemsRelationship.deleteRestrict) {
                 const parentPropertyName = this.parentPropertyName(itemsRelationship);
                 const childrenPropertyName = this.childrenPropertyName(itemsRelationship);
@@ -184,9 +186,15 @@ builder.HasOne(x => x.${parentPropertyName})
 
         if (this.isChildEntity(item, itemsRelationship)) {
             const parentPropertyName = this.parentPropertyName(itemsRelationship);
-            data.push(`[LocalizedRequired]
+            const parentNullable = itemsRelationship.parentNullable;
+            if (parentNullable) {
+                data.push(`[Display(Name = "${parentPropertyName}", ResourceType = typeof(DisplayNames))]
+public string ${parentPropertyName}Id { get; set; }`);
+            } else {
+                data.push(`[LocalizedRequired]
 [Display(Name = "${parentPropertyName}", ResourceType = typeof(DisplayNames))]
 public string ${parentPropertyName}Id { get; set; }`);
+            }
         }
     }
 
@@ -280,7 +288,9 @@ public static string ${childrenPropertyName} {
     }
 }`
             });
-        } else {
+        }
+
+        if (this.isChildEntity(item, itemsRelationship)) {
             const parentPropertyName = this.parentPropertyName(itemsRelationship);
             const parentDisplayName = _.startCase(parentPropertyName);
 
