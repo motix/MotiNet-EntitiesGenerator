@@ -48,6 +48,7 @@
  * @property {boolean} hasCoreOptions
  * @property {boolean} hasEntityFrameworkCoreSealedModelsOptions
  * @property {boolean} hasAspNetCoreOptions
+ * @property {boolean} includeCustomDisplayNames
  * @property {Project} project
  * @property {Item[]} items
  * @property {ItemsRelationship[]} itemsRelationships

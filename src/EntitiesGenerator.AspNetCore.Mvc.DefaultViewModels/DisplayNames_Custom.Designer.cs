@@ -232,6 +232,15 @@ namespace EntitiesGenerator.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Include Custom Display Names.
+        /// </summary>
+        public static string IncludeCustomDisplayNames {
+            get {
+                return ResourceManager.GetString("IncludeCustomDisplayNames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Item 1 Property Name.
         /// </summary>
         public static string Item1PropertyName {

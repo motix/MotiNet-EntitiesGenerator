@@ -12,5 +12,7 @@
         public bool HasEntityFrameworkCoreSealedModelsOptions { get; set; }
 
         public bool HasAspNetCoreOptions { get; set; }
+
+        public bool IncludeCustomDisplayNames { get; set; }
     }
 }

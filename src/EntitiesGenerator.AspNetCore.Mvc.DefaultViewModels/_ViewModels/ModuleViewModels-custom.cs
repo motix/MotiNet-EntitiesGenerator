@@ -21,6 +21,9 @@ namespace EntitiesGenerator.Mvc
 
         [Display(Name = nameof(HasAspNetCoreOptions), ResourceType = typeof(DisplayNames_Custom))]
         public bool HasAspNetCoreOptions { get; set; }
+   
+        [Display(Name = nameof(IncludeCustomDisplayNames), ResourceType = typeof(DisplayNames_Custom))]
+        public bool IncludeCustomDisplayNames { get; set; }
     }
 
     // Full

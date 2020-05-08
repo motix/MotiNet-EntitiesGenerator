@@ -88,6 +88,17 @@
                     <label class="custom-control-label" for="hasAspNetCoreOptionsSwitch">{{displayNames['HasAspNetCoreOptions']}}</label>
                 </div>
             </div>
+            <div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox"
+                           class="custom-control-input"
+                           id="includeCustomDisplayNamesSwitch"
+                           v-bind:disabled="!newMode && !editMode"
+                           v-model="entity.includeCustomDisplayNames"
+                           @change="dirty()">
+                    <label class="custom-control-label" for="includeCustomDisplayNamesSwitch">{{displayNames['IncludeCustomDisplayNames']}}</label>
+                </div>
+            </div>
             <section class="mt-4" v-if="!newMode">
                 <div class="row">
                     <div class="col-lg-8 col-xl-9">

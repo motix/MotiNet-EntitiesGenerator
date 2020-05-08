@@ -18,6 +18,18 @@ export class AspDvProject_ProjectFileGenerator extends ProjectFileGenerator {
         const defaultNamespace = this.getProjectDefaultNamespaceIfRequired(AspDvProjectSG);
         const coreProjectName = CoreProjectSG.getProjectName(this.module);
 
+        const customDisplayNamesDesigner = this.module.includeCustomDisplayNames ? `
+    <Compile Update="DisplayNames_Custom.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DisplayNames_Custom.resx</DependentUpon>
+    </Compile>` : '';
+        const customDisplayNamesResx = this.module.includeCustomDisplayNames ? `
+    <EmbeddedResource Update="DisplayNames_Custom.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DisplayNames_Custom.Designer.cs</LastGenOutput>
+    </EmbeddedResource>` : '';
+
         const content = `<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -44,14 +56,14 @@ export class AspDvProject_ProjectFileGenerator extends ProjectFileGenerator {
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>DisplayNames.resx</DependentUpon>
-    </Compile>
+    </Compile>${customDisplayNamesDesigner}
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="DisplayNames.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>DisplayNames.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    </EmbeddedResource>${customDisplayNamesResx}
   </ItemGroup>
 
 </Project>
