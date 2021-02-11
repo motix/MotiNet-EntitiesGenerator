@@ -22,7 +22,7 @@
     "@fortawesome/fontawesome-svg-core": "1.2.26",
     "@fortawesome/vue-fontawesome": "0.1.9",
     "@vue/component-compiler-utils": "2.4.0",
-    "apexcharts": "3.12.0",
+    "apexcharts": "3.24.0",
     "axios": "0.19.1",
     "babel-loader": "8.0.6",
     "bootstrap-vue": "2.3.0",
